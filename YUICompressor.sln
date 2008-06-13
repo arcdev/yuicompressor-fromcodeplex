@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{74643830-FD8D-4348-AE41-CCDF31DDAA73}"
 	ProjectSection(SolutionItems) = preProject
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
+		Solution Items\MsBuildSample.xml = Solution Items\MsBuildSample.xml
+		Solution Items\StylesheetSample1.css = Solution Items\StylesheetSample1.css
+		Solution Items\StylesheetSample2.css = Solution Items\StylesheetSample2.css
+		Solution Items\StylesheetSample3.css = Solution Items\StylesheetSample3.css
 		YUICompressor.vsmdi = YUICompressor.vsmdi
 	EndProjectSection
 EndProject

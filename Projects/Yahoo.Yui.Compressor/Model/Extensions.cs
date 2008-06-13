@@ -87,5 +87,21 @@ namespace Yahoo.Yui.Compressor
 
             return stringBuilder.ToString();
         }
+
+        public static string ToPluralString(this int value)
+        {
+            return value == 1 ? string.Empty : "s";
+        }
+
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> value)
+        {
+            return value == null ||
+                value.Count() <= 0 ? true : false;
+        }
+
+        public static IList<T> ToListIfNotNullOrEmpty<T>(this IList<T> value)
+        {
+            return value.IsNullOrEmpty() ? null : value;
+        }
     }
 }
