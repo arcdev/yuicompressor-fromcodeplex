@@ -17,6 +17,7 @@ namespace Yahoo.Yui.Compressor.MSBuild
         public string JavaScriptFiles { get; set; }
         public string JavaScriptFileToReplace { get; set; }
         public bool VerboseLogging { get; set; }
+        public bool DeleteFiles { get; set; }
 
         #region Methods
 
@@ -30,7 +31,7 @@ namespace Yahoo.Yui.Compressor.MSBuild
                 throw new ArgumentNullException("filesToParse");
             }
 
-            fileList = filesToParse.Split(new string[] { " ", ", ", "; " },
+            fileList = filesToParse.Split(new string[] { " ", ",", ";" },
                 StringSplitOptions.RemoveEmptyEntries).ToList();
 
             return fileList == null ||
@@ -58,6 +59,39 @@ namespace Yahoo.Yui.Compressor.MSBuild
                     isIndented ? "    " : string.Empty,
                     message));
             }
+        }
+
+        private int DeleteListedFiles(string filesToDelete)
+        {
+            IList<string> files;
+            int counter = 0;
+
+
+            if (string.IsNullOrEmpty(filesToDelete))
+            {
+                throw new ArgumentNullException("filesToDelete");
+            }
+
+            files = CompressorTask.ParseFiles(filesToDelete);
+            if (!files.IsNullOrEmpty())
+            {
+                foreach (string file in files)
+                {
+                    try
+                    {
+                        File.Delete(file);
+                        counter++;
+                    }
+                    catch
+                    {
+                        Log.LogError(string.Format(CultureInfo.InvariantCulture,
+                            "Failed to delete the file [{0}]. Please make sure this file exists and it's not locked, etc.",
+                            file));
+                    }
+                }
+            }
+
+            return counter;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", 
@@ -174,7 +208,9 @@ namespace Yahoo.Yui.Compressor.MSBuild
         {
             DateTime startTime;
             StringBuilder compressedCss;
-            
+            bool saveResult;
+            int counter;
+
 
             // Check to make sure we have the bare minimum arguments supplied to the task.
             if (string.IsNullOrEmpty(this.CssFiles) &&
@@ -189,7 +225,7 @@ namespace Yahoo.Yui.Compressor.MSBuild
                 return false;
             }
 
-            Log.LogMessage("Starting Css/Javascript compression...");
+            this.LogMessage("Starting Css/Javascript compression...");
             startTime = DateTime.Now;
 
             if (!string.IsNullOrEmpty(this.CssFiles))
@@ -202,14 +238,38 @@ namespace Yahoo.Yui.Compressor.MSBuild
                 }
 
                 // Save this css to the output file.
-                if (!this.SaveCompressedCss(compressedCss.ToString()))
+                saveResult = this.SaveCompressedCss(compressedCss.ToString());
+                if (!saveResult)
                 {
                     return false;
                 }
+                else if (this.DeleteFiles)
+                {
+                    this.LogMessage("Request to delete files ...");
+
+                    // Remove the files.
+                    if (!string.IsNullOrEmpty(this.CssFiles))
+                    {
+                        counter = this.DeleteListedFiles(this.CssFiles);
+                        this.LogMessage(string.Format(CultureInfo.InvariantCulture,
+                                "=> Finished deleting {0} Css files.",
+                                counter),
+                            true);
+                    }
+
+                    if (!string.IsNullOrEmpty(this.JavaScriptFiles))
+                    {
+                        counter = this.DeleteListedFiles(this.JavaScriptFiles);
+                        this.LogMessage(string.Format(CultureInfo.InvariantCulture,
+                                "=> Finished deleting {0} Javascript files.",
+                                counter),
+                            true);
+                    }
+                }
             }
 
-            Log.LogMessage("Finished Css/Javascript compression.");
-            Log.LogMessage(string.Format(CultureInfo.InvariantCulture, 
+            this.LogMessage("Finished Css/Javascript compression.");
+            this.LogMessage(string.Format(CultureInfo.InvariantCulture, 
                 "Total time to execute task: {0}",
                 (DateTime.Now - startTime).ToString()));
 
