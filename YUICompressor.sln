@@ -5,10 +5,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Solution Items\BSD License.txt = Solution Items\BSD License.txt
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-		Solution Items\MsBuildSample.xml = Solution Items\MsBuildSample.xml
-		Solution Items\StylesheetSample1.css = Solution Items\StylesheetSample1.css
-		Solution Items\StylesheetSample2.css = Solution Items\StylesheetSample2.css
-		Solution Items\StylesheetSample3.css = Solution Items\StylesheetSample3.css
 		YUICompressor.vsmdi = YUICompressor.vsmdi
 	EndProjectSection
 EndProject
@@ -38,6 +34,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "org.mozilla.javascript", "o
 		Solution Items\Yahoo! YUICompressor Java code\v2.3.5\org\mozilla\javascript\Parser.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.3.5\org\mozilla\javascript\Parser.java.txt
 		Solution Items\Yahoo! YUICompressor Java code\v2.3.5\org\mozilla\javascript\Token.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.3.5\org\mozilla\javascript\Token.java.txt
 		Solution Items\Yahoo! YUICompressor Java code\v2.3.5\org\mozilla\javascript\TokenStream.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.3.5\org\mozilla\javascript\TokenStream.java.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsBuild example", "MsBuild example", "{314D701E-0C4B-4254-8DE3-47464B67E6DC}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\MsBuild Example\MsBuildSample.xml = Solution Items\MsBuild Example\MsBuildSample.xml
+		Solution Items\MsBuild Example\StylesheetSample1.css = Solution Items\MsBuild Example\StylesheetSample1.css
+		Solution Items\MsBuild Example\StylesheetSample2.css = Solution Items\MsBuild Example\StylesheetSample2.css
+		Solution Items\MsBuild Example\StylesheetSample3.css = Solution Items\MsBuild Example\StylesheetSample3.css
+		Solution Items\MsBuild Example\SylesSheetFinal.css = Solution Items\MsBuild Example\SylesSheetFinal.css
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web Deployment Project example", "Web Deployment Project example", "{30F222A7-0C0C-4F46-98D4-B06C7CE70C77}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Web Deployment Project Example\Sample WebSite.zip = Solution Items\Web Deployment Project Example\Sample WebSite.zip
 	EndProjectSection
 EndProject
 Global
@@ -76,6 +86,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D063AA82-CD35-40A7-BA2D-B26C4E291C59} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
+		{314D701E-0C4B-4254-8DE3-47464B67E6DC} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
+		{30F222A7-0C0C-4F46-98D4-B06C7CE70C77} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
 		{AFDF50F0-286B-4490-9EBD-007561864738} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{D263F886-F883-45C6-B79D-2136E0CE2195} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{197F7032-A560-44C7-969D-7D610B96B9AB} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}
