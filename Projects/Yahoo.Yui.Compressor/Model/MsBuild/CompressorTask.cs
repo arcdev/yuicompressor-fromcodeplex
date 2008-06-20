@@ -12,12 +12,16 @@ namespace Yahoo.Yui.Compressor.MSBuild
 {
     public class CompressorTask : Task
     {
+        #region Properties
+
         public string CssFiles { get; set; }
         public string CssOutputFile { get; set; }
         public string JavaScriptFiles { get; set; }
         public string JavaScriptFileToReplace { get; set; }
         public bool VerboseLogging { get; set; }
         public bool DeleteFiles { get; set; }
+
+        #endregion
 
         #region Methods
 
@@ -87,6 +91,7 @@ namespace Yahoo.Yui.Compressor.MSBuild
                         Log.LogError(string.Format(CultureInfo.InvariantCulture,
                             "Failed to delete the file [{0}]. Please make sure this file exists and it's not locked, etc.",
                             file));
+                        throw;
                     }
                 }
             }
