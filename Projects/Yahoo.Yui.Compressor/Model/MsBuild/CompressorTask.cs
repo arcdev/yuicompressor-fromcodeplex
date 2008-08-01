@@ -8,18 +8,25 @@ using Microsoft.Build.Utilities;
 using Yahoo.Yui.Compressor;
 
 
-namespace Yahoo.Yui.Compressor.MSBuild
+namespace Yahoo.Yui.Compressor.MsBuild
 {
     public class CompressorTask : Task
     {
+        #region Fields
+
+        private CssCompressionType _cssCompressionType;
+        private LoggingType _loggingType;
+
+        #endregion
+
         #region Properties
 
+        public string CssCompressionType { get; set; }
         public string CssFiles { get; set; }
         public string CssOutputFile { get; set; }
         public string JavaScriptFiles { get; set; }
-        public string JavaScriptFileToReplace { get; set; }
-        public bool VerboseLogging { get; set; }
-        public bool DeleteFiles { get; set; }
+        public string JavaScriptOutputFile { get; set; }
+        public string LoggingType { get; set; }
 
         #endregion
 
@@ -35,7 +42,7 @@ namespace Yahoo.Yui.Compressor.MSBuild
                 throw new ArgumentNullException("filesToParse");
             }
 
-            fileList = filesToParse.Split(new string[] { " ", ",", ";" },
+            fileList = filesToParse.Split(new string[] { " ", ", ", "; " },
                 StringSplitOptions.RemoveEmptyEntries).ToList();
 
             return fileList == null ||
@@ -51,12 +58,8 @@ namespace Yahoo.Yui.Compressor.MSBuild
         private void LogMessage(string message,
             bool isIndented)
         {
-            if (string.IsNullOrEmpty(message))
-            {
-                throw new ArgumentNullException("message");
-            }
-
-            if (this.VerboseLogging)
+            if (this._loggingType == MsBuild.LoggingType.ALittleBit ||
+                this._loggingType == MsBuild.LoggingType.HardcoreBringItOn)
             {
                 this.Log.LogMessage(string.Format(CultureInfo.InvariantCulture, 
                     "{0}{1}",
@@ -65,97 +68,94 @@ namespace Yahoo.Yui.Compressor.MSBuild
             }
         }
 
-        private int DeleteListedFiles(string filesToDelete)
-        {
-            IList<string> files;
-            int counter = 0;
-
-
-            if (string.IsNullOrEmpty(filesToDelete))
-            {
-                throw new ArgumentNullException("filesToDelete");
-            }
-
-            files = CompressorTask.ParseFiles(filesToDelete);
-            if (!files.IsNullOrEmpty())
-            {
-                foreach (string file in files)
-                {
-                    try
-                    {
-                        File.Delete(file);
-                        counter++;
-                    }
-                    catch
-                    {
-                        Log.LogError(string.Format(CultureInfo.InvariantCulture,
-                            "Failed to delete the file [{0}]. Please make sure this file exists and it's not locked, etc.",
-                            file));
-                        throw;
-                    }
-                }
-            }
-
-            return counter;
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private StringBuilder CompressCss()
+        private StringBuilder CompressFiles(ActionType actionType)
         {
-            IList<string> cssFiles;
-            string originalCss;
-            int totalOriginalCssLength = 0;
-            string compressedCss;
-            StringBuilder finalCss = null;
+            string actionDescription;
+            IList<string> fileList = null;
+            string originalContent;
+            int totalOriginalContentLength = 0;
+            string compressedContent = null;
+            StringBuilder finalContent = null;
 
-
-            this.LogMessage("# Found one or more css file arguments. Now parsing ...");
-
-            // Get the list of css files to compress.
-            cssFiles = CompressorTask.ParseFiles(this.CssFiles);
-
-            if (cssFiles != null)
+            switch(actionType)
             {
-                this.LogMessage(string.Format(CultureInfo.InvariantCulture, 
-                    "# {0} css file{1} requested.",
-                    cssFiles.Count,
-                    cssFiles.Count.ToPluralString()));
-                foreach (string file in cssFiles)
+                case ActionType.Css: actionDescription = "css"; break;
+                case ActionType.JavaScript: actionDescription = "JavaScript"; break;
+                default : actionDescription = "Unknown action type"; break;
+            }
+
+            this.LogMessage(string.Format(CultureInfo.InvariantCulture,
+                "# Found one or more {0} file arguments. Now parsing ...",
+                actionDescription));
+
+            // Get the list of files to compress.
+            if (actionType == ActionType.Css)
+            {
+                fileList = CompressorTask.ParseFiles(this.CssFiles);
+            }
+            else if (actionType == ActionType.JavaScript)
+            {
+                fileList = CompressorTask.ParseFiles(this.JavaScriptFiles);
+            }
+
+            if (fileList != null)
+            {
+                this.LogMessage(string.Format(CultureInfo.InvariantCulture,
+                    "# {0} {1} file{1} requested.",
+                    fileList.Count,
+                    actionDescription,
+                    fileList.Count.ToPluralString()));
+
+                foreach (string file in fileList)
                 {
                     this.LogMessage("=> " + file,
                         true);
                 }
 
-                // Now compress each css file.
-                foreach (string file in cssFiles)
+                // Now compress each file.
+                foreach (string file in fileList)
                 {
                     // Load up the file.
                     try
                     {
-                        originalCss = File.ReadAllText(file);
-                        totalOriginalCssLength += originalCss.Length;
+                        originalContent = File.ReadAllText(file);
+                        totalOriginalContentLength += originalContent.Length;
 
-                        if (string.IsNullOrEmpty(originalCss))
+                        if (string.IsNullOrEmpty(originalContent))
                         {
                             Log.LogError(string.Format(CultureInfo.InvariantCulture,
                                 "There is no data in the file [{0}]. Please check that this is the file you want to compress. Lolz :)",
                                 file));
                         }
 
-                        compressedCss = CssCompressor.Compress(originalCss);
-                        if (finalCss == null)
+                        if (actionType == ActionType.Css)
                         {
-                            finalCss = new StringBuilder();
+                            compressedContent = CssCompressor.Compress(originalContent,
+                                0,
+                                this._cssCompressionType);
+                        }
+                        else if (actionType == ActionType.JavaScript)
+                        {
+                            compressedContent = JavaScriptCompressor.Compress(originalContent,
+                                this._loggingType == MsBuild.LoggingType.HardcoreBringItOn);
                         }
 
-                        finalCss.Append(compressedCss);
+                        if (!string.IsNullOrEmpty(compressedContent))
+                        {
+                            if (finalContent == null)
+                            {
+                                finalContent = new StringBuilder();
+                            }
+                            finalContent.Append(compressedContent);
+                        }
                     }
                     catch (Exception exception)
                     {
                         // FFS :( Something bad happened.
                         // The most likely scenario is that the user provided some incorrect path information.
-                        Log.LogError(string.Format(CultureInfo.InvariantCulture, 
+                        Log.LogError(string.Format(CultureInfo.InvariantCulture,
                             "Failed to read in the data for the path/file [{0}]. The most common cause for this is because the path is incorrect or the file name is incorrect ... so please check your path and file names. Until you fix this up, I can't continue ... sowwy.",
                             file));
                         Log.LogErrorFromException(exception,
@@ -163,43 +163,63 @@ namespace Yahoo.Yui.Compressor.MSBuild
                     }
                 }
 
-                this.LogMessage(string.Format(CultureInfo.InvariantCulture, 
+                this.LogMessage(string.Format(CultureInfo.InvariantCulture,
                     "Finished compressing all {0} file{1}.",
-                    cssFiles.Count,
-                    cssFiles.Count.ToPluralString()),
+                    fileList.Count,
+                    fileList.Count.ToPluralString()),
                     true);
-                this.LogMessage(string.Format(CultureInfo.InvariantCulture, 
-                    "Total original css file size: {0}. After compression: {1}. Compressed down to {2}% of original size.",
-                    totalOriginalCssLength,
-                    finalCss.ToString().Length,
-                    100 - ((float)totalOriginalCssLength - (float)finalCss.ToString().Length) / (float)totalOriginalCssLength * 100));
+
+                this.LogMessage(string.Format(CultureInfo.InvariantCulture,
+                    "Total original {0} file size: {1}. After compression: {2}. Compressed down to {3}% of original size.",
+                    actionDescription,
+                    totalOriginalContentLength,
+                    finalContent.ToString().Length,
+                    100 - ((float)totalOriginalContentLength - (float)finalContent.ToString().Length) / (float)totalOriginalContentLength * 100));
+
+                if (actionType == ActionType.Css)
+                {
+                    this.LogMessage(string.Format(CultureInfo.InvariantCulture,
+                        "Css Compression Type: {0}.",
+                        this._cssCompressionType == Yahoo.Yui.Compressor.CssCompressionType.StockYUICompressor ? "Stock YUI compression" :
+                            this._cssCompressionType == Yahoo.Yui.Compressor.CssCompressionType.MichaelAshsRegexEnhancements ? "Micahel Ash's Regex Enhancement compression" :
+                            "Hybrid compresssion (the best compression out of all compression types)"));
+                }
 
             }
 
-            return finalCss;
+            return finalContent;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", 
             "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private bool SaveCompressedCss(string compressedCss)
+        private bool SaveCompressedText(string compressedText,
+            ActionType actionType)
         {
-            if (string.IsNullOrEmpty(compressedCss))
+            string destinationFileName;
+
+
+            if (string.IsNullOrEmpty(compressedText))
             {
-                throw new ArgumentNullException("compressedCss");
+                throw new ArgumentNullException("compressedText");
             }
+
+            destinationFileName = actionType == ActionType.Css ? this.CssOutputFile : this.JavaScriptOutputFile;
 
             try
             {
-                File.WriteAllText(this.CssOutputFile,
-                    compressedCss);
+                File.WriteAllText(destinationFileName,
+                    compressedText);
+                Log.LogMessage(string.Format("Compressed content saved to file [{0}].{1}",
+                    destinationFileName,
+                    System.Environment.NewLine));
             }
             catch (Exception exception)
             {
                 // Most likely cause of this exception would be that the user failed to provide the correct path/file
                 // or the file is read only, unable to be written, etc.. 
                 Log.LogError(string.Format(CultureInfo.InvariantCulture, 
-                    "Failed to save the compressed css into the output file [{0}]. Please check the path/file name and make sure the file isn't magically locked, read-only, etc..",
-                    this.CssOutputFile));
+                    "Failed to save the compressed text into the output file [{0}]. Please check the path/file name and make sure the file isn't magically locked, read-only, etc..",
+                    destinationFileName));
                 Log.LogErrorFromException(exception,
                     false);
 
@@ -209,13 +229,48 @@ namespace Yahoo.Yui.Compressor.MSBuild
             return true;
         }
 
+        private void InitialiseBuildSettings()
+        {
+            if (string.IsNullOrEmpty(this.CssCompressionType))
+            {
+                this.LogMessage("No Compression type defined. Defaulting to 'YuiStockCompression'.");
+                this.CssCompressionType = "YUIStockCompression";
+            }
+
+            switch (this.CssCompressionType)
+            {
+                case "MichaelAshsRegexEnhancements": this._cssCompressionType = Yahoo.Yui.Compressor.CssCompressionType.MichaelAshsRegexEnhancements; 
+                    break;
+                case "HaveMyCakeAndEatIt":
+                case "BestOfBothWorlds":
+                case "Hybrid": this._cssCompressionType = Yahoo.Yui.Compressor.CssCompressionType.Hybrid;
+                    break;
+                default: this._cssCompressionType = Yahoo.Yui.Compressor.CssCompressionType.StockYUICompressor;
+                    break;
+            }
+
+            if (string.IsNullOrEmpty(this.LoggingType))
+            {
+                Log.LogWarning("No logging argument defined. Defaulting to 'ALittleBit'.");
+                this.LoggingType = "ALittleBit";
+            }
+
+            switch (this.LoggingType)
+            {
+                case "None": this._loggingType = MsBuild.LoggingType.None;
+                    break;
+                case "HardcoreBringItOn": this._loggingType = MsBuild.LoggingType.HardcoreBringItOn;
+                    break;
+                default: this._loggingType = MsBuild.LoggingType.ALittleBit;
+                    break;
+            }
+        }
+
         public override bool Execute()
         {
             DateTime startTime;
-            StringBuilder compressedCss;
-            bool saveResult;
-            int counter;
-
+            StringBuilder compressedText;
+            
 
             // Check to make sure we have the bare minimum arguments supplied to the task.
             if (string.IsNullOrEmpty(this.CssFiles) &&
@@ -230,51 +285,48 @@ namespace Yahoo.Yui.Compressor.MSBuild
                 return false;
             }
 
-            this.LogMessage("Starting Css/Javascript compression...");
+            this.InitialiseBuildSettings();
+
+            Log.LogMessage("Starting Css/Javascript compression...");
+            Log.LogMessage(System.Environment.NewLine);
             startTime = DateTime.Now;
 
             if (!string.IsNullOrEmpty(this.CssFiles))
             {
-                compressedCss = this.CompressCss();
-                if (compressedCss == null)
+                compressedText = this.CompressFiles(ActionType.Css);
+                if (compressedText == null)
                 {
                     // Assumption: an error has occured and it has already been logged.
                     return false;
                 }
 
                 // Save this css to the output file.
-                saveResult = this.SaveCompressedCss(compressedCss.ToString());
-                if (!saveResult)
+                if (!this.SaveCompressedText(compressedText.ToString(),
+                    ActionType.Css))
                 {
                     return false;
                 }
-                else if (this.DeleteFiles)
+            }
+
+            if (!string.IsNullOrEmpty(this.JavaScriptFiles))
+            {
+                compressedText = this.CompressFiles(ActionType.JavaScript);
+                if (compressedText == null)
                 {
-                    this.LogMessage("Request to delete files ...");
+                    // Assumption: an error has occured and it has already been logged.
+                    return false;
+                }
 
-                    // Remove the files.
-                    if (!string.IsNullOrEmpty(this.CssFiles))
-                    {
-                        counter = this.DeleteListedFiles(this.CssFiles);
-                        this.LogMessage(string.Format(CultureInfo.InvariantCulture,
-                                "=> Finished deleting {0} Css files.",
-                                counter),
-                            true);
-                    }
-
-                    if (!string.IsNullOrEmpty(this.JavaScriptFiles))
-                    {
-                        counter = this.DeleteListedFiles(this.JavaScriptFiles);
-                        this.LogMessage(string.Format(CultureInfo.InvariantCulture,
-                                "=> Finished deleting {0} Javascript files.",
-                                counter),
-                            true);
-                    }
+                // Save this JavaScript to the output file.
+                if (!this.SaveCompressedText(compressedText.ToString(),
+                    ActionType.JavaScript))
+                {
+                    return false;
                 }
             }
 
-            this.LogMessage("Finished Css/Javascript compression.");
-            this.LogMessage(string.Format(CultureInfo.InvariantCulture, 
+            Log.LogMessage("Finished Css/Javascript compression.");
+            Log.LogMessage(string.Format(CultureInfo.InvariantCulture, 
                 "Total time to execute task: {0}",
                 (DateTime.Now - startTime).ToString()));
 

@@ -2,6 +2,18 @@
 <Dictionary>
     <Words>
         <Recognized>
+            <Word>Ms</Word>
+        </Recognized>
+        <Recognized>
+            <Word>munge</Word>
+        </Recognized>
+        <Recognized>
+            <Word>Munged</Word>
+        </Recognized>
+        <Recognized>
+            <Word>Munging</Word>
+        </Recognized>
+        <Recognized>
             <Word>Yui</Word>
         </Recognized>
     </Words>

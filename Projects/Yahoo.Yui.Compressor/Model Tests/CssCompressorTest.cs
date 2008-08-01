@@ -14,7 +14,7 @@ namespace Yahoo.Yui.Compressor.Tests
         [TestMethod]
         [DeploymentItem("bin\\SampleStylesheet.css")]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CompressWithNoColumnWidthTest()
+        public void CompressYUIStockWithNoColumnWidthTest()
         {
             string css;
             string compressedCss;
@@ -35,7 +35,7 @@ namespace Yahoo.Yui.Compressor.Tests
         [TestMethod]
         [DeploymentItem("bin\\SampleStylesheet.css")]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CompressWithColumnWidthSpecifiedTest()
+        public void CompressYUIStockWithColumnWidthSpecifiedTest()
         {
             string css;
             string compressedCss;
@@ -46,7 +46,54 @@ namespace Yahoo.Yui.Compressor.Tests
 
             // Now compress the css.
             compressedCss = CssCompressor.Compress(css,
-                73);
+                73,
+                CssCompressionType.StockYUICompressor);
+            Assert.IsTrue(!string.IsNullOrEmpty(compressedCss));
+            Assert.IsTrue(css.Length > compressedCss.Length);
+
+            // Expected failure.
+            CssCompressor.Compress(null);
+        }
+
+        [TestMethod]
+        [DeploymentItem("bin\\SampleStylesheet.css")]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CompressMichaelAshsRegexWithNoColumnWidthTest()
+        {
+            string css;
+            string compressedCss;
+
+
+            // First load up some Css.
+            css = File.ReadAllText("SampleStylesheet.css");
+
+            // Now compress the css.
+            compressedCss = CssCompressor.Compress(css,
+                0,
+                CssCompressionType.MichaelAshsRegexEnhancements);
+            Assert.IsTrue(!string.IsNullOrEmpty(compressedCss));
+            Assert.IsTrue(css.Length > compressedCss.Length);
+
+            // Expected failure.
+            CssCompressor.Compress(null);
+        }
+
+        [TestMethod]
+        [DeploymentItem("bin\\SampleStylesheet.css")]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CompressMichaelAshsRegexWithColumnWidthSpecifiedTest()
+        {
+            string css;
+            string compressedCss;
+
+
+            // First load up some Css.
+            css = File.ReadAllText("SampleStylesheet.css");
+
+            // Now compress the css.
+            compressedCss = CssCompressor.Compress(css,
+                73,
+                CssCompressionType.MichaelAshsRegexEnhancements);
             Assert.IsTrue(!string.IsNullOrEmpty(compressedCss));
             Assert.IsTrue(css.Length > compressedCss.Length);
 

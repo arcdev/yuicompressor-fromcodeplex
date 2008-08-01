@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EcmaScript.NET.modified, Version=0.1.1.0, Culture=neutral, PublicKeyToken=7d53ba4f537753a5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\3rd Party Assemblies\EcmaScript.NET.modified.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v3.5">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -43,12 +47,24 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CssCompressionType.cs" />
     <Compile Include="CssCompressor.cs" />
+    <Compile Include="CustomErrorReporter.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="JavaScriptCompressor.cs" />
+    <Compile Include="JavaScriptIdentifier.cs" />
+    <Compile Include="JavaScriptToken.cs" />
+    <Compile Include="MichaelAshsRegexCompressor.cs" />
+    <Compile Include="MsBuild\ActionType.cs" />
     <Compile Include="MsBuild\CompressorTask.cs" />
+    <Compile Include="MsBuild\LoggingType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptOrFunctionScope.cs" />
+    <Compile Include="YUICompressor.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />

@@ -9,231 +9,40 @@ namespace Yahoo.Yui.Compressor
 {
     public static class CssCompressor
     {
-        #region Private Extension Methods
-
-        private static string RemoveCommentBlocks(this string input)
-        {
-            int startIndex = 0;
-            int endIndex = 0;
-            bool iemac = false;
-
-            startIndex = input.IndexOf(@"/*", 
-                startIndex,
-                StringComparison.OrdinalIgnoreCase);
-            while (startIndex >= 0)
-            {
-                endIndex = input.IndexOf(@"*/", 
-                    startIndex + 2,
-                    StringComparison.OrdinalIgnoreCase);
-                if (endIndex >= startIndex + 2)
-                {
-                    if (input[endIndex - 1] == '\\')
-                    {
-                        startIndex = endIndex + 2;
-                        iemac = true;
-                    }
-                    else if (iemac)
-                    {
-                        startIndex = endIndex + 2;
-                        iemac = false;
-                    }
-                    else
-                    {
-                        input = input.RemoveRange(startIndex, endIndex + 2);
-                    }
-                }
-                startIndex = input.IndexOf(@"/*",
-                    startIndex,
-                    StringComparison.OrdinalIgnoreCase);
-            }
-
-            return input;
-        }
-
-        private static string ShortenRgbColors(this string css)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            Regex pattern = new Regex("rgb\\s*\\(\\s*([0-9,\\s]+)\\s*\\)");
-            Match match = pattern.Match(css);
-
-            int index = 0;
-            while (match.Success)
-            {
-                int value; 
-                string[] colors = match.Groups[1].Value.Split(',');
-                StringBuilder hexcolor = new StringBuilder("#");
-                
-
-                foreach (string color in colors)
-                {
-                    if (!Int32.TryParse(color,
-                        out value))
-                    {
-                        value = 0;
-                    }
-
-                    if (value < 16)
-                    {
-                        hexcolor.Append("0");
-                    }
-
-                    hexcolor.Append(value.ToHexString());
-                }
-
-                index = match.AppendReplacement(stringBuilder, 
-                    css,
-                    hexcolor.ToString(), 
-                    index);
-                match = match.NextMatch();
-            }
-
-            stringBuilder.AppendTail(css,
-                index);
-
-            return stringBuilder.ToString();
-        }
-
-        private static string ShortenHexColors(this string css)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            Regex pattern = new Regex("([^\"'=\\s])(\\s*)#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])");
-            Match match = pattern.Match(css);
-
-            int index = 0;
-            while (match.Success)
-            {
-                if (match.Groups[3].Value.EqualsIgnoreCase(match.Groups[4].Value) &&
-                    match.Groups[5].Value.EqualsIgnoreCase(match.Groups[6].Value) &&
-                    match.Groups[7].Value.EqualsIgnoreCase(match.Groups[8].Value))
-                {
-                    var replacement = String.Concat(match.Groups[1].Value, 
-                        match.Groups[2].Value, 
-                        "#", match.Groups[3].Value, 
-                        match.Groups[5].Value,
-                        match.Groups[7].Value);
-                    index = match.AppendReplacement(stringBuilder, 
-                        css, 
-                        replacement, 
-                        index);
-                }
-                else
-                {
-                    index = match.AppendReplacement(stringBuilder, 
-                        css,
-                        match.Value, 
-                        index);
-                }
-
-                match = match.NextMatch();
-            }
-
-            stringBuilder.AppendTail(css, 
-                index);
-
-            return stringBuilder.ToString();
-        }
-
-        private static string RemovePrecedingSpaces(this string css)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            Regex pattern = new Regex("(^|\\})(([^\\{:])+:)+([^\\{]*\\{)");
-            Match match = pattern.Match(css);
-
-            int index = 0;
-            while (match.Success)
-            {
-                string s = match.Value;
-                s = s.RegexReplace(":", "___PSEUDOCLASSCOLON___");
-
-                index = match.AppendReplacement(stringBuilder, 
-                    css, 
-                    s, 
-                    index);
-                match = match.NextMatch();
-            }
-            stringBuilder.AppendTail(css, 
-                index);
-
-            string result = stringBuilder.ToString();
-            result = result.RegexReplace("\\s+([!{};:>+\\(\\)\\],])", "$1");
-            result = result.RegexReplace("___PSEUDOCLASSCOLON___", ":");
-
-            return result;
-        }
-
-        private static string BreakLines(this string css, 
-            int columnWidth)
-        {
-            int i = 0;
-            int start = 0;
-
-            StringBuilder stringBuilder = new StringBuilder(css);
-            while (i < stringBuilder.Length)
-            {
-                char c = stringBuilder[i++];
-                if (c == '}' && 
-                    i - start > columnWidth)
-                {
-                    stringBuilder.Insert(i, '\n');
-                    start = i;
-                }
-            }
-
-            return stringBuilder.ToString();
-        }
-
-        #endregion
-
-        #region Public Methods
-
         public static string Compress(string css)
         {
             return CssCompressor.Compress(css,
-                0);
+                0,
+                CssCompressionType.StockYUICompressor);
         }
 
         public static string Compress(string css,
-            int columnWidth)
+            int columnWidth,
+            CssCompressionType cssCompressionType)
         {
-            if (string.IsNullOrEmpty(css))
+            string compressedCss = null;
+
+
+            switch (cssCompressionType)
             {
-                throw new ArgumentNullException("css");
+                case CssCompressionType.StockYUICompressor: compressedCss = YUICompressor.Compress(css,
+                    columnWidth);
+                    break;
+                case CssCompressionType.MichaelAshsRegexEnhancements: compressedCss = MichaelAshsRegexCompressor.Compress(css,
+                    columnWidth);
+                    break;
+                case CssCompressionType.Hybrid :
+                    // We need to try both types. We get the keep size.
+                    string yuiCompressedCss = YUICompressor.Compress(css,
+                        columnWidth);
+                    string michaelAshsRegexEnhancementsCompressedCss = MichaelAshsRegexCompressor.Compress(css,
+                        columnWidth);
+                    compressedCss = yuiCompressedCss.Length < michaelAshsRegexEnhancementsCompressedCss.Length ? yuiCompressedCss : michaelAshsRegexEnhancementsCompressedCss;
+                    break;
+                default: throw new InvalidOperationException("Unhandled CssCompressionType found when trying to determine which compression method to use.");
             }
 
-            // Safety check the other arguments.
-            if (columnWidth < 0)
-            {
-                columnWidth = 0;
-            }
-
-            // Now compress the css!
-            css = css.RemoveCommentBlocks();
-            css = css.RegexReplace("\\s+", " ");
-            css = css.RegexReplace("\"\\\\\"}\\\\\"\"", "___PSEUDOCLASSBMH___");
-            css = css.RemovePrecedingSpaces();
-            css = css.RegexReplace("([!{}:;>+\\(\\[,])\\s+", "$1");
-            css = css.RegexReplace("([^;\\}])}", "$1;}");
-            css = css.RegexReplace("([\\s:])(0)(px|em|%|in|cm|mm|pc|pt|ex)", "$1$2");
-            css = css.RegexReplace(":0 0 0 0;", ":0;");
-            css = css.RegexReplace(":0 0 0;", ":0;");
-            css = css.RegexReplace(":0 0;", ":0;");
-            css = css.RegexReplace("background-position:0;", "background-position:0 0;");
-            css = css.RegexReplace("(:|\\s)0+\\.(\\d+)", "$1.$2");
-            css = css.ShortenRgbColors();
-            css = css.ShortenHexColors();
-            css = css.RegexReplace("[^\\}]+\\{;\\}", "");
-
-            if (columnWidth > 0)
-            {
-                css = css.BreakLines(columnWidth);
-            }
-
-            css = css.RegexReplace("___PSEUDOCLASSBMH___", "\"\\\\\"}\\\\\"\"");
-            css = css.Trim();
-
-            return css;
+            return compressedCss;
         }
-
-        #endregion
     }
 }
