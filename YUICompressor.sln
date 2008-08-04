@@ -6,12 +6,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Solution Items\BSD License.txt = Solution Items\BSD License.txt
 		Solution Items\EcmaScript.NET.modified..zip = Solution Items\EcmaScript.NET.modified..zip
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-		Solution Items\MsBuildSample.xml = Solution Items\MsBuildSample.xml
-		Solution Items\SampleJavaScript1.js = Solution Items\SampleJavaScript1.js
-		Solution Items\SampleJavaScript2.js = Solution Items\SampleJavaScript2.js
-		Solution Items\StylesheetSample1.css = Solution Items\StylesheetSample1.css
-		Solution Items\StylesheetSample2.css = Solution Items\StylesheetSample2.css
-		Solution Items\StylesheetSample3.css = Solution Items\StylesheetSample3.css
 		YUICompressor.vsmdi = YUICompressor.vsmdi
 	EndProjectSection
 EndProject
@@ -73,6 +67,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "com.yahoo.platform.yui.comp
 		Solution Items\Yahoo! YUICompressor Java code\v2.3.6\com\yahoo\platform\yui\compressor\YUICompressor.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.3.6\com\yahoo\platform\yui\compressor\YUICompressor.java.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsBuild Example", "MsBuild Example", "{3A36C8E2-F5AD-4BB8-B0B0-4268F7AA11B0}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\MsBuild Example\MsBuildSample.xml = Solution Items\MsBuild Example\MsBuildSample.xml
+		Solution Items\MsBuild Example\SampleJavaScript1.js = Solution Items\MsBuild Example\SampleJavaScript1.js
+		Solution Items\MsBuild Example\SampleJavaScript2.js = Solution Items\MsBuild Example\SampleJavaScript2.js
+		Solution Items\MsBuild Example\StylesheetSample1.css = Solution Items\MsBuild Example\StylesheetSample1.css
+		Solution Items\MsBuild Example\StylesheetSample2.css = Solution Items\MsBuild Example\StylesheetSample2.css
+		Solution Items\MsBuild Example\StylesheetSample3.css = Solution Items\MsBuild Example\StylesheetSample3.css
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 3
@@ -106,6 +110,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D063AA82-CD35-40A7-BA2D-B26C4E291C59} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
+		{3A36C8E2-F5AD-4BB8-B0B0-4268F7AA11B0} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
 		{AFDF50F0-286B-4490-9EBD-007561864738} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{D263F886-F883-45C6-B79D-2136E0CE2195} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{197F7032-A560-44C7-969D-7D610B96B9AB} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}

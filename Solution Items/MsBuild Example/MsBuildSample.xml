@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/MsBuild/2003">
+    <UsingTask
+        TaskName="CompressorTask"
+        AssemblyFile="..\Projects\Yahoo.Yui.Compressor\Model\bin\Debug\Yahoo.Yui.Compressor.dll" />
+    <Target Name="MyTaskTarget">
+        <!--
+            CssCompressionType: YuiStockCompression | MichaelAshsRegexEnhancements | HaveMyCakeAndEatIt or BestOfBothWorlds or Hybrid;
+            LoggingType: None | ALittleBit | HardcoreBringItOn;  Hardcore also lists javascript verbose warnings, if there are any (and there usually is :P ).
+        -->
+        <CompressorTask
+            CssFiles="StylesheetSample1.css, StylesheetSample2.css, StylesheetSample3.css"
+            CssOutputFile="SylesSheetFinal.css"
+            CssCompressionType="YuiStockCompression"
+            JavaScriptFiles="Common\Common2.js"
+            JavaScriptOutputFile="CompressedJavaScript.js"
+            LoggingType="ALittleBit" />
+        </Target>
+</Project>
