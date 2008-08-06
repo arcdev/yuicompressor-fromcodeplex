@@ -13,7 +13,7 @@ namespace Yahoo.Yui.Compressor
         {
             return CssCompressor.Compress(css,
                 0,
-                CssCompressionType.StockYUICompressor);
+                CssCompressionType.StockYuiCompressor);
         }
 
         public static string Compress(string css,
@@ -25,17 +25,17 @@ namespace Yahoo.Yui.Compressor
 
             switch (cssCompressionType)
             {
-                case CssCompressionType.StockYUICompressor: compressedCss = YUICompressor.Compress(css,
+                case CssCompressionType.StockYuiCompressor: compressedCss = YUICompressor.Compress(css,
                     columnWidth);
                     break;
-                case CssCompressionType.MichaelAshsRegexEnhancements: compressedCss = MichaelAshsRegexCompressor.Compress(css,
+                case CssCompressionType.MichaelAshRegexEnhancements: compressedCss = MichaelAshRegexCompressor.Compress(css,
                     columnWidth);
                     break;
                 case CssCompressionType.Hybrid :
                     // We need to try both types. We get the keep size.
                     string yuiCompressedCss = YUICompressor.Compress(css,
                         columnWidth);
-                    string michaelAshsRegexEnhancementsCompressedCss = MichaelAshsRegexCompressor.Compress(css,
+                    string michaelAshsRegexEnhancementsCompressedCss = MichaelAshRegexCompressor.Compress(css,
                         columnWidth);
                     compressedCss = yuiCompressedCss.Length < michaelAshsRegexEnhancementsCompressedCss.Length ? yuiCompressedCss : michaelAshsRegexEnhancementsCompressedCss;
                     break;

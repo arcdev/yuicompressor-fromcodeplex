@@ -47,7 +47,7 @@ namespace Yahoo.Yui.Compressor.Tests
             // Now compress the css.
             compressedCss = CssCompressor.Compress(css,
                 73,
-                CssCompressionType.StockYUICompressor);
+                CssCompressionType.StockYuiCompressor);
             Assert.IsTrue(!string.IsNullOrEmpty(compressedCss));
             Assert.IsTrue(css.Length > compressedCss.Length);
 
@@ -70,7 +70,7 @@ namespace Yahoo.Yui.Compressor.Tests
             // Now compress the css.
             compressedCss = CssCompressor.Compress(css,
                 0,
-                CssCompressionType.MichaelAshsRegexEnhancements);
+                CssCompressionType.MichaelAshRegexEnhancements);
             Assert.IsTrue(!string.IsNullOrEmpty(compressedCss));
             Assert.IsTrue(css.Length > compressedCss.Length);
 
@@ -93,7 +93,7 @@ namespace Yahoo.Yui.Compressor.Tests
             // Now compress the css.
             compressedCss = CssCompressor.Compress(css,
                 73,
-                CssCompressionType.MichaelAshsRegexEnhancements);
+                CssCompressionType.MichaelAshRegexEnhancements);
             Assert.IsTrue(!string.IsNullOrEmpty(compressedCss));
             Assert.IsTrue(css.Length > compressedCss.Length);
 

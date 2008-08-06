@@ -280,7 +280,7 @@ namespace Yahoo.Yui.Compressor
                         literals.Add(Token.IF, "if");
                         literals.Add(Token.ELSE, "else");
                         literals.Add(Token.FOR, "for");
-                        literals.Add(Token.IN, "in ");
+                        literals.Add(Token.IN, " in ");
                         literals.Add(Token.WITH, "with");
                         literals.Add(Token.WHILE, "while");
                         literals.Add(Token.DO, "do");
@@ -894,7 +894,7 @@ namespace Yahoo.Yui.Compressor
             {
                 if (showDebugString)
                 {
-                    message = message + "\n" + this.GetDebugString(10);
+                    message = message + Environment.NewLine + this.GetDebugString(10);
                 }
 
                 this._logger.Warning(message, null, -1, null, -1);
@@ -1485,7 +1485,7 @@ namespace Yahoo.Yui.Compressor
                                 if (currentScope != this._globalScope &&
                                     identifier.RefCount == 0)
                                 {
-                                    this.Warn("The symbol " + symbol + " is declared but is apparently never used.\nThis code can probably be written in a more compact way.", true);
+                                    this.Warn("The symbol " + symbol + " is declared but is apparently never used." + Environment.NewLine + "This code can probably be written in a more compact way.", true);
                                 }
                             }
                             else
@@ -1557,7 +1557,7 @@ namespace Yahoo.Yui.Compressor
                             if (currentScope != this._globalScope &&
                                 identifier.RefCount == 0)
                             {
-                                this.Warn("The symbol " + symbol + " is declared but is apparently never used.\nThis code can probably be written in a more compact way.", true);
+                                this.Warn("The symbol " + symbol + " is declared but is apparently never used." + Environment.NewLine + "This code can probably be written in a more compact way.", true);
                             }
 
                             token = this.ConsumeToken();
@@ -1724,7 +1724,7 @@ namespace Yahoo.Yui.Compressor
                             // Some source control tools don't like it when files containing lines longer
                             // than, say 8000 characters, are checked in. The linebreak option is used in
                             // that case to split long lines after a specific column.
-                            result.Append('\n');
+                            result.Append(Environment.NewLine);
                             linestartpos = result.Length;
                         }
                         break;
@@ -1733,12 +1733,13 @@ namespace Yahoo.Yui.Compressor
                         if (result.Length > 0 &&
                             result[result.Length - 1] != '\n')
                         {
-                            result.Append("\n");
+                            result.Append(Environment.NewLine);
                         }
 
                         result.Append("/*");
                         result.Append(symbol);
-                        result.Append("*/\n");
+                        result.Append("*/");
+                        result.Append(Environment.NewLine);
                         break;
 
                     default:

@@ -58,7 +58,7 @@
     <Compile Include="JavaScriptCompressor.cs" />
     <Compile Include="JavaScriptIdentifier.cs" />
     <Compile Include="JavaScriptToken.cs" />
-    <Compile Include="MichaelAshsRegexCompressor.cs" />
+    <Compile Include="MichaelAshRegexCompressor.cs" />
     <Compile Include="MsBuild\ActionType.cs" />
     <Compile Include="MsBuild\CompressorTask.cs" />
     <Compile Include="MsBuild\LoggingType.cs" />

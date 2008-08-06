@@ -37,6 +37,9 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
             Assert.IsTrue(javascript.Length > compressedJavascript.Length);
 
+            javascript = "for(var x in _2f[i]){};";
+            compressedJavascript = JavaScriptCompressor.Compress(javascript);
+
             // Expected failure.
             JavaScriptCompressor.Compress(null);
         }

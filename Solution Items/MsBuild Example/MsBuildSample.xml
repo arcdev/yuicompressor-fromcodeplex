@@ -2,17 +2,27 @@
 <Project xmlns="http://schemas.microsoft.com/developer/MsBuild/2003">
     <UsingTask
         TaskName="CompressorTask"
-        AssemblyFile="..\Projects\Yahoo.Yui.Compressor\Model\bin\Debug\Yahoo.Yui.Compressor.dll" />
+        AssemblyFile="..\..\Projects\Yahoo.Yui.Compressor\Model\bin\Debug\Yahoo.Yui.Compressor.dll" />
     <Target Name="MyTaskTarget">
         <!--
-            CssCompressionType: YuiStockCompression | MichaelAshsRegexEnhancements | HaveMyCakeAndEatIt or BestOfBothWorlds or Hybrid;
+            CssFiles/JavaScriptFiles data format: can be delimeted by a space, comma or semicolon. having an extra space after the delimeter is optional also.
+                      Valid examples: 
+                         o) StylesheetSample1.css, StylesheetSample2.css
+                         o) StylesheetSample1.css,StylesheetSample2.css
+                         o) SampleJavaScript1.js;SampleJavaScript2.js
+                         o) SampleJavaScript1.js     SampleJavaScript2.js
+            DeleteCssFiles: Yes | Yeah | Yep | True | FoSho | Fo Sho. Default is False. Anything else is False.
+            CssCompressionType: YuiStockCompression | MichaelAshsRegexEnhancements | HaveMyCakeAndEatIt or BestOfBothWorlds or Hybrid; Default is YuiStockCompression.
+            DeleteJavaScriptFiles: refer to DeleteCssFiles, above.
             LoggingType: None | ALittleBit | HardcoreBringItOn;  Hardcore also lists javascript verbose warnings, if there are any (and there usually is :P ).
         -->
         <CompressorTask
             CssFiles="StylesheetSample1.css, StylesheetSample2.css, StylesheetSample3.css"
+            DeleteCssFiles="fo sho"
             CssOutputFile="SylesSheetFinal.css"
             CssCompressionType="YuiStockCompression"
-            JavaScriptFiles="Common\Common2.js"
+            JavaScriptFiles="SampleJavaScript1.js;SampleJavaScript2.js"
+            DeleteJavaScriptFiles="false"
             JavaScriptOutputFile="CompressedJavaScript.js"
             LoggingType="ALittleBit" />
         </Target>

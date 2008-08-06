@@ -4,8 +4,8 @@ namespace Yahoo.Yui.Compressor
 {
     public enum CssCompressionType
     {
-        StockYUICompressor,
-        MichaelAshsRegexEnhancements,
+        StockYuiCompressor,
+        MichaelAshRegexEnhancements,
         Hybrid
     }
 }

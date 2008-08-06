@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Yahoo.Yui.Compressor
 {
-    public class MichaelAshsRegexCompressor
+    public class MichaelAshRegexCompressor
     {
         private static Hashtable _shortColorNames;
         private static Hashtable _shortHexColors;
@@ -139,7 +139,7 @@ namespace Yahoo.Yui.Compressor
                 char c = sb[i++];
                 if (c == '}' && i - start > columnWidth)
                 {
-                    sb.Insert(i, '\n');
+                    sb.Insert(i, Environment.NewLine);
                     start = i;
                 }
             }
@@ -160,9 +160,9 @@ namespace Yahoo.Yui.Compressor
         {
             // This function replace hex color values named colors if the name is shorter than the hex code
             string returnValue = m.Value;
-            if (MichaelAshsRegexCompressor._shortColorNames.ContainsKey(m.Groups["hex"].Value))
+            if (MichaelAshRegexCompressor._shortColorNames.ContainsKey(m.Groups["hex"].Value))
             {
-                returnValue = MichaelAshsRegexCompressor._shortColorNames[m.Groups["hex"].Value].ToString();
+                returnValue = MichaelAshRegexCompressor._shortColorNames[m.Groups["hex"].Value].ToString();
             }
             return returnValue;
         }
@@ -170,7 +170,7 @@ namespace Yahoo.Yui.Compressor
         private static string ShortColorHexMatchHandler(Match m)
         {
             //This function replaces named values with there shorter hex equivalent
-            return MichaelAshsRegexCompressor._shortHexColors[m.Value.ToString().ToLower()].ToString();
+            return MichaelAshRegexCompressor._shortHexColors[m.Value.ToString().ToLower()].ToString();
         }
 
         private static void CreateHashTable()
@@ -179,11 +179,11 @@ namespace Yahoo.Yui.Compressor
             Hashtable shortHexColors;
 
 
-            if (MichaelAshsRegexCompressor._shortColorNames == null)
+            if (MichaelAshRegexCompressor._shortColorNames == null)
             {
-                lock (MichaelAshsRegexCompressor._syncObject)
+                lock (MichaelAshRegexCompressor._syncObject)
                 {
-                    if (MichaelAshsRegexCompressor._shortColorNames == null)
+                    if (MichaelAshRegexCompressor._shortColorNames == null)
                     {
                         shortColorNames = new Hashtable();
 
@@ -219,16 +219,16 @@ namespace Yahoo.Yui.Compressor
                         shortColorNames.Add("EE82EE".ToLower(), "Violet".ToLower());
                         shortColorNames.Add("F5DEB3".ToLower(), "Wheat".ToLower());
 
-                        MichaelAshsRegexCompressor._shortColorNames = shortColorNames;
+                        MichaelAshRegexCompressor._shortColorNames = shortColorNames;
                     }
                 }
             }
 
-            if (MichaelAshsRegexCompressor._shortHexColors == null)
+            if (MichaelAshRegexCompressor._shortHexColors == null)
             {
-                lock (MichaelAshsRegexCompressor._syncObject)
+                lock (MichaelAshRegexCompressor._syncObject)
                 {
-                    if (MichaelAshsRegexCompressor._shortHexColors == null)
+                    if (MichaelAshRegexCompressor._shortHexColors == null)
                     {
                         shortHexColors = new Hashtable();
 
@@ -241,7 +241,7 @@ namespace Yahoo.Yui.Compressor
                         shortHexColors.Add("white", "#fff");
                         shortHexColors.Add("yellow", "#ff0");
 
-                        MichaelAshsRegexCompressor._shortHexColors = shortHexColors;
+                        MichaelAshRegexCompressor._shortHexColors = shortHexColors;
                     }
                 }
             }

@@ -16,6 +16,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
         private CssCompressionType _cssCompressionType;
         private LoggingType _loggingType;
+        private bool _deleteCssFiles;
+        private bool _deleteJavaScriptFiles;
 
         #endregion
 
@@ -23,14 +25,93 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
         public string CssCompressionType { get; set; }
         public string CssFiles { get; set; }
+        public string DeleteCssFiles { get; set; }
         public string CssOutputFile { get; set; }
         public string JavaScriptFiles { get; set; }
+        public string DeleteJavaScriptFiles { get; set; }
         public string JavaScriptOutputFile { get; set; }
         public string LoggingType { get; set; }
-
+        
         #endregion
 
         #region Methods
+
+        private void InitialiseBuildSettings()
+        {
+            if (string.IsNullOrEmpty(this.CssCompressionType))
+            {
+                this.LogMessage("No Compression type defined. Defaulting to 'YuiStockCompression'.");
+                this.CssCompressionType = "YUIStockCompression";
+            }
+
+            switch (this.CssCompressionType)
+            {
+                case "MichaelAshsRegexEnhancements": this._cssCompressionType = Yahoo.Yui.Compressor.CssCompressionType.MichaelAshRegexEnhancements;
+                    break;
+                case "HaveMyCakeAndEatIt":
+                case "BestOfBothWorlds":
+                case "Hybrid": this._cssCompressionType = Yahoo.Yui.Compressor.CssCompressionType.Hybrid;
+                    break;
+                default: this._cssCompressionType = Yahoo.Yui.Compressor.CssCompressionType.StockYuiCompressor;
+                    break;
+            }
+
+            if (string.IsNullOrEmpty(this.LoggingType))
+            {
+                Log.LogWarning("No logging argument defined. Defaulting to 'ALittleBit'.");
+                this.LoggingType = "ALittleBit";
+            }
+
+            switch (this.LoggingType)
+            {
+                case "None": this._loggingType = MsBuild.LoggingType.None;
+                    break;
+                case "HardcoreBringItOn": this._loggingType = MsBuild.LoggingType.HardcoreBringItOn;
+                    break;
+                default: this._loggingType = MsBuild.LoggingType.ALittleBit;
+                    break;
+            }
+
+            // Optional property.
+            if (!string.IsNullOrEmpty(this.DeleteCssFiles))
+            {
+                switch (this.DeleteCssFiles.ToUpperInvariant())
+                {
+                    case "YES":
+                    case "Y":
+                    case "YEP":
+                    case "TRUE":
+                    case "FOSHO":
+                    case "FO SHO":
+                        this._deleteCssFiles = true; break;
+                    default: this._deleteCssFiles = false; break;
+                }
+            }
+            else
+            {
+                this._deleteCssFiles = false;
+            }
+
+            // Optional property.
+            if (!string.IsNullOrEmpty(this.DeleteJavaScriptFiles))
+            {
+                switch (this.DeleteJavaScriptFiles.ToUpperInvariant())
+                {
+                    case "YES":
+                    case "Y":
+                    case "YEP":
+                    case "TRUE":
+                    case "FOSHO":
+                    case "FO SHO":
+                        this._deleteJavaScriptFiles = true; break;
+                    default: this._deleteJavaScriptFiles = false; break;
+                }
+            }
+            else
+            {
+                this._deleteCssFiles = false;
+            }
+        }
 
         private static IList<string> ParseFiles(string filesToParse)
         {
@@ -42,7 +123,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
                 throw new ArgumentNullException("filesToParse");
             }
 
-            fileList = filesToParse.Split(new string[] { " ", ", ", "; " },
+            fileList = filesToParse.Split(new string[] { " ", ",", ";" },
                 StringSplitOptions.RemoveEmptyEntries).ToList();
 
             return fileList == null ||
@@ -161,6 +242,26 @@ namespace Yahoo.Yui.Compressor.MsBuild
                         Log.LogErrorFromException(exception,
                             false);
                     }
+
+                    // Try and remove this file, if the user requests to do this.
+                    try
+                    {
+                        if ((actionType == ActionType.Css &&
+                            this._deleteCssFiles) ||
+                            (actionType == ActionType.JavaScript &&
+                            this._deleteJavaScriptFiles))
+                        {
+                            File.Delete(file);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        Log.LogError(string.Format(CultureInfo.InvariantCulture,
+                            "Failed to delete the path/file [{0}]. It's possible the file is locked?",
+                            file));
+                        Log.LogErrorFromException(exception,
+                            false);
+                    }
                 }
 
                 this.LogMessage(string.Format(CultureInfo.InvariantCulture,
@@ -180,8 +281,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
                 {
                     this.LogMessage(string.Format(CultureInfo.InvariantCulture,
                         "Css Compression Type: {0}.",
-                        this._cssCompressionType == Yahoo.Yui.Compressor.CssCompressionType.StockYUICompressor ? "Stock YUI compression" :
-                            this._cssCompressionType == Yahoo.Yui.Compressor.CssCompressionType.MichaelAshsRegexEnhancements ? "Micahel Ash's Regex Enhancement compression" :
+                        this._cssCompressionType == Yahoo.Yui.Compressor.CssCompressionType.StockYuiCompressor ? "Stock YUI compression" :
+                            this._cssCompressionType == Yahoo.Yui.Compressor.CssCompressionType.MichaelAshRegexEnhancements ? "Micahel Ash's Regex Enhancement compression" :
                             "Hybrid compresssion (the best compression out of all compression types)"));
                 }
 
@@ -209,7 +310,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
             {
                 File.WriteAllText(destinationFileName,
                     compressedText);
-                Log.LogMessage(string.Format("Compressed content saved to file [{0}].{1}",
+                Log.LogMessage(string.Format(CultureInfo.InvariantCulture,
+                    "Compressed content saved to file [{0}].{1}",
                     destinationFileName,
                     System.Environment.NewLine));
             }
@@ -227,43 +329,6 @@ namespace Yahoo.Yui.Compressor.MsBuild
             }
 
             return true;
-        }
-
-        private void InitialiseBuildSettings()
-        {
-            if (string.IsNullOrEmpty(this.CssCompressionType))
-            {
-                this.LogMessage("No Compression type defined. Defaulting to 'YuiStockCompression'.");
-                this.CssCompressionType = "YUIStockCompression";
-            }
-
-            switch (this.CssCompressionType)
-            {
-                case "MichaelAshsRegexEnhancements": this._cssCompressionType = Yahoo.Yui.Compressor.CssCompressionType.MichaelAshsRegexEnhancements; 
-                    break;
-                case "HaveMyCakeAndEatIt":
-                case "BestOfBothWorlds":
-                case "Hybrid": this._cssCompressionType = Yahoo.Yui.Compressor.CssCompressionType.Hybrid;
-                    break;
-                default: this._cssCompressionType = Yahoo.Yui.Compressor.CssCompressionType.StockYUICompressor;
-                    break;
-            }
-
-            if (string.IsNullOrEmpty(this.LoggingType))
-            {
-                Log.LogWarning("No logging argument defined. Defaulting to 'ALittleBit'.");
-                this.LoggingType = "ALittleBit";
-            }
-
-            switch (this.LoggingType)
-            {
-                case "None": this._loggingType = MsBuild.LoggingType.None;
-                    break;
-                case "HardcoreBringItOn": this._loggingType = MsBuild.LoggingType.HardcoreBringItOn;
-                    break;
-                default: this._loggingType = MsBuild.LoggingType.ALittleBit;
-                    break;
-            }
         }
 
         public override bool Execute()

@@ -16,5 +16,8 @@
         <Recognized>
             <Word>Yui</Word>
         </Recognized>
+        <Recognized>
+            <Word>YUICompressor</Word>
+        </Recognized>
     </Words>
 </Dictionary>
