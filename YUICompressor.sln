@@ -72,9 +72,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsBuild Example", "MsBuild 
 		Solution Items\MsBuild Example\MsBuildSample.xml = Solution Items\MsBuild Example\MsBuildSample.xml
 		Solution Items\MsBuild Example\SampleJavaScript1.js = Solution Items\MsBuild Example\SampleJavaScript1.js
 		Solution Items\MsBuild Example\SampleJavaScript2.js = Solution Items\MsBuild Example\SampleJavaScript2.js
+		Solution Items\MsBuild Example\SampleJavaScript3.js = Solution Items\MsBuild Example\SampleJavaScript3.js
 		Solution Items\MsBuild Example\StylesheetSample1.css = Solution Items\MsBuild Example\StylesheetSample1.css
 		Solution Items\MsBuild Example\StylesheetSample2.css = Solution Items\MsBuild Example\StylesheetSample2.css
 		Solution Items\MsBuild Example\StylesheetSample3.css = Solution Items\MsBuild Example\StylesheetSample3.css
+		Solution Items\MsBuild Example\StyleSheetSample4.css = Solution Items\MsBuild Example\StyleSheetSample4.css
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web Deployment Project Example", "Web Deployment Project Example", "{5F3C3ACA-787D-454F-A6CA-8AACB75B56D9}"

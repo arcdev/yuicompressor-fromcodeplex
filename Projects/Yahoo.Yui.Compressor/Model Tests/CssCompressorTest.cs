@@ -12,7 +12,7 @@ namespace Yahoo.Yui.Compressor.Tests
     public class CssCompressorTest
     {
         [TestMethod]
-        [DeploymentItem("bin\\SampleStylesheet.css")]
+        [DeploymentItem("bin\\SampleStylesheet1.css")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CompressYUIStockWithNoColumnWidthTest()
         {
@@ -21,7 +21,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
 
             // First load up some Css.
-            css = File.ReadAllText("SampleStylesheet.css");
+            css = File.ReadAllText("SampleStylesheet1.css");
 
             // Now compress the css.
             compressedCss = CssCompressor.Compress(css);
@@ -33,7 +33,7 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem("bin\\SampleStylesheet.css")]
+        [DeploymentItem("bin\\SampleStylesheet1.css")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CompressYUIStockWithColumnWidthSpecifiedTest()
         {
@@ -42,7 +42,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
 
             // First load up some Css.
-            css = File.ReadAllText("SampleStylesheet.css");
+            css = File.ReadAllText("SampleStylesheet1.css");
 
             // Now compress the css.
             compressedCss = CssCompressor.Compress(css,
@@ -56,7 +56,23 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem("bin\\SampleStylesheet.css")]
+        [DeploymentItem("bin\\SampleStylesheet2.css")]
+        public void CompressYUIStockWithNoCssContent()
+        {
+            string css;
+            string compressedCss;
+
+
+            // First load up some Css.
+            css = File.ReadAllText("SampleStylesheet2.css");
+
+            // Now compress the css - result should be empty.
+            compressedCss = CssCompressor.Compress(css);
+            Assert.IsTrue(string.IsNullOrEmpty(compressedCss));
+        }
+
+        [TestMethod]
+        [DeploymentItem("bin\\SampleStylesheet1.css")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CompressMichaelAshsRegexWithNoColumnWidthTest()
         {
@@ -65,7 +81,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
 
             // First load up some Css.
-            css = File.ReadAllText("SampleStylesheet.css");
+            css = File.ReadAllText("SampleStylesheet1.css");
 
             // Now compress the css.
             compressedCss = CssCompressor.Compress(css,
@@ -79,7 +95,7 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem("bin\\SampleStylesheet.css")]
+        [DeploymentItem("bin\\SampleStylesheet1.css")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CompressMichaelAshsRegexWithColumnWidthSpecifiedTest()
         {
@@ -88,7 +104,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
 
             // First load up some Css.
-            css = File.ReadAllText("SampleStylesheet.css");
+            css = File.ReadAllText("SampleStylesheet1.css");
 
             // Now compress the css.
             compressedCss = CssCompressor.Compress(css,

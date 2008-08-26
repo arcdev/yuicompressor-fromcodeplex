@@ -45,7 +45,7 @@ namespace Yahoo.Yui.Compressor
         private ArrayList GetUsedSymbols()
         {
             ArrayList result = new ArrayList();
-            foreach (JavaScriptIdentifier identifier in this.Identifiers)
+            foreach (JavaScriptIdentifier identifier in this.Identifiers.Values)
             {
                 string mungedValue = identifier.MungedValue;
                 if (string.IsNullOrEmpty(mungedValue))
@@ -105,18 +105,18 @@ namespace Yahoo.Yui.Compressor
                 ArrayList freeSymbols = new ArrayList();
 
                 freeSymbols.AddRange(JavaScriptCompressor.Ones);
-                foreach (JavaScriptIdentifier identifier in this.GetAllUsedSymbols())
+                foreach (string symbol in this.GetAllUsedSymbols())
                 {
-                    freeSymbols.Remove(identifier);
+                    freeSymbols.Remove(symbol);
                 }
 
                 if (freeSymbols.Count == 0)
                 {
                     pickFromSet = 2;
                     freeSymbols.AddRange(JavaScriptCompressor.Twos);
-                    foreach (JavaScriptIdentifier identifier in this.GetAllUsedSymbols())
+                    foreach (string symbol in this.GetAllUsedSymbols())
                     {
-                        freeSymbols.Remove(identifier);
+                        freeSymbols.Remove(symbol);
                     }
                 }
 
@@ -124,9 +124,9 @@ namespace Yahoo.Yui.Compressor
                 {
                     pickFromSet = 3;
                     freeSymbols.AddRange(JavaScriptCompressor.Threes);
-                    foreach (JavaScriptIdentifier identifier in this.GetAllUsedSymbols())
+                    foreach (string symbol in this.GetAllUsedSymbols())
                     {
-                        freeSymbols.Remove(identifier);
+                        freeSymbols.Remove(symbol);
                     }
                 }
 
@@ -135,7 +135,7 @@ namespace Yahoo.Yui.Compressor
                     throw new InvalidOperationException("The YUI Compressor ran out of symbols. Aborting...");
                 }
 
-                foreach (JavaScriptIdentifier identifier in this.Identifiers)
+                foreach (JavaScriptIdentifier identifier in this.Identifiers.Values)
                 {
                     if (freeSymbols.Count == 0)
                     {
@@ -156,9 +156,9 @@ namespace Yahoo.Yui.Compressor
                         // the containing scopes, or some of the variables declared
                         // in the containing scopes will be redeclared, which can
                         // lead to errors.
-                        foreach (JavaScriptIdentifier javaScriptIdentifier in this.GetAllUsedSymbols())
+                        foreach (string symbol in this.GetAllUsedSymbols())
                         {
-                            freeSymbols.Remove(javaScriptIdentifier);
+                            freeSymbols.Remove(symbol);
                         }
                     }
 

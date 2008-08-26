@@ -159,6 +159,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
             int totalOriginalContentLength = 0;
             string compressedContent = null;
             StringBuilder finalContent = null;
+            int finalContentLength;
+
 
             switch(actionType)
             {
@@ -184,7 +186,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
             if (fileList != null)
             {
                 this.LogMessage(string.Format(CultureInfo.InvariantCulture,
-                    "# {0} {1} file{1} requested.",
+                    "# {0} {1} file{2} requested.",
                     fileList.Count,
                     actionDescription,
                     fileList.Count.ToPluralString()));
@@ -270,12 +272,14 @@ namespace Yahoo.Yui.Compressor.MsBuild
                     fileList.Count.ToPluralString()),
                     true);
 
+                finalContentLength = finalContent == null ? 0 : finalContent.ToString().Length;
+
                 this.LogMessage(string.Format(CultureInfo.InvariantCulture,
                     "Total original {0} file size: {1}. After compression: {2}. Compressed down to {3}% of original size.",
                     actionDescription,
                     totalOriginalContentLength,
-                    finalContent.ToString().Length,
-                    100 - ((float)totalOriginalContentLength - (float)finalContent.ToString().Length) / (float)totalOriginalContentLength * 100));
+                    finalContentLength,
+                    100 - ((float)totalOriginalContentLength - (float)finalContentLength) / (float)totalOriginalContentLength * 100));
 
                 if (actionType == ActionType.Css)
                 {
@@ -293,23 +297,23 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", 
             "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private bool SaveCompressedText(string compressedText,
+        private bool SaveCompressedText(StringBuilder compressedText,
             ActionType actionType)
         {
             string destinationFileName;
 
-
-            if (string.IsNullOrEmpty(compressedText))
-            {
-                throw new ArgumentNullException("compressedText");
-            }
+            // Note: compressedText CAN be null or empty, so no check.
+            //if (string.IsNullOrEmpty(compressedText))
+            //{
+            //    compressedText == string.Empty;
+            //}
 
             destinationFileName = actionType == ActionType.Css ? this.CssOutputFile : this.JavaScriptOutputFile;
 
             try
             {
                 File.WriteAllText(destinationFileName,
-                    compressedText);
+                    compressedText == null ? string.Empty : compressedText.ToString());
                 Log.LogMessage(string.Format(CultureInfo.InvariantCulture,
                     "Compressed content saved to file [{0}].{1}",
                     destinationFileName,
@@ -344,9 +348,16 @@ namespace Yahoo.Yui.Compressor.MsBuild
                 Log.LogError("At least one css or javascript file is required to be compressed / minified.");
                 return false;
             }
-            else if (string.IsNullOrEmpty(this.CssOutputFile))
+            else if (!string.IsNullOrEmpty(this.CssFiles) &&
+                (string.IsNullOrEmpty(this.CssOutputFile)))
             {
-                Log.LogError("At least one css or javascript output file is required.");
+                Log.LogError("The css outfile is required if one or more css input files have been defined.");
+                return false;
+            }
+            else if (!string.IsNullOrEmpty(this.JavaScriptFiles) &&
+                (string.IsNullOrEmpty(this.JavaScriptOutputFile)))
+            {
+                Log.LogError("The javascript outfile is required if one or more javascript input files have been defined.");
                 return false;
             }
 
@@ -359,14 +370,9 @@ namespace Yahoo.Yui.Compressor.MsBuild
             if (!string.IsNullOrEmpty(this.CssFiles))
             {
                 compressedText = this.CompressFiles(ActionType.Css);
-                if (compressedText == null)
-                {
-                    // Assumption: an error has occured and it has already been logged.
-                    return false;
-                }
-
-                // Save this css to the output file.
-                if (!this.SaveCompressedText(compressedText.ToString(),
+                
+                // Save this css to the output file, if we have some result text.
+                if (!this.SaveCompressedText(compressedText,
                     ActionType.Css))
                 {
                     return false;
@@ -376,14 +382,9 @@ namespace Yahoo.Yui.Compressor.MsBuild
             if (!string.IsNullOrEmpty(this.JavaScriptFiles))
             {
                 compressedText = this.CompressFiles(ActionType.JavaScript);
-                if (compressedText == null)
-                {
-                    // Assumption: an error has occured and it has already been logged.
-                    return false;
-                }
-
-                // Save this JavaScript to the output file.
-                if (!this.SaveCompressedText(compressedText.ToString(),
+                
+                // Save this JavaScript to the output file, if we have some result text.
+                if (!this.SaveCompressedText(compressedText,
                     ActionType.JavaScript))
                 {
                     return false;
