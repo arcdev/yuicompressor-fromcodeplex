@@ -24,7 +24,7 @@
             DeleteCssFiles="false"
             CssOutputFile="SylesSheetFinal.css"
             CssCompressionType="YuiStockCompression"
-            JavaScriptFiles="SampleJavaScript4.js"
+            JavaScriptFiles="SampleJavaScript1.js;SampleJavaScript2.js;SampleJavaScript3.js;SampleJavaScript4.js"
             ObfuscateJavaScript="FoSho"
             PreserveAllSemicolons="Yeah"
             DisableOptimizations="Nope"

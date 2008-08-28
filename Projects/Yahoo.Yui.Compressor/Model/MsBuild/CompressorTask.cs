@@ -57,6 +57,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
                 case "YES":
                 case "Y":
                 case "YEP":
+                case "YEAH":
                 case "TRUE":
                 case "FOSHO":
                 case "FO SHO":
