@@ -73,6 +73,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsBuild Example", "MsBuild 
 		Solution Items\MsBuild Example\SampleJavaScript1.js = Solution Items\MsBuild Example\SampleJavaScript1.js
 		Solution Items\MsBuild Example\SampleJavaScript2.js = Solution Items\MsBuild Example\SampleJavaScript2.js
 		Solution Items\MsBuild Example\SampleJavaScript3.js = Solution Items\MsBuild Example\SampleJavaScript3.js
+		Solution Items\MsBuild Example\SampleJavaScript4.js = Solution Items\MsBuild Example\SampleJavaScript4.js
 		Solution Items\MsBuild Example\StylesheetSample1.css = Solution Items\MsBuild Example\StylesheetSample1.css
 		Solution Items\MsBuild Example\StylesheetSample2.css = Solution Items\MsBuild Example\StylesheetSample2.css
 		Solution Items\MsBuild Example\StylesheetSample3.css = Solution Items\MsBuild Example\StylesheetSample3.css

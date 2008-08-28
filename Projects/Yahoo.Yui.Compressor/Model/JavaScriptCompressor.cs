@@ -692,12 +692,34 @@ namespace Yahoo.Yui.Compressor
             }
 
             StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0, L = s.Length; i < L; i++) {
+            for (int i = 0, L = s.Length; i < L; i++)
+            {
                 int c = s[i];
-                if (c == quotechar) {
-                    stringBuilder.Append("\\");
+
+                switch (c)
+                {
+                    case 8: // \b.
+                        stringBuilder.Append(@"\b");
+                        break;
+                    case 9: // \t.
+                        stringBuilder.Append(@"\t");
+                        break;
+                    case 10: // \n.
+                    case 13: // \r.
+                        stringBuilder.Append(@"\n");
+                        break;
+                    case 92: // Single \ (backslash characters) need to be replaced by double backslashes.
+                        stringBuilder.Append("\\\\");
+                        break;
+                    default:
+                        if (c == quotechar)
+                        {
+                            stringBuilder.Append("\\");
+                        }
+
+                        stringBuilder.Append((char)c);
+                        break;
                 }
-                stringBuilder.Append((char) c);
             }
 
             return stringBuilder.ToString();
@@ -1733,13 +1755,12 @@ namespace Yahoo.Yui.Compressor
                         if (result.Length > 0 &&
                             result[result.Length - 1] != '\n')
                         {
-                            result.Append(Environment.NewLine);
+                            result.Append("\\n");
                         }
 
                         result.Append("/*");
                         result.Append(symbol);
-                        result.Append("*/");
-                        result.Append(Environment.NewLine);
+                        result.Append("*/\\n");
                         break;
 
                     default:
@@ -1789,6 +1810,19 @@ namespace Yahoo.Yui.Compressor
         public static string Compress(string javaScript,
             bool isVerboseLogging)
         {
+            return JavaScriptCompressor.Compress(javaScript,
+                isVerboseLogging,
+                true,
+                true,
+                false);
+        }
+
+        public static string Compress(string javaScript,
+            bool isVerboseLogging,
+            bool isObfuscateJavascript,
+            bool preserveAllSemicolons,
+            bool disableOptimizations)
+        {
             JavaScriptCompressor javaScriptCompressor;
 
 
@@ -1801,19 +1835,19 @@ namespace Yahoo.Yui.Compressor
                 isVerboseLogging);
 
             return javaScriptCompressor.Compress(80,
-                false,
-                true,
-                true,
-                false);
+                true, 
+                isObfuscateJavascript,
+                preserveAllSemicolons,
+                disableOptimizations);
         }
 
         public string Compress(int lineBreak,
-            bool munge,
-            bool verbose,
+            bool verbose, 
+            bool isObfuscateJavascript,
             bool preserveAllSemicolons,
             bool disableOptimizations)
         {
-            this._munge = munge;
+            this._munge = isObfuscateJavascript;
             this._verbose = verbose;
 
             JavaScriptCompressor.ProcessStringLiterals(this._tokens, 
