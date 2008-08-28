@@ -18,6 +18,9 @@ namespace Yahoo.Yui.Compressor.MsBuild
         private LoggingType _loggingType;
         private bool _deleteCssFiles;
         private bool _deleteJavaScriptFiles;
+        private bool _obfuscateJavaScript;
+        private bool _preserveAllSemicolons;
+        private bool _disableOptimizations;
 
         #endregion
 
@@ -28,6 +31,9 @@ namespace Yahoo.Yui.Compressor.MsBuild
         public string DeleteCssFiles { get; set; }
         public string CssOutputFile { get; set; }
         public string JavaScriptFiles { get; set; }
+        public string ObfuscateJavaScript { get; set; }
+        public string PreserveAllSemicolons { get; set; }
+        public string DisableOptimizations { get; set; }
         public string DeleteJavaScriptFiles { get; set; }
         public string JavaScriptOutputFile { get; set; }
         public string LoggingType { get; set; }
@@ -36,8 +42,38 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
         #region Methods
 
+        private static bool ParseSillyTrueFalseValue(string value)
+        {
+            bool result;
+
+
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            switch (value)
+            {
+                case "YES":
+                case "Y":
+                case "YEP":
+                case "TRUE":
+                case "FOSHO":
+                case "FO SHO":
+                    result = true;
+                    break;
+                default:
+                    result = false;
+                    break;
+            }
+
+            return result;
+        }
+
         private void InitialiseBuildSettings()
         {
+            #region Required Elements
+
             if (string.IsNullOrEmpty(this.CssCompressionType))
             {
                 this.LogMessage("No Compression type defined. Defaulting to 'YuiStockCompression'.");
@@ -72,20 +108,14 @@ namespace Yahoo.Yui.Compressor.MsBuild
                     break;
             }
 
+            #endregion
+
+            #region Optional Elements
+
             // Optional property.
             if (!string.IsNullOrEmpty(this.DeleteCssFiles))
             {
-                switch (this.DeleteCssFiles.ToUpperInvariant())
-                {
-                    case "YES":
-                    case "Y":
-                    case "YEP":
-                    case "TRUE":
-                    case "FOSHO":
-                    case "FO SHO":
-                        this._deleteCssFiles = true; break;
-                    default: this._deleteCssFiles = false; break;
-                }
+                this._deleteCssFiles = CompressorTask.ParseSillyTrueFalseValue(this.DeleteCssFiles.ToUpperInvariant());
             }
             else
             {
@@ -95,22 +125,44 @@ namespace Yahoo.Yui.Compressor.MsBuild
             // Optional property.
             if (!string.IsNullOrEmpty(this.DeleteJavaScriptFiles))
             {
-                switch (this.DeleteJavaScriptFiles.ToUpperInvariant())
-                {
-                    case "YES":
-                    case "Y":
-                    case "YEP":
-                    case "TRUE":
-                    case "FOSHO":
-                    case "FO SHO":
-                        this._deleteJavaScriptFiles = true; break;
-                    default: this._deleteJavaScriptFiles = false; break;
-                }
+                this._deleteJavaScriptFiles = CompressorTask.ParseSillyTrueFalseValue(this.DeleteJavaScriptFiles.ToUpperInvariant());
             }
             else
             {
-                this._deleteCssFiles = false;
+                this._deleteJavaScriptFiles = false;
             }
+
+            // Optional Property.
+            if (!string.IsNullOrEmpty(this.ObfuscateJavaScript))
+            {
+                this._obfuscateJavaScript = CompressorTask.ParseSillyTrueFalseValue(this.ObfuscateJavaScript.ToUpperInvariant());
+            }
+            else
+            {
+                this._obfuscateJavaScript = false;
+            }
+
+            // Optional Property.
+            if (!string.IsNullOrEmpty(this.PreserveAllSemicolons))
+            {
+                this._preserveAllSemicolons = CompressorTask.ParseSillyTrueFalseValue(this.PreserveAllSemicolons.ToUpperInvariant());
+            }
+            else
+            {
+                this._preserveAllSemicolons = false;
+            }
+
+            // Optional Property.
+            if (!string.IsNullOrEmpty(this.DisableOptimizations))
+            {
+                this._disableOptimizations = CompressorTask.ParseSillyTrueFalseValue(this.DisableOptimizations.ToUpperInvariant());
+            }
+            else
+            {
+                this._disableOptimizations = false;
+            }
+
+            #endregion
         }
 
         private static IList<string> ParseFiles(string filesToParse)
@@ -160,6 +212,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
             string compressedContent = null;
             StringBuilder finalContent = null;
             int finalContentLength;
+            const string yep = "Yep!";
+            const string nope = "Nope :(";
 
 
             switch(actionType)
@@ -180,6 +234,14 @@ namespace Yahoo.Yui.Compressor.MsBuild
             }
             else if (actionType == ActionType.JavaScript)
             {
+                // First, lets display what javascript specific arguments have been specified.
+                this.LogMessage(string.Format(CultureInfo.InvariantCulture, "    ** Obfuscate Javascript: {0}",
+                    this._obfuscateJavaScript ? yep : nope));
+                this.LogMessage(string.Format(CultureInfo.InvariantCulture, "    ** Preserve semi colons: {0}",
+                    this._preserveAllSemicolons ? yep : nope));
+                this.LogMessage(string.Format(CultureInfo.InvariantCulture, "    ** Disable optimizations: {0}",
+                    this._disableOptimizations ? "Yeah :(" : "Hell No!"));
+
                 fileList = CompressorTask.ParseFiles(this.JavaScriptFiles);
             }
 
@@ -222,7 +284,10 @@ namespace Yahoo.Yui.Compressor.MsBuild
                         else if (actionType == ActionType.JavaScript)
                         {
                             compressedContent = JavaScriptCompressor.Compress(originalContent,
-                                this._loggingType == MsBuild.LoggingType.HardcoreBringItOn);
+                                this._loggingType == MsBuild.LoggingType.HardcoreBringItOn,
+                                this._obfuscateJavaScript,
+                                this._preserveAllSemicolons,
+                                this._disableOptimizations);
                         }
 
                         if (!string.IsNullOrEmpty(compressedContent))

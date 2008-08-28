@@ -54,22 +54,31 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem("bin\\SampleJavaScript2.js")]
-        public void CompressWithMungeTest()
+        [DeploymentItem("bin\\SampleJavaScript4.js")]
+        public void CompressWithObfuscationTest()
         {
-            JavaScriptCompressor javaScriptCompressor;
             string javascript;
             string compressedJavascript;
+            int notObfuscatedLength;
 
 
             // Now lets try the big mother fraker.
-            javascript = File.ReadAllText("SampleJavaScript2.js");
+            javascript = File.ReadAllText("SampleJavaScript4.js");
 
-            // Now compress the small javascript.
-            javaScriptCompressor = new JavaScriptCompressor(javascript,
-                true);
+            // Now compress the small javascript without obfuscating.
+            compressedJavascript = JavaScriptCompressor.Compress(javascript,
+                true,
+                false,
+                true,
+                false);
 
-            compressedJavascript = javaScriptCompressor.Compress(80,
+            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
+            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+
+            notObfuscatedLength = compressedJavascript.Length;
+
+            // Now obfuscate that same javascript.
+            compressedJavascript = JavaScriptCompressor.Compress(javascript,
                 true,
                 true,
                 true,
@@ -77,6 +86,9 @@ namespace Yahoo.Yui.Compressor.Tests
 
             Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
             Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+
+            // Is the obfuscated smaller?
+            Assert.IsTrue(compressedJavascript.Length < notObfuscatedLength);
         }
     }
 }

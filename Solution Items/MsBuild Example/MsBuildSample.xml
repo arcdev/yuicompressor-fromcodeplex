@@ -11,9 +11,12 @@
                          o) StylesheetSample1.css,StylesheetSample2.css
                          o) SampleJavaScript1.js;SampleJavaScript2.js
                          o) SampleJavaScript1.js     SampleJavaScript2.js
-            DeleteCssFiles: Yes | Yeah | Yep | True | FoSho | Fo Sho. Default is False. Anything else is False.
+            DeleteCssFiles: [Optional] Yes | Yeah | Yep | True | FoSho | Fo Sho. Default is False. Anything else is False.
             CssCompressionType: YuiStockCompression | MichaelAshsRegexEnhancements | HaveMyCakeAndEatIt or BestOfBothWorlds or Hybrid; Default is YuiStockCompression.
-            DeleteJavaScriptFiles: refer to DeleteCssFiles, above.
+            ObfuscateJavaScript: [Optional] refer to DeleteCssFiles, above.
+            PreserveAllSemicolons: [Optional] refer to DeleteCssFiles, above.
+            DisableOptimizations: [Optional] refer to DeleteCssFiles, above.
+            DeleteJavaScriptFiles: [Optional] refer to DeleteCssFiles, above.
             LoggingType: None | ALittleBit | HardcoreBringItOn;  Hardcore also lists javascript verbose warnings, if there are any (and there usually is :P ).
         -->
         <CompressorTask
@@ -21,7 +24,10 @@
             DeleteCssFiles="false"
             CssOutputFile="SylesSheetFinal.css"
             CssCompressionType="YuiStockCompression"
-            JavaScriptFiles="SampleJavaScript1.js;SampleJavaScript2.js;SampleJavaScript3.js"
+            JavaScriptFiles="SampleJavaScript4.js"
+            ObfuscateJavaScript="FoSho"
+            PreserveAllSemicolons="Yeah"
+            DisableOptimizations="Nope"
             DeleteJavaScriptFiles="false"
             JavaScriptOutputFile="CompressedJavaScript.js"
             LoggingType="ALittleBit" />
