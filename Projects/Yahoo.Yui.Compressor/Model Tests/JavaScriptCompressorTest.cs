@@ -90,5 +90,21 @@ namespace Yahoo.Yui.Compressor.Tests
             // Is the obfuscated smaller?
             Assert.IsTrue(compressedJavascript.Length < notObfuscatedLength);
         }
+
+        [TestMethod]
+        [DeploymentItem("bin\\SampleJavaScript5.js")]
+        public void CompressNestedIdentifiersTest()
+        {
+            string javascript = File.ReadAllText("SampleJavaScript5.js");
+            
+            // Compress with full obfuscation
+            string compressedJavascript = JavaScriptCompressor.Compress(javascript,
+                true,
+                true,
+                true,
+                false);
+
+            Assert.IsTrue(compressedJavascript.Length < javascript.Length);
+        }
     }
 }
