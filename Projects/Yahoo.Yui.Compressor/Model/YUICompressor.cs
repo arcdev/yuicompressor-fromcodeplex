@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-
 
 namespace Yahoo.Yui.Compressor
 {
@@ -17,8 +14,7 @@ namespace Yahoo.Yui.Compressor
             int endIndex = 0;
             bool iemac = false;
             bool preserve = false;
-
-
+            
             startIndex = input.IndexOf(@"/*",
                 startIndex,
                 StringComparison.OrdinalIgnoreCase);

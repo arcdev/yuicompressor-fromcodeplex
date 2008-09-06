@@ -1,16 +1,15 @@
 ﻿using System;
 using EcmaScript.NET;
 
-
 namespace Yahoo.Yui.Compressor
 {
     public class CustomErrorReporter : ErrorReporter
     {
-        private bool _isVerboseLogging;
+        private readonly bool _isVerboseLogging;
 
         public CustomErrorReporter(bool isVerboseLogging)
         {
-            this._isVerboseLogging = isVerboseLogging;
+            _isVerboseLogging = isVerboseLogging;
         }
 
         public virtual void Warning(string message, 
@@ -19,9 +18,9 @@ namespace Yahoo.Yui.Compressor
             string lineSource, 
             int lineOffset)
         {
-            if (this._isVerboseLogging)
+            if (_isVerboseLogging)
             {
-                Console.WriteLine("[WARNING] " + message + Environment.NewLine);
+                Console.WriteLine("[WARNING] {0}{1}", message, Environment.NewLine);
             }
         }
 

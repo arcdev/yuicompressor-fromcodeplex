@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Model.Net20</RootNamespace>
+    <AssemblyName>Model.Net20</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EcmaScript.NET.modified, Version=0.1.1.0, Culture=neutral, PublicKeyToken=7d53ba4f537753a5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\3rd Party Assemblies\EcmaScript.NET.modified.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.0.3, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\3rd Party Assemblies\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Model\CssCompressionType.cs">
+      <Link>CssCompressionType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Model\CustomErrorReporter.cs">
+      <Link>CustomErrorReporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Model\JavaScriptIdentifier.cs">
+      <Link>JavaScriptIdentifier.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Model\JavaScriptToken.cs">
+      <Link>JavaScriptToken.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Model\MichaelAshRegexCompressor.cs">
+      <Link>MichaelAshRegexCompressor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Model\ScriptOrFunctionScope.cs">
+      <Link>ScriptOrFunctionScope.cs</Link>
+    </Compile>
+    <Compile Include="CssCompressor.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="JavaScriptCompressor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="YUICompressor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Model\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

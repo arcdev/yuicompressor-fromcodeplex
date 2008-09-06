@@ -1,7 +1,4 @@
-﻿using System;
-
-
-namespace Yahoo.Yui.Compressor
+﻿namespace Yahoo.Yui.Compressor
 {
     public class JavaScriptToken
     {
@@ -11,8 +8,8 @@ namespace Yahoo.Yui.Compressor
         public JavaScriptToken(int type, 
             string value)
         {
-            this.TokenType = type;
-            this.Value = value;
+            TokenType = type;
+            Value = value;
         }
     }
 }

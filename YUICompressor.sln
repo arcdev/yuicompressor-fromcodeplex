@@ -41,6 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd Party Assemblies", "3rd
 	ProjectSection(SolutionItems) = preProject
 		3rd Party Assemblies\EcmaScript.NET.dll = 3rd Party Assemblies\EcmaScript.NET.dll
 		3rd Party Assemblies\EcmaScript.NET.modified.dll = 3rd Party Assemblies\EcmaScript.NET.modified.dll
+		3rd Party Assemblies\Iesi.Collections.dll = 3rd Party Assemblies\Iesi.Collections.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2.3.6", "v2.3.6", "{9CAE6E06-6453-4E10-9563-2B55CE537EF3}"
@@ -85,9 +86,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web Deployment Project Exam
 		Solution Items\Web Deployment Project Example\Sample WebSite and WDP.zip = Solution Items\Web Deployment Project Example\Sample WebSite and WDP.zip
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model.Net20", "Projects\Yahoo.Yui.Compressor\Model.Net20\Model.Net20\Model.Net20.csproj", "{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
+		SccNumberOfProjects = 4
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs07.codeplex.com/
 		SccLocalPath0 = .
@@ -99,6 +102,10 @@ Global
 		SccProjectTopLevelParentUniqueName2 = YUICompressor.sln
 		SccProjectName2 = Projects/Yahoo.Yui.Compressor/Model\u0020Tests
 		SccLocalPath2 = Projects\\Yahoo.Yui.Compressor\\Model\u0020Tests
+		SccProjectUniqueName3 = Projects\\Yahoo.Yui.Compressor\\Model.Net20\\Model.Net20\\Model.Net20.csproj
+		SccProjectTopLevelParentUniqueName3 = YUICompressor.sln
+		SccProjectName3 = Projects/Yahoo.Yui.Compressor/Model.Net20/Model.Net20
+		SccLocalPath3 = Projects\\Yahoo.Yui.Compressor\\Model.Net20\\Model.Net20
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +119,10 @@ Global
 		{D263F886-F883-45C6-B79D-2136E0CE2195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D263F886-F883-45C6-B79D-2136E0CE2195}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D263F886-F883-45C6-B79D-2136E0CE2195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +133,7 @@ Global
 		{5F3C3ACA-787D-454F-A6CA-8AACB75B56D9} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
 		{AFDF50F0-286B-4490-9EBD-007561864738} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{D263F886-F883-45C6-B79D-2136E0CE2195} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
+		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{197F7032-A560-44C7-969D-7D610B96B9AB} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}
 		{9CAE6E06-6453-4E10-9563-2B55CE537EF3} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}
 		{FE4841B2-D33B-49D4-8FC2-B3123A5C1B8E} = {197F7032-A560-44C7-969D-7D610B96B9AB}

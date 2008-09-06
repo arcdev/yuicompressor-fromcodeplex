@@ -26,7 +26,7 @@ namespace Yahoo.Yui.Compressor
                 case CssCompressionType.MichaelAshRegexEnhancements: compressedCss = MichaelAshRegexCompressor.Compress(css,
                     columnWidth);
                     break;
-                case CssCompressionType.Hybrid :
+                case CssCompressionType.Hybrid:
                     // We need to try both types. We get the keep size.
                     string yuiCompressedCss = YUICompressor.Compress(css,
                         columnWidth);

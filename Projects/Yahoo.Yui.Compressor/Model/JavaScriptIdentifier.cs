@@ -1,7 +1,6 @@
 ﻿using System;
 using EcmaScript.NET;
 
-
 namespace Yahoo.Yui.Compressor
 {
     public class JavaScriptIdentifier : JavaScriptToken
@@ -15,8 +14,8 @@ namespace Yahoo.Yui.Compressor
             ScriptOrFunctionScope declaredScope) : base(Token.NAME, 
                 value)
         {
-            this.MarkedForMunging = true;
-            this.DeclaredScope = declaredScope;
+            MarkedForMunging = true;
+            DeclaredScope = declaredScope;
         }
     }
 }
