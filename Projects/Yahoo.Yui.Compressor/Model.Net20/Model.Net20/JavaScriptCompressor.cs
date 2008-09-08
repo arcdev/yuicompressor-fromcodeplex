@@ -673,28 +673,27 @@ namespace Yahoo.Yui.Compressor
             {
                 int c = s[i];
 
+                // Handle ASCII and derivative control characters.
+                // Info: http://en.wikipedia.org/wiki/C0_and_C1_control_codes
                 switch (c)
                 {
-                    case 8: // \b.
-                        stringBuilder.Append(@"\b");
-                        break;
-                    case 9: // \t.
-                        stringBuilder.Append(@"\t");
-                        break;
-                    case 10: // \n.
-                    case 13: // \r.
-                        stringBuilder.Append(@"\n");
-                        break;
-                    case 92: // Single \ (backslash characters) need to be replaced by double backslashes.
-                        stringBuilder.Append("\\\\");
-                        break;
+                    case 0: stringBuilder.Append(@"\0"); break; // Null.
+                    case 7: stringBuilder.Append(@"\a"); break; // Bell.
+                    case 8: stringBuilder.Append(@"\b"); break; // Backspace.
+                    case 9: stringBuilder.Append(@"\t"); break; // Tab (horizontal).
+                    case 10: stringBuilder.Append(@"\n"); break; // Line feed.
+                    case 11: stringBuilder.Append(@"\v"); break; // Tab (vertical).
+                    case 12: stringBuilder.Append(@"\f"); break; // Form feed.
+                    case 13: stringBuilder.Append(@"\n"); break; // Line feed or carriage return.
+                    case 27: stringBuilder.Append(@"\e"); break; // Escape.
+                    case 92: stringBuilder.Append("\\\\"); break; // Single \ (backslash characters) need to be replaced by double backslashes.
                     default:
-                        if(c == quotechar)
+                        if (c == quotechar)
                         {
                             stringBuilder.Append("\\");
                         }
 
-                        stringBuilder.Append((char) c);
+                        stringBuilder.Append((char)c);
                         break;
                 }
             }
@@ -1283,8 +1282,6 @@ namespace Yahoo.Yui.Compressor
                                     break;
                             }
                         }
-
-                        break;
 
                     case Token.FUNCTION:
                         ParseFunctionDeclaration();

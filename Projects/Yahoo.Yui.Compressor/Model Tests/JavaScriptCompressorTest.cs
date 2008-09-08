@@ -38,6 +38,18 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
             Assert.IsTrue(javascript.Length > compressedJavascript.Length);
 
+            // Special Ms AJAX test.
+            var original = File.ReadAllText("SampleJavaScript2.js");
+            var index = original.IndexOf("Sys.Serialization.JavaScriptSerializer._stringRegEx");
+            var test = original.Substring(index);
+
+            var compressor = new JavaScriptCompressor(original);
+
+            var minified = compressor.Compress(1000, false, true, true, false);
+            index = minified.IndexOf("Sys.Serialization.JavaScriptSerializer._stringRegEx");
+            test = minified.Substring(index);
+
+
             // And now some weird \n test.
             javascript = File.ReadAllText("SampleJavaScript3.js");
 

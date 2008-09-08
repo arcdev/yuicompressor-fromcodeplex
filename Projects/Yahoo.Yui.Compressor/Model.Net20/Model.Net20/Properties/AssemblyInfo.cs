@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Model.Net20")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("YUI Compressor .NET Library for .NET 2.0")]
+[assembly: AssemblyDescription("A .NET port of the Yahoo! YUI Compressor project")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dimebrain")]
-[assembly: AssemblyProduct("Model.Net20")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("YUI Compressor (.NET 2.0 port)")]
 [assembly: AssemblyCopyright("Copyright © Dimebrain 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.2.1.0")]
+[assembly: AssemblyFileVersion("1.2.1.0")]
