@@ -88,6 +88,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web Deployment Project Exam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model.Net20", "Projects\Yahoo.Yui.Compressor\Model.Net20\Model.Net20\Model.Net20.csproj", "{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2.4.1", "v2.4.1", "{0F58ACB2-6E77-42A1-8806-FB07D70A4D5C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "com.yahoo.platform.yui.compressor", "com.yahoo.platform.yui.compressor", "{3C7817AD-0D09-4E42-9AFC-63EB13410FC0}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\Bootstrap.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\Bootstrap.java.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\CssCompressor.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\CssCompressor.java.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\JarClassLoader.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\JarClassLoader.java.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\JavaScriptCompressor.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\JavaScriptCompressor.java.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\JavaScriptIdentifier.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\JavaScriptIdentifier.java.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\JavaScriptToken.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\JavaScriptToken.java.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\ScriptOrFnScope.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\ScriptOrFnScope.java.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\YUICompressor.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\com\yahoo\platform\yui\compressor\YUICompressor.java.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "org.mozilla.javascript", "org.mozilla.javascript", "{9DC443EA-144A-4477-BD58-C35FA650F193}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Decompiler.java.orig.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Decompiler.java.orig.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Decompiler.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Decompiler.java.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Parser.java.orig.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Parser.java.orig.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Parser.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Parser.java.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Token.java.orig.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Token.java.orig.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Token.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\Token.java.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\TokenStream.java.orig.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\TokenStream.java.orig.txt
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\TokenStream.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\TokenStream.java.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 4
@@ -136,9 +162,12 @@ Global
 		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{197F7032-A560-44C7-969D-7D610B96B9AB} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}
 		{9CAE6E06-6453-4E10-9563-2B55CE537EF3} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}
+		{0F58ACB2-6E77-42A1-8806-FB07D70A4D5C} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}
 		{FE4841B2-D33B-49D4-8FC2-B3123A5C1B8E} = {197F7032-A560-44C7-969D-7D610B96B9AB}
 		{7CB16AB7-DE91-49D1-8541-012D4CA8F679} = {197F7032-A560-44C7-969D-7D610B96B9AB}
 		{ACE77365-E3A5-4019-A21D-976CAF4377B0} = {9CAE6E06-6453-4E10-9563-2B55CE537EF3}
 		{12FB8E86-C92F-4E6C-A39D-F66D4FD01A23} = {9CAE6E06-6453-4E10-9563-2B55CE537EF3}
+		{3C7817AD-0D09-4E42-9AFC-63EB13410FC0} = {0F58ACB2-6E77-42A1-8806-FB07D70A4D5C}
+		{9DC443EA-144A-4477-BD58-C35FA650F193} = {0F58ACB2-6E77-42A1-8806-FB07D70A4D5C}
 	EndGlobalSection
 EndGlobal

@@ -51,10 +51,21 @@ namespace Yahoo.Yui.Compressor
 
         public JavaScriptCompressor(string javaScript)
             : this(javaScript,
-                   true) {}
+                   true)
+        {
+        }
 
         public JavaScriptCompressor(string javaScript,
                                     bool isVerboseLogging)
+            : this(javaScript,
+                   isVerboseLogging,
+                   Encoding.Default)
+        {
+        }
+
+        public JavaScriptCompressor(string javaScript,
+                                    bool isVerboseLogging,
+                                    Encoding encoding)
         {
             if(string.IsNullOrEmpty(javaScript))
             {
@@ -63,9 +74,8 @@ namespace Yahoo.Yui.Compressor
 
             Initialise();
 
-            MemoryStream memoryStream = new MemoryStream(Encoding.Default.GetBytes(javaScript));
+            MemoryStream memoryStream = new MemoryStream(encoding.GetBytes(javaScript));
             CustomErrorReporter customErrorReporter = new CustomErrorReporter(isVerboseLogging);
-            
             _logger = customErrorReporter;
             _tokens = Parse(new StreamReader(memoryStream), customErrorReporter);
         }
@@ -146,12 +156,12 @@ namespace Yahoo.Yui.Compressor
                         {
                             var one = Ones[i];
 
-                            for (var c = 'A'; c <= 'Z'; c++)
+                            for (var c = 'a'; c <= 'z'; c++)
                             {
                                 twosList.Add(one + Convert.ToString(c, CultureInfo.InvariantCulture));
                             }
 
-                            for (var c = 'a'; c <= 'z'; c++)
+                            for (var c = 'A'; c <= 'Z'; c++)
                             {
                                 twosList.Add(one + Convert.ToString(c, CultureInfo.InvariantCulture));
                             }
@@ -255,7 +265,7 @@ namespace Yahoo.Yui.Compressor
                         literals.Add(Token.FALSE, "false");
                         literals.Add(Token.NULL, "null");
                         literals.Add(Token.THIS, "this");
-                        literals.Add(Token.FUNCTION, "function ");
+                        literals.Add(Token.FUNCTION, "function");
                         literals.Add(Token.COMMA, ",");
                         literals.Add(Token.LC, "{");
                         literals.Add(Token.RC, "}");
@@ -276,13 +286,13 @@ namespace Yahoo.Yui.Compressor
                         literals.Add(Token.TRY, "try");
                         literals.Add(Token.CATCH, "catch");
                         literals.Add(Token.FINALLY, "finally");
-                        literals.Add(Token.THROW, "throw ");
+                        literals.Add(Token.THROW, "throw");
                         literals.Add(Token.SWITCH, "switch");
-                        literals.Add(Token.BREAK, "break ");
-                        literals.Add(Token.CONTINUE, "continue ");
-                        literals.Add(Token.CASE, "case ");
+                        literals.Add(Token.BREAK, "break");
+                        literals.Add(Token.CONTINUE, "continue");
+                        literals.Add(Token.CASE, "case");
                         literals.Add(Token.DEFAULT, "default");
-                        literals.Add(Token.RETURN, "return ");
+                        literals.Add(Token.RETURN, "return");
                         literals.Add(Token.VAR, "var ");
                         literals.Add(Token.SEMI, ";");
                         literals.Add(Token.ASSIGN, "=");
@@ -317,7 +327,7 @@ namespace Yahoo.Yui.Compressor
                         literals.Add(Token.LSH, "<<");
                         literals.Add(Token.RSH, ">>");
                         literals.Add(Token.URSH, ">>>");
-                        literals.Add(Token.TYPEOF, "typeof ");
+                        literals.Add(Token.TYPEOF, "typeof");
                         literals.Add(Token.VOID, "void ");
                         literals.Add(Token.CONST, "const ");
                         literals.Add(Token.NOT, "!");
@@ -1268,20 +1278,20 @@ namespace Yahoo.Yui.Compressor
                                 throw new InvalidOperationException();
                             }
 
-                            switch (token.TokenType)
+                            if (token.TokenType == Token.IN)
                             {
-                                case Token.IN:
-                                    break;
-                                default:
-                                    ParseExpression();
-                                    token = GetToken(-1);
-                                    if(token.TokenType == Token.SEMI)
-                                    {
-                                        break;
-                                    }
-                                    break;
+                                break;
+                            }
+
+                            this.ParseExpression();
+                            token = this.GetToken(-1);
+                            if (token.TokenType == Token.SEMI)
+                            {
+                                break;
                             }
                         }
+
+                        break;
 
                     case Token.FUNCTION:
                         ParseFunctionDeclaration();
@@ -1629,9 +1639,10 @@ namespace Yahoo.Yui.Compressor
                         break;
 
                     case Token.RETURN:
-                        result.Append("return");
+                    case Token.TYPEOF:
+                        result.Append((string)Literals[token.TokenType]);
 
-                        // No space needed after 'return' when followed
+                        // No space needed after 'return' and 'typeof' when followed
                         // by '(', '[', '{', a string or a regexp.
                         if(_offset < length)
                         {
@@ -1640,7 +1651,8 @@ namespace Yahoo.Yui.Compressor
                                token.TokenType != Token.LB &&
                                token.TokenType != Token.LC &&
                                token.TokenType != Token.STRING &&
-                               token.TokenType != Token.REGEXP)
+                               token.TokenType != Token.REGEXP &&
+                               token.TokenType != Token.SEMI)
                             {
                                 result.Append(' ');
                             }
@@ -1648,20 +1660,10 @@ namespace Yahoo.Yui.Compressor
                         break;
 
                     case Token.CASE:
-                        result.Append("case");
-
-                        // White-space needed after 'case' when not followed by a string.
-                        if(_offset < length &&
-                           GetToken(0).TokenType != Token.STRING)
-                        {
-                            result.Append(' ');
-                        }
-                        break;
-
                     case Token.THROW:
-                        // White-space needed after 'throw' when not followed by a string.
-                        result.Append("throw");
+                        result.Append((string)Literals[token.TokenType]);
 
+                        // White-space needed after 'case' and 'throw' when not followed by a string.
                         if(_offset < length &&
                            GetToken(0).TokenType != Token.STRING)
                         {
@@ -1670,24 +1672,13 @@ namespace Yahoo.Yui.Compressor
                         break;
 
                     case Token.BREAK:
-                        result.Append("break");
-
-                        if(_offset < length &&
-                           GetToken(0).TokenType != Token.SEMI)
-                        {
-                            // If 'break' is not followed by a semi-colon, it must be
-                            // followed by a label, hence the need for a white space.
-                            result.Append(' ');
-                        }
-                        break;
-
                     case Token.CONTINUE:
-                        result.Append("continue");
+                        result.Append((string)Literals[token.TokenType]);
                         if(_offset < length &&
                            GetToken(0).TokenType != Token.SEMI)
                         {
-                            // If 'continue' is not followed by a semi-colon, it must be
-                            // followed by a label, hence the need for a white space.
+                            // If 'break' or 'continue' is not followed by a semi-colon, it must
+                            // be followed by a label, hence the need for a white space.
                             result.Append(' ');
                         }
                         break;
@@ -1762,7 +1753,8 @@ namespace Yahoo.Yui.Compressor
             // several minified files (the absence of an ending semi-colon at the
             // end of one file may very likely cause a syntax error)
             if(!preserveAllSemiColons &&
-               result.Length > 0)
+               result.Length > 0 &&
+                GetToken(-1).TokenType != Token.SPECIALCOMMENT)
             {
                 if(result[result.Length - 1] == '\n')
                 {
@@ -1803,13 +1795,29 @@ namespace Yahoo.Yui.Compressor
                                       bool preserveAllSemicolons,
                                       bool disableOptimizations)
         {
+            return Compress(javaScript,
+                            isVerboseLogging,
+                            isObfuscateJavascript,
+                            preserveAllSemicolons,
+                            disableOptimizations,
+                            Encoding.Default);
+        }
+
+        public static string Compress(string javaScript,
+                                      bool isVerboseLogging,
+                                      bool isObfuscateJavascript,
+                                      bool preserveAllSemicolons,
+                                      bool disableOptimizations,
+                                      Encoding encoding)
+        {
             if(string.IsNullOrEmpty(javaScript))
             {
                 throw new ArgumentNullException("javaScript");
             }
 
             JavaScriptCompressor javaScriptCompressor = new JavaScriptCompressor(javaScript,
-                                                                                 isVerboseLogging);
+                                                                                 isVerboseLogging,
+                                                                                 encoding);
             return javaScriptCompressor.Compress(80,
                                                  true,
                                                  isObfuscateJavascript,
@@ -1829,7 +1837,7 @@ namespace Yahoo.Yui.Compressor
             ProcessStringLiterals(_tokens,
                                   !disableOptimizations);
 
-            if(!disableOptimizations)
+            if (!disableOptimizations)
             {
                 OptimizeObjectMemberAccess(_tokens);
                 OptimizeObjLitMemberDecl(_tokens);
@@ -1841,7 +1849,6 @@ namespace Yahoo.Yui.Compressor
 
             return stringBuilder.ToString();
         }
-
         #endregion
 
         #endregion

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
+//using System.Linq;
 using System.Text;
 using Microsoft.Build.Utilities;
 using Yahoo.Yui.Compressor;
@@ -166,7 +166,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
             }
 
             // Optional Property.
-            switch(this.EncodingType)
+            switch (this.EncodingType)
             {
                 case "ASCII":
                     this._encoding = Encoding.ASCII;
@@ -183,7 +183,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
                 case "UTF7":
                     this._encoding = Encoding.UTF7;
                     break;
-                case "":
+                case "UTF8":
                     this._encoding = Encoding.UTF8;
                     break;
                 default:
@@ -196,16 +196,13 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
         private static IList<string> ParseFiles(string filesToParse)
         {
-            IList<string> fileList;
-
-
             if (string.IsNullOrEmpty(filesToParse))
             {
                 throw new ArgumentNullException("filesToParse");
             }
 
-            fileList = filesToParse.Split(new string[] { " ", ",", ";" },
-                StringSplitOptions.RemoveEmptyEntries).ToList();
+            IList<string> fileList = new List<string>(filesToParse.Split(new string[] { " ", ",", ";" },
+                                                                 StringSplitOptions.RemoveEmptyEntries));
 
             return fileList == null ||
                 fileList.Count <= 0 ? null : fileList;
@@ -277,10 +274,9 @@ namespace Yahoo.Yui.Compressor.MsBuild
             if (fileList != null)
             {
                 this.LogMessage(string.Format(CultureInfo.InvariantCulture,
-                    "# {0} {1} file{2} requested.",
+                    "# {0} {1} file requested.",
                     fileList.Count,
-                    actionDescription,
-                    fileList.Count.ToPluralString()));
+                    actionDescription));
 
                 foreach (string file in fileList)
                 {
@@ -362,9 +358,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
                 }
 
                 this.LogMessage(string.Format(CultureInfo.InvariantCulture,
-                    "Finished compressing all {0} file{1}.",
-                    fileList.Count,
-                    fileList.Count.ToPluralString()),
+                    "Finished compressing all {0} file.",
+                    fileList.Count),
                     true);
 
                 finalContentLength = finalContent == null ? 0 : finalContent.ToString().Length;

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Yahoo.Yui.Compressor;
-
 
 namespace Yahoo.Yui.Compressor.Tests
 {

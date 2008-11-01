@@ -3,6 +3,11 @@
     <UsingTask
         TaskName="CompressorTask"
         AssemblyFile="..\..\Projects\Yahoo.Yui.Compressor\Model\bin\Debug\Yahoo.Yui.Compressor.dll" />
+    <!-- The .NET 2.0 version of the task .. and yes .. that's Model.Net20 folder listed twice .. i know i know...
+    <UsingTask
+        TaskName="CompressorTask"
+        AssemblyFile="..\..\Projects\Yahoo.Yui.Compressor\Model.Net20\Model.Net20\bin\Debug\Yahoo.Yui.Compressor.NET20.dll" />
+    -->
     <Target Name="MyTaskTarget">
         <!--
             CssFiles/JavaScriptFiles data format: can be delimeted by a space, comma or semicolon. having an extra space after the delimeter is optional also.
@@ -16,6 +21,7 @@
             ObfuscateJavaScript: [Optional] refer to DeleteCssFiles, above.
             PreserveAllSemicolons: [Optional] refer to DeleteCssFiles, above.
             DisableOptimizations: [Optional] refer to DeleteCssFiles, above.
+            EncodingType: [Optional] ASCII, BigEndianUnicode, Unicode, UTF32, UTF7, UTF8, Default. Default is 'Default'.
             DeleteJavaScriptFiles: [Optional] refer to DeleteCssFiles, above.
             LoggingType: None | ALittleBit | HardcoreBringItOn;  Hardcore also lists javascript verbose warnings, if there are any (and there usually is :P ).
         -->
@@ -28,6 +34,7 @@
             ObfuscateJavaScript="FoSho"
             PreserveAllSemicolons="Yeah"
             DisableOptimizations="Nope"
+            EncodingType="Default"
             DeleteJavaScriptFiles="false"
             JavaScriptOutputFile="CompressedJavaScript.js"
             LoggingType="ALittleBit" />
