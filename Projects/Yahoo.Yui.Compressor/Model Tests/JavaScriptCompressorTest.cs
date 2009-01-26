@@ -41,7 +41,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
             var compressor = new JavaScriptCompressor(original);
 
-            var minified = compressor.Compress(1000, false, true, true, false);
+            var minified = compressor.Compress(false, true, false, false, -1);
             index = minified.IndexOf("Sys.Serialization.JavaScriptSerializer._stringRegEx");
             test = minified.Substring(index);
 
@@ -77,8 +77,9 @@ namespace Yahoo.Yui.Compressor.Tests
             compressedJavascript = JavaScriptCompressor.Compress(javascript,
                 true,
                 false,
-                true,
-                false);
+                false,
+                false,
+                -1);
 
             Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
             Assert.IsTrue(javascript.Length > compressedJavascript.Length);
@@ -89,8 +90,9 @@ namespace Yahoo.Yui.Compressor.Tests
             compressedJavascript = JavaScriptCompressor.Compress(javascript,
                 true,
                 true,
-                true,
-                false);
+                false,
+                false,
+                -1);
 
             Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
             Assert.IsTrue(javascript.Length > compressedJavascript.Length);
@@ -108,9 +110,10 @@ namespace Yahoo.Yui.Compressor.Tests
             // Compress with full obfuscation
             string compressedJavascript = JavaScriptCompressor.Compress(javascript,
                 true,
-                true,
-                true,
-                false);
+                false,
+                false,
+                false,
+                -1);
 
             Assert.IsTrue(compressedJavascript.Length < javascript.Length);
         }

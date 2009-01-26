@@ -21,6 +21,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
         private bool _obfuscateJavaScript;
         private bool _preserveAllSemicolons;
         private bool _disableOptimizations;
+        private int _lineBreakPosition;
         private Encoding _encoding;
 
         #endregion
@@ -35,6 +36,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
         public string ObfuscateJavaScript { get; set; }
         public string PreserveAllSemicolons { get; set; }
         public string DisableOptimizations { get; set; }
+        public string LineBreakPosition { get; set; }
         public string EncodingType { get; set; }
         public string DeleteJavaScriptFiles { get; set; }
         public string JavaScriptOutputFile { get; set; }
@@ -166,6 +168,18 @@ namespace Yahoo.Yui.Compressor.MsBuild
             }
 
             // Optional Property.
+            int tempLineBreakPosition;
+            if (!string.IsNullOrEmpty(this.LineBreakPosition) &&
+                int.TryParse(this.LineBreakPosition, out tempLineBreakPosition))
+            {
+                this._lineBreakPosition = tempLineBreakPosition;
+            }
+            else
+            {
+                this._lineBreakPosition = -1;
+            }
+
+            // Optional Property.
             switch(this.EncodingType)
             {
                 case "ASCII":
@@ -270,6 +284,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
                     this._preserveAllSemicolons ? yep : nope));
                 this.LogMessage(string.Format(CultureInfo.InvariantCulture, "    ** Disable optimizations: {0}",
                     this._disableOptimizations ? "Yeah :(" : "Hell No!"));
+                this.LogMessage(string.Format(CultureInfo.InvariantCulture, "    ** Line break position: {0}",
+                    this._lineBreakPosition <= -1 ? "None" : LineBreakPosition));
 
                 fileList = CompressorTask.ParseFiles(this.JavaScriptFiles);
             }
@@ -317,6 +333,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
                                 this._obfuscateJavaScript,
                                 this._preserveAllSemicolons,
                                 this._disableOptimizations,
+                                this._lineBreakPosition,
                                 this._encoding);
                         }
 
@@ -432,7 +449,6 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
         public override bool Execute()
         {
-            DateTime startTime;
             StringBuilder compressedText;
             
 
@@ -460,7 +476,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
             Log.LogMessage("Starting Css/Javascript compression...");
             Log.LogMessage(System.Environment.NewLine);
-            startTime = DateTime.Now;
+            DateTime startTime = DateTime.Now;
 
             if (!string.IsNullOrEmpty(this.CssFiles))
             {

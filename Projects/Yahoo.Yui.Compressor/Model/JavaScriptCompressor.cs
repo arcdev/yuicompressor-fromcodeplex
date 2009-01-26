@@ -1789,21 +1789,24 @@ namespace Yahoo.Yui.Compressor
             return Compress(javaScript,
                             isVerboseLogging,
                             true,
-                            true,
-                            false);
+                            false,
+                            false,
+                            -1);
         }
 
         public static string Compress(string javaScript,
                                       bool isVerboseLogging,
                                       bool isObfuscateJavascript,
                                       bool preserveAllSemicolons,
-                                      bool disableOptimizations)
+                                      bool disableOptimizations,
+                                      int lineBreakPosition)
         {
             return Compress(javaScript, 
                 isVerboseLogging, 
                 isObfuscateJavascript, 
                 preserveAllSemicolons,
                 disableOptimizations, 
+                lineBreakPosition,
                 Encoding.Default);
         }
 
@@ -1812,6 +1815,7 @@ namespace Yahoo.Yui.Compressor
                                       bool isObfuscateJavascript,
                                       bool preserveAllSemicolons,
                                       bool disableOptimizations,
+                                      int lineBreakPosition,
                                       Encoding encoding)
         {
             if (string.IsNullOrEmpty(javaScript))
@@ -1823,18 +1827,18 @@ namespace Yahoo.Yui.Compressor
                                                                                  isVerboseLogging,
                                                                                  encoding);
 
-            return javaScriptCompressor.Compress(80,
-                                                 true,
+            return javaScriptCompressor.Compress(isVerboseLogging,
                                                  isObfuscateJavascript,
                                                  preserveAllSemicolons,
-                                                 disableOptimizations);
+                                                 disableOptimizations,
+                                                 lineBreakPosition);
         }
 
-        public string Compress(int lineBreak,
-                               bool verbose,
+        public string Compress(bool verbose,
                                bool isObfuscateJavascript,
                                bool preserveAllSemicolons,
-                               bool disableOptimizations)
+                               bool disableOptimizations,
+                               int lineBreakPosition)
         {
             this._munge = isObfuscateJavascript;
             this._verbose = verbose;
@@ -1850,7 +1854,7 @@ namespace Yahoo.Yui.Compressor
 
             this.BuildSymbolTree();
             this.MungeSymboltree();
-            StringBuilder stringBuilder = this.PrintSymbolTree(lineBreak, preserveAllSemicolons);
+            StringBuilder stringBuilder = this.PrintSymbolTree(lineBreakPosition, preserveAllSemicolons);
 
             return stringBuilder.ToString();
         }

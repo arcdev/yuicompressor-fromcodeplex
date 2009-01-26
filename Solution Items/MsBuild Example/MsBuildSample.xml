@@ -16,13 +16,15 @@
                          o) StylesheetSample1.css,StylesheetSample2.css
                          o) SampleJavaScript1.js;SampleJavaScript2.js
                          o) SampleJavaScript1.js     SampleJavaScript2.js
-            DeleteCssFiles: [Optional] Yes | Yeah | Yep | True | FoSho | Fo Sho. Default is False. Anything else is False.
+            DeleteCssFiles: [Optional] True | Yes | Yeah | Yep | True | FoSho | Fo Sho. Default is False. Anything else is False. (eg. blah = false, xxxx111 = false, etc)
             CssCompressionType: YuiStockCompression | MichaelAshsRegexEnhancements | HaveMyCakeAndEatIt or BestOfBothWorlds or Hybrid; Default is YuiStockCompression.
             ObfuscateJavaScript: [Optional] refer to DeleteCssFiles, above.
             PreserveAllSemicolons: [Optional] refer to DeleteCssFiles, above.
             DisableOptimizations: [Optional] refer to DeleteCssFiles, above.
             EncodingType: [Optional] ASCII, BigEndianUnicode, Unicode, UTF32, UTF7, UTF8, Default. Default is 'Default'.
             DeleteJavaScriptFiles: [Optional] refer to DeleteCssFiles, above.
+            LineBreakPosition: [Optional] the position where a line feed is appened when the next semicolon is reached. Default is -1 (never add a line break).
+                               0 (zero) means add a line break after every semicolon. (This might help with debugging troublesome files).          
             LoggingType: None | ALittleBit | HardcoreBringItOn;  Hardcore also lists javascript verbose warnings, if there are any (and there usually is :P ).
         -->
         <CompressorTask
@@ -30,13 +32,14 @@
             DeleteCssFiles="false"
             CssOutputFile="SylesSheetFinal.css"
             CssCompressionType="YuiStockCompression"
-            JavaScriptFiles="SampleJavaScript1.js;SampleJavaScript2.js;SampleJavaScript3.js;SampleJavaScript4.js"
+            JavaScriptFiles="jquery-1.2.6-vsdoc.js"
             ObfuscateJavaScript="FoSho"
-            PreserveAllSemicolons="Yeah"
+            PreserveAllSemicolons="False"
             DisableOptimizations="Nope"
             EncodingType="Default"
             DeleteJavaScriptFiles="false"
+            LineBreakPosition="-1"
             JavaScriptOutputFile="CompressedJavaScript.js"
             LoggingType="ALittleBit" />
-        </Target>
+    </Target>
 </Project>
