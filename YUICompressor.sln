@@ -4,7 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{74643830-FD8D-4348-AE41-CCDF31DDAA73}"
 	ProjectSection(SolutionItems) = preProject
 		Solution Items\BSD License.txt = Solution Items\BSD License.txt
-		Solution Items\EcmaScript.NET.modified..zip = Solution Items\EcmaScript.NET.modified..zip
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 		YUICompressor.vsmdi = YUICompressor.vsmdi
 	EndProjectSection
@@ -40,7 +39,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd Party Assemblies", "3rd Party Assemblies", "{57597355-3121-4B2E-AD33-A6DD78E40999}"
 	ProjectSection(SolutionItems) = preProject
 		3rd Party Assemblies\EcmaScript.NET.dll = 3rd Party Assemblies\EcmaScript.NET.dll
-		3rd Party Assemblies\EcmaScript.NET.modified.dll = 3rd Party Assemblies\EcmaScript.NET.modified.dll
 		3rd Party Assemblies\Iesi.Collections.dll = 3rd Party Assemblies\Iesi.Collections.dll
 	EndProjectSection
 EndProject
@@ -114,9 +112,39 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "org.mozilla.javascript", "o
 		Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\TokenStream.java.txt = Solution Items\Yahoo! YUICompressor Java code\v2.4.1\org\mozilla\javascript\TokenStream.java.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EmacsScript.Net", "EmacsScript.Net", "{B9985104-A65C-4B82-9844-1DD26967BB6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcmaScript.NET", "Projects\EcmaScript.NET\EcmaScript.NET.csproj", "{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2.4.2", "v2.4.2", "{789E3CAA-6D10-41C0-987C-99AF5F58690A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "com.yahoo.platform.yui.compressor", "com.yahoo.platform.yui.compressor", "{C66F0E7F-0954-42F8-AA00-4F8592237B65}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\Bootstrap.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\Bootstrap.java
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\CssCompressor.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\CssCompressor.java
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\JarClassLoader.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\JarClassLoader.java
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\JavaScriptCompressor.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\JavaScriptCompressor.java
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\JavaScriptIdentifier.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\JavaScriptIdentifier.java
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\JavaScriptToken.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\JavaScriptToken.java
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\ScriptOrFnScope.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\ScriptOrFnScope.java
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\YUICompressor.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\com\yahoo\platform\yui\compressor\YUICompressor.java
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "org.mozilla.javascript", "org.mozilla.javascript", "{F79D98D1-1C4A-4AB9-BBD3-19A4603EAE2A}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Decompiler.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Decompiler.java
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Decompiler.java.orig = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Decompiler.java.orig
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Parser.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Parser.java
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Parser.java.orig = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Parser.java.orig
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Token.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Token.java
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Token.java.orig = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\Token.java.orig
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\TokenStream.java = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\TokenStream.java
+		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\TokenStream.java.orig = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\TokenStream.java.orig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs07.codeplex.com/
 		SccLocalPath0 = .
@@ -132,6 +160,10 @@ Global
 		SccProjectTopLevelParentUniqueName3 = YUICompressor.sln
 		SccProjectName3 = Projects/Yahoo.Yui.Compressor/Model.Net20/Model.Net20
 		SccLocalPath3 = Projects\\Yahoo.Yui.Compressor\\Model.Net20\\Model.Net20
+		SccProjectUniqueName4 = Projects\\EcmaScript.NET\\EcmaScript.NET.csproj
+		SccProjectTopLevelParentUniqueName4 = YUICompressor.sln
+		SccProjectName4 = Projects/EcmaScript.NET
+		SccLocalPath4 = Projects\\EcmaScript.NET
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -149,6 +181,10 @@ Global
 		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,11 +199,15 @@ Global
 		{197F7032-A560-44C7-969D-7D610B96B9AB} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}
 		{9CAE6E06-6453-4E10-9563-2B55CE537EF3} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}
 		{0F58ACB2-6E77-42A1-8806-FB07D70A4D5C} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}
+		{789E3CAA-6D10-41C0-987C-99AF5F58690A} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}
 		{FE4841B2-D33B-49D4-8FC2-B3123A5C1B8E} = {197F7032-A560-44C7-969D-7D610B96B9AB}
 		{7CB16AB7-DE91-49D1-8541-012D4CA8F679} = {197F7032-A560-44C7-969D-7D610B96B9AB}
 		{ACE77365-E3A5-4019-A21D-976CAF4377B0} = {9CAE6E06-6453-4E10-9563-2B55CE537EF3}
 		{12FB8E86-C92F-4E6C-A39D-F66D4FD01A23} = {9CAE6E06-6453-4E10-9563-2B55CE537EF3}
 		{3C7817AD-0D09-4E42-9AFC-63EB13410FC0} = {0F58ACB2-6E77-42A1-8806-FB07D70A4D5C}
 		{9DC443EA-144A-4477-BD58-C35FA650F193} = {0F58ACB2-6E77-42A1-8806-FB07D70A4D5C}
+		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50} = {B9985104-A65C-4B82-9844-1DD26967BB6E}
+		{C66F0E7F-0954-42F8-AA00-4F8592237B65} = {789E3CAA-6D10-41C0-987C-99AF5F58690A}
+		{F79D98D1-1C4A-4AB9-BBD3-19A4603EAE2A} = {789E3CAA-6D10-41C0-987C-99AF5F58690A}
 	EndGlobalSection
 EndGlobal
