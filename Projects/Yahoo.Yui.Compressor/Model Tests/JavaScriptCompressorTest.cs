@@ -11,6 +11,8 @@ namespace Yahoo.Yui.Compressor.Tests
         [DeploymentItem("bin\\SampleJavaScript1.js")]
         [DeploymentItem("bin\\SampleJavaScript2.js")]
         [DeploymentItem("bin\\SampleJavaScript3.js")]
+        [DeploymentItem("bin\\jquery-1.2.6-vsdoc.js")]
+        [DeploymentItem("bin\\jquery-1.3.1.js")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CompressTest()
         {
@@ -54,8 +56,13 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
             Assert.IsTrue(javascript.Length > compressedJavascript.Length);
 
-            javascript = "for(var x in _2f[i]){};";
+
+            // And now for the jQuery's..
+            javascript = File.ReadAllText("jquery-1.2.6-vsdoc.js");
             compressedJavascript = JavaScriptCompressor.Compress(javascript);
+            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
+            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+            Assert.AreEqual(61951, compressedJavascript.Length);
 
             // Expected failure.
             JavaScriptCompressor.Compress(null);
@@ -116,6 +123,23 @@ namespace Yahoo.Yui.Compressor.Tests
                 -1);
 
             Assert.IsTrue(compressedJavascript.Length < javascript.Length);
+        }
+
+        [TestMethod]
+        [DeploymentItem("bin\\SampleJavaScript6.js")]
+        public void CompressRegExWithUnicodeTest()
+        {
+            string javascript = File.ReadAllText("SampleJavaScript6.js");
+
+            // Compress with full obfuscation
+            string compressedJavascript = JavaScriptCompressor.Compress(javascript,
+                true,
+                false,
+                false,
+                false,
+                -1);
+
+            Assert.IsTrue(compressedJavascript.Contains(@"\w\u0128"));
         }
     }
 }

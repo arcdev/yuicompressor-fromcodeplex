@@ -658,50 +658,12 @@ namespace Yahoo.Yui.Compressor
             for (int i = 0, L = s.Length; i < L; i++)
             {
                 int c = s[i];
-
-                // Handle ASCII and derivative control characters.
-                // Info: http://en.wikipedia.org/wiki/C0_and_C1_control_codes
-                switch (c)
+                if (c == quotechar)
                 {
-                    case 0:
-                        stringBuilder.Append(@"\0");
-                        break; // Null.
-                    case 7:
-                        stringBuilder.Append(@"\a");
-                        break; // Bell.
-                    case 8:
-                        stringBuilder.Append(@"\b");
-                        break; // Backspace.
-                    case 9:
-                        stringBuilder.Append(@"\t");
-                        break; // Tab (horizontal).
-                    case 10:
-                        stringBuilder.Append(@"\n");
-                        break; // Line feed.
-                    case 11:
-                        stringBuilder.Append(@"\v");
-                        break; // Tab (vertical).
-                    case 12:
-                        stringBuilder.Append(@"\f");
-                        break; // Form feed.
-                    case 13:
-                        stringBuilder.Append(@"\n");
-                        break; // Line feed or carriage return.
-                    case 27:
-                        stringBuilder.Append(@"\e");
-                        break; // Escape.
-                    case 92:
-                        stringBuilder.Append("\\\\");
-                        break; // Single \ (backslash characters) need to be replaced by double backslashes.
-                    default:
-                        if (c == quotechar)
-                        {
-                            stringBuilder.Append("\\");
-                        }
-
-                        stringBuilder.Append((char) c);
-                        break;
+                    stringBuilder.Append("\\");
                 }
+
+                stringBuilder.Append((char) c);
             }
 
             return stringBuilder.ToString();
@@ -741,7 +703,7 @@ namespace Yahoo.Yui.Compressor
                 {
                     token = (JavaScriptToken) tokens[i + 1];
                     tv = token.Value;
-                    tv = tv.Substring(1, tv.Length - 1);
+                    tv = tv.Substring(1, tv.Length - 2);
                     if (IsValidIdentifier(tv))
                     {
                         tokens[i] = new JavaScriptToken(Token.DOT, ".");
@@ -772,7 +734,7 @@ namespace Yahoo.Yui.Compressor
                 {
                     token = (JavaScriptToken) tokens[i - 1];
                     tv = token.Value;
-                    tv = tv.Substring(1, tv.Length - 1);
+                    tv = tv.Substring(1, tv.Length - 2);
                     if (IsValidIdentifier(tv))
                     {
                         tokens[i - 1] = new JavaScriptToken(Token.NAME, tv);
@@ -1730,12 +1692,12 @@ namespace Yahoo.Yui.Compressor
                         if (result.Length > 0 &&
                             result[result.Length - 1] != '\n')
                         {
-                            result.Append("\\n");
+                            result.Append("\n");
                         }
 
                         result.Append("/*");
                         result.Append(symbol);
-                        result.Append("*/\\n");
+                        result.Append("*/\n");
                         break;
 
                     default:

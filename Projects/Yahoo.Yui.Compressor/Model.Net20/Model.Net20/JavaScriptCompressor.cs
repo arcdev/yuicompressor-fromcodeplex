@@ -543,15 +543,15 @@ namespace Yahoo.Yui.Compressor
         private static ArrayList Parse(StreamReader stream,
                                        ErrorReporter reporter)
         {
-            var compilerEnvirons = new CompilerEnvirons();
-            var parser = new Parser(compilerEnvirons, reporter);
+            CompilerEnvirons compilerEnvirons = new CompilerEnvirons();
+            Parser parser = new Parser(compilerEnvirons, reporter);
             parser.Parse(stream, null, 1);
-            var source = parser.EncodedSource;
+            string source = parser.EncodedSource;
 
-            var offset = 0;
-            var length = source.Length;
-            var tokens = new ArrayList();
-            var stringBuilder = new StringBuilder();
+            int offset = 0;
+            int length = source.Length;
+            ArrayList tokens = new ArrayList();
+            StringBuilder stringBuilder = new StringBuilder();
 
             while (offset < length)
             {
@@ -576,8 +576,8 @@ namespace Yahoo.Yui.Compressor
                         break;
 
                     default:
-                        var literal = (string) Literals[tt];
-                        if(literal != null)
+                        string literal = (string)Literals[tt];
+                        if (literal != null)
                         {
                             tokens.Add(new JavaScriptToken(tt, literal));
                         }
@@ -682,30 +682,12 @@ namespace Yahoo.Yui.Compressor
             for (int i = 0, L = s.Length; i < L; i++)
             {
                 int c = s[i];
-
-                // Handle ASCII and derivative control characters.
-                // Info: http://en.wikipedia.org/wiki/C0_and_C1_control_codes
-                switch (c)
+                if (c == quotechar)
                 {
-                    case 0: stringBuilder.Append(@"\0"); break; // Null.
-                    case 7: stringBuilder.Append(@"\a"); break; // Bell.
-                    case 8: stringBuilder.Append(@"\b"); break; // Backspace.
-                    case 9: stringBuilder.Append(@"\t"); break; // Tab (horizontal).
-                    case 10: stringBuilder.Append(@"\n"); break; // Line feed.
-                    case 11: stringBuilder.Append(@"\v"); break; // Tab (vertical).
-                    case 12: stringBuilder.Append(@"\f"); break; // Form feed.
-                    case 13: stringBuilder.Append(@"\n"); break; // Line feed or carriage return.
-                    case 27: stringBuilder.Append(@"\e"); break; // Escape.
-                    case 92: stringBuilder.Append("\\\\"); break; // Single \ (backslash characters) need to be replaced by double backslashes.
-                    default:
-                        if (c == quotechar)
-                        {
-                            stringBuilder.Append("\\");
-                        }
-
-                        stringBuilder.Append((char)c);
-                        break;
+                    stringBuilder.Append("\\");
                 }
+
+                stringBuilder.Append((char)c);
             }
 
             return stringBuilder.ToString();
@@ -1785,21 +1767,24 @@ namespace Yahoo.Yui.Compressor
             return Compress(javaScript,
                             isVerboseLogging,
                             true,
-                            true,
-                            false);
+                            false,
+                            false,
+                            -1);
         }
 
         public static string Compress(string javaScript,
                                       bool isVerboseLogging,
                                       bool isObfuscateJavascript,
                                       bool preserveAllSemicolons,
-                                      bool disableOptimizations)
+                                      bool disableOptimizations,
+                                      int lineBreakPosition)
         {
             return Compress(javaScript,
                             isVerboseLogging,
                             isObfuscateJavascript,
                             preserveAllSemicolons,
                             disableOptimizations,
+                            lineBreakPosition,
                             Encoding.Default);
         }
 
@@ -1808,6 +1793,7 @@ namespace Yahoo.Yui.Compressor
                                       bool isObfuscateJavascript,
                                       bool preserveAllSemicolons,
                                       bool disableOptimizations,
+                                      int lineBreakPosition,
                                       Encoding encoding)
         {
             if(string.IsNullOrEmpty(javaScript))
@@ -1818,18 +1804,18 @@ namespace Yahoo.Yui.Compressor
             JavaScriptCompressor javaScriptCompressor = new JavaScriptCompressor(javaScript,
                                                                                  isVerboseLogging,
                                                                                  encoding);
-            return javaScriptCompressor.Compress(80,
-                                                 true,
+            return javaScriptCompressor.Compress(isVerboseLogging,
                                                  isObfuscateJavascript,
                                                  preserveAllSemicolons,
-                                                 disableOptimizations);
+                                                 disableOptimizations,
+                                                 lineBreakPosition);
         }
 
-        public string Compress(int lineBreak,
-                               bool verbose,
+        public string Compress(bool verbose,
                                bool isObfuscateJavascript,
                                bool preserveAllSemicolons,
-                               bool disableOptimizations)
+                               bool disableOptimizations,
+                              int lineBreakPosition)
         {
             _munge = isObfuscateJavascript;
             _verbose = verbose;
@@ -1845,7 +1831,7 @@ namespace Yahoo.Yui.Compressor
 
             BuildSymbolTree();
             MungeSymboltree();
-            var stringBuilder = PrintSymbolTree(lineBreak, preserveAllSemicolons);
+            var stringBuilder = PrintSymbolTree(lineBreakPosition, preserveAllSemicolons);
 
             return stringBuilder.ToString();
         }

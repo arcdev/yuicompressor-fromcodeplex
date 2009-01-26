@@ -159,13 +159,13 @@ namespace EcmaScript.NET
                         }
                         ungetChar (c);
 
-                        string str = StringFromBuffer;
+                        string stringFromBuffer = StringFromBuffer;
                         if (!containsEscape) {
                             // OPT we shouldn't have to make a string (object!) to
                             // check if it's a keyword.
 
                             // Return the corresponding token if it's a keyword
-                            int result = stringToKeyword (str);
+                            int result = stringToKeyword(stringFromBuffer);
                             if (result != EcmaScript.NET.Token.EOF) {
                                 if (result != EcmaScript.NET.Token.RESERVED) {
                                     return result;
@@ -177,7 +177,7 @@ namespace EcmaScript.NET
                                     // If implementation permits to use future reserved
                                     // keywords in violation with the EcmaScript,
                                     // treat it as name but issue warning
-                                    parser.AddWarning ("msg.reserved.keyword", str);
+                                    parser.AddWarning("msg.reserved.keyword", stringFromBuffer);
                                 }
                             }
                         }
@@ -305,130 +305,59 @@ namespace EcmaScript.NET
                                 return EcmaScript.NET.Token.ERROR;
                             }
 
-                            if (c == '\\') {
-                                // We've hit an escaped character
-                                int escapeVal;
-
+                            if (c == '\\')
+                            {
                                 c = Char;
-                                switch (c) {
 
-                                    case 'b':
-                                        c = '\b';
+                                if (c == 'x')
+                                {
+                                    int i = 0;
+                                    i++;
+                                }
+                                switch (c)
+                                {
+                                    case '\\': // backslash
+                                    case 'b':  // backspace
+                                    case 'f':  // form feed
+                                    case 'n':  // line feed
+                                    case 'r':  // carriage return
+                                    case 't':  // horizontal tab
+                                    case 'v':  // vertical tab
+                                    case 'd':  // octal sequence
+                                    case 'u':  // unicode sequence
+                                    case 'x':  // hexadecimal sequence
+                                        // Only keep the '\' character for those
+                                        // characters that need to be escaped...
+                                        // Don't escape quoting characters...
+                                        addToString('\\');
+                                        addToString(c);
                                         break;
-
-                                    case 'f':
-                                        c = '\f';
-                                        break;
-
-                                    case 'n':
-                                        c = '\n';
-                                        break;
-
-                                    case 'r':
-                                        c = '\r';
-                                        break;
-
-                                    case 't':
-                                        c = '\t';
-                                        break;
-
-                                    // \v a late addition to the ECMA spec,
-                                    // it is not in Java, so use 0xb
-
-                                    case 'v':
-                                        c = 0xb;
-                                        break;
-
-
-                                    case 'u':
-                                        // Get 4 hex digits; if the u escape is not
-                                        // followed by 4 hex digits, use 'u' + the
-                                        // literal character sequence that follows.
-                                        int escapeStart = stringBufferTop;
-                                        addToString ('u');
-                                        escapeVal = 0;
-                                        for (int i = 0; i != 4; ++i) {
-                                            c = Char;
-                                            escapeVal = ScriptConvert.XDigitToInt (c, escapeVal);
-                                            if (escapeVal < 0) {
-
-                                                goto strLoop;
-                                            }
-                                            addToString (c);
-                                        }
-                                        // prepare for replace of stored 'u' sequence
-                                        // by escape value
-                                        stringBufferTop = escapeStart;
-                                        c = escapeVal;
-                                        break;
-
-                                    case 'x':
-                                        // Get 2 hex digits, defaulting to 'x'+literal
-                                        // sequence, as above.
-                                        c = Char;
-                                        escapeVal = ScriptConvert.XDigitToInt (c, 0);
-                                        if (escapeVal < 0) {
-                                            addToString ('x');
-
-                                            goto strLoop;
-                                        }
-                                        else {
-                                            int c1 = c;
-                                            c = Char;
-                                            escapeVal = ScriptConvert.XDigitToInt (c, escapeVal);
-                                            if (escapeVal < 0) {
-                                                addToString ('x');
-                                                addToString (c1);
-
-                                                goto strLoop;
-                                            }
-                                            else {
-                                                // got 2 hex digits
-                                                c = escapeVal;
-                                            }
-                                        }
-                                        break;
-
 
                                     case '\n':
-                                        // Remove line terminator after escape to follow
-                                        // SpiderMonkey and C/C++
-                                        c = Char;
-
-                                        goto strLoop;
-
-
-                                    default:
-                                        if ('0' <= c && c < '8') {
-                                            int val = c - '0';
-                                            c = Char;
-                                            if ('0' <= c && c < '8') {
-                                                val = 8 * val + c - '0';
-                                                c = Char;
-                                                if ('0' <= c && c < '8' && val <= 31) {
-                                                    // c is 3rd char of octal sequence only
-                                                    // if the resulting val <= 0377
-                                                    val = 8 * val + c - '0';
-                                                    c = Char;
-                                                }
-                                            }
-                                            ungetChar (c);
-                                            c = val;
-                                        }
+                                        // Remove line terminator after escape
                                         break;
 
+                                    default:
+                                        if (isDigit(c))
+                                        {
+                                            // Octal representation of a character.
+                                            // Preserve the escaping (see Y! bug #1637286)
+                                            addToString('\\');
+                                        }
+                                        addToString(c);
+                                        break;
                                 }
                             }
-                            addToString (c);
+                            else
+                            {
+                                addToString(c);
+                            }
+                            
                             c = Char;
-
-
-                        strLoop:
-                            ;
                         }
 
-                        string str = StringFromBuffer;
-                        this.str = ((string)allStrings.intern (str));
+                        string someStuff = StringFromBuffer;
+                        this.str = ((string)allStrings.intern(someStuff));
                         return EcmaScript.NET.Token.STRING;
                     }
 
