@@ -1100,8 +1100,9 @@ namespace EcmaScript.NET
 
                 case Token.SETPROP:
                 case Token.SETPROP_OP:
-                case Token.SETPROP_GETTER:
-                case Token.SETPROP_SETTER: {
+                //case Token.SETPROP_GETTER:
+                //case Token.SETPROP_SETTER: 
+                    {
                         VisitExpression (child, 0);
                         child = child.Next;
                         string property = child.String;
@@ -3153,8 +3154,8 @@ namespace EcmaScript.NET
                                     }
                                     goto case Token.SETPROP;
 
-                                case Token.SETPROP_GETTER:
-                                case Token.SETPROP_SETTER:
+                                //case Token.SETPROP_GETTER:
+                                //case Token.SETPROP_SETTER:
                                 case Token.SETPROP: {
                                         object rhs = stack [stackTop];
                                         if (rhs == DBL_MRK)
@@ -3165,15 +3166,15 @@ namespace EcmaScript.NET
                                             lhs = sDbl [stackTop];
 
                                         switch (op) {
-                                            case Token.SETPROP_GETTER:
-                                                ((ScriptableObject)lhs).DefineGetter (stringReg, ((ICallable)rhs));
-                                                stack [stackTop] = rhs;
-                                                break;
+                                            //case Token.SETPROP_GETTER:
+                                            //    ((ScriptableObject)lhs).DefineGetter (stringReg, ((ICallable)rhs));
+                                            //    stack [stackTop] = rhs;
+                                            //    break;
 
-                                            case Token.SETPROP_SETTER:
-                                                ((ScriptableObject)lhs).DefineSetter (stringReg, ((ICallable)rhs));
-                                                stack [stackTop] = rhs;
-                                                break;
+                                            //case Token.SETPROP_SETTER:
+                                            //    ((ScriptableObject)lhs).DefineSetter (stringReg, ((ICallable)rhs));
+                                            //    stack [stackTop] = rhs;
+                                            //    break;
 
 
                                             default:

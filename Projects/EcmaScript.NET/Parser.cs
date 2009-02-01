@@ -110,13 +110,44 @@ namespace EcmaScript.NET
         int peekToken ()
         {
             int tt = currentFlaggedToken;
-            if (tt == Token.EOF) {
-                tt = ts.Token;
-                if (tt == Token.EOL) {
-                    do {
-                        tt = ts.Token;
+            if (tt == Token.EOF)
+            {
+                while ((tt = ts.Token) == Token.CONDCOMMENT ||
+                       tt == Token.KEEPCOMMENT)
+                {
+                    if (tt == Token.CONDCOMMENT)
+                    {
+                        // Support for JScript conditional comments */
+                        decompiler.AddJScriptConditionalComment(ts.String);
                     }
-                    while (tt == Token.EOL);
+                    else
+                    {
+                        /* Support for preserved comments */
+                        decompiler.AddPreservedComment(ts.String);
+                    }
+                }
+
+
+                if (tt == Token.EOL)
+                {
+                    do
+                    {
+                        tt = ts.Token;
+
+                        if (tt == Token.CONDCOMMENT)
+                        {
+                            /* Support for JScript conditional comments */
+                            decompiler.AddJScriptConditionalComment(ts.String);
+                        }
+                        else if (tt == Token.KEEPCOMMENT)
+                        {
+                            /* Support for preserved comments */
+                            decompiler.AddPreservedComment(ts.String);
+                        }
+                    } while (tt == Token.EOL ||
+                             tt == Token.CONDCOMMENT ||
+                             tt == Token.KEEPCOMMENT);
+
                     tt |= TI_AFTER_EOL;
                 }
                 currentFlaggedToken = tt;
@@ -1114,22 +1145,22 @@ namespace EcmaScript.NET
                         pn = expr (false);
                         if (pn.Type != Token.LABEL) {
 
-                            if (compilerEnv.getterAndSetterSupport) {
-                                tt = peekToken ();
-                                if (tt == Token.NAME) {
-                                    if (ts.String == "getter" || ts.String == "setter") {
-                                        pn.Type = (ts.String [0] == 'g' ? Token.SETPROP_GETTER
-                                            : Token.SETPROP_SETTER);
-                                        decompiler.AddName (" " + ts.String); // HACK: Hack (whitespace) for decmpiler
-                                        consumeToken ();
-                                        matchToken (Token.ASSIGN);
-                                        decompiler.AddToken (Token.ASSIGN);
-                                        matchToken (Token.FUNCTION);
-                                        Node fn = function (FunctionNode.FUNCTION_EXPRESSION);
-                                        pn.addChildToBack (fn);
-                                    }
-                                }
-                            }
+                            //if (compilerEnv.getterAndSetterSupport) {
+                            //    tt = peekToken ();
+                            //    if (tt == Token.NAME) {
+                            //        if (ts.String == "getter" || ts.String == "setter") {
+                            //            pn.Type = (ts.String [0] == 'g' ? Token.SETPROP_GETTER
+                            //                : Token.SETPROP_SETTER);
+                            //            decompiler.AddName (" " + ts.String); // HACK: Hack (whitespace) for decmpiler
+                            //            consumeToken ();
+                            //            matchToken (Token.ASSIGN);
+                            //            decompiler.AddToken (Token.ASSIGN);
+                            //            matchToken (Token.FUNCTION);
+                            //            Node fn = function (FunctionNode.FUNCTION_EXPRESSION);
+                            //            pn.addChildToBack (fn);
+                            //        }
+                            //    }
+                            //}
                             pn = nf.CreateExprStatement (pn, lineno);
                         }
                         else {
@@ -1972,11 +2003,11 @@ namespace EcmaScript.NET
                                         case Token.NAME:
                                         case Token.STRING:
                                             consumeToken ();
-                                            if (compilerEnv.getterAndSetterSupport) {
-                                                if (tt == Token.NAME)
-                                                    if (CheckForGetOrSet (elems) || CheckForGetterOrSetter (elems))
-                                                        goto next_prop;
-                                            }
+                                            //if (compilerEnv.getterAndSetterSupport) {
+                                            //    if (tt == Token.NAME)
+                                            //        if (CheckForGetOrSet (elems) || CheckForGetterOrSetter (elems))
+                                            //            goto next_prop;
+                                            //}
 
 
                                             // map NAMEs to STRINGs in object literal context

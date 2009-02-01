@@ -140,6 +140,18 @@ namespace EcmaScript.NET
             AppendString ('/' + regexp + '/' + flags);
         }
 
+        internal void AddJScriptConditionalComment(String str)
+        {
+            AddToken(Token.CONDCOMMENT);
+            AppendString(str);
+        }
+
+        internal void AddPreservedComment(String str)
+        {
+            AddToken(Token.KEEPCOMMENT);
+            AppendString(str);
+        }
+
         internal void AddNumber (double n)
         {
             AddToken (Token.NUMBER);

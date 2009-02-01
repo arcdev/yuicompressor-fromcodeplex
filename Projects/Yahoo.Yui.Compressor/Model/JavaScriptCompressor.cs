@@ -534,7 +534,8 @@ namespace Yahoo.Yui.Compressor
                 int tt = source[offset++];
                 switch (tt)
                 {
-                    case Token.SPECIALCOMMENT:
+                    case Token.CONDCOMMENT:
+                    case Token.KEEPCOMMENT:
                     case Token.NAME:
                     case Token.REGEXP:
                     case Token.STRING:
@@ -1119,7 +1120,7 @@ namespace Yahoo.Yui.Compressor
                         parensNesting--;
                         break;
 
-                    case Token.SPECIALCOMMENT:
+                    case Token.CONDCOMMENT:
                         if (this._mode == BUILDING_SYMBOL_TREE)
                         {
                             this.ProtectScopeFromObfuscation(currentScope);
@@ -1299,7 +1300,7 @@ namespace Yahoo.Yui.Compressor
                         this.ParseCatch();
                         break;
 
-                    case Token.SPECIALCOMMENT:
+                    case Token.CONDCOMMENT:
                         if (this._mode == BUILDING_SYMBOL_TREE)
                         {
                             this.ProtectScopeFromObfuscation(scope);
@@ -1606,7 +1607,6 @@ namespace Yahoo.Yui.Compressor
                     case Token.RETURN:
                     case Token.TYPEOF:
                         result.Append((string) Literals[token.TokenType]);
-
                         // No space needed after 'return' and 'typeof' when followed
                         // by '(', '[', '{', a string or a regexp.
                         if (this._offset < length)
@@ -1627,7 +1627,6 @@ namespace Yahoo.Yui.Compressor
                     case Token.CASE:
                     case Token.THROW:
                         result.Append((string) Literals[token.TokenType]);
-
                         // White-space needed after 'case' and 'throw' when not followed by a string.
                         if (this._offset < length &&
                             this.GetToken(0).TokenType != Token.STRING)
@@ -1683,14 +1682,15 @@ namespace Yahoo.Yui.Compressor
                             // Some source control tools don't like it when files containing lines longer
                             // than, say 8000 characters, are checked in. The linebreak option is used in
                             // that case to split long lines after a specific column.
-                            result.Append(Environment.NewLine);
+                            result.Append('\n');
                             linestartpos = result.Length;
                         }
                         break;
 
-                    case Token.SPECIALCOMMENT:
+                    case Token.CONDCOMMENT:
+                    case Token.KEEPCOMMENT:
                         if (result.Length > 0 &&
-                            result[result.Length - 1] != '\n')
+                           result[result.Length - 1] != '\n')
                         {
                             result.Append("\n");
                         }
@@ -1720,11 +1720,13 @@ namespace Yahoo.Yui.Compressor
             // end of one file may very likely cause a syntax error)
             if (!preserveAllSemiColons &&
                 result.Length > 0 &&
-                GetToken(-1).TokenType != Token.SPECIALCOMMENT)
+                GetToken(-1).TokenType != Token.CONDCOMMENT &&
+                GetToken(-1).TokenType != Token.KEEPCOMMENT)
             {
                 if (result[result.Length - 1] == '\n')
                 {
-                    result.Append(";", result.Length - 1, 1);
+                    //result.Append(";", result.Length - 1, 1);
+                    result[result.Length - 1] = '\n';
                 }
                 else
                 {

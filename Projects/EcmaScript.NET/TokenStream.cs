@@ -181,7 +181,8 @@ namespace EcmaScript.NET
                                 }
                             }
                         }
-                        this.str = ((string)allStrings.intern (str));
+                        //this.str = ((string)allStrings.intern (str));
+                        this.str = ((string)allStrings.intern(stringFromBuffer));
                         return EcmaScript.NET.Token.NAME;
                     }
 
@@ -309,11 +310,6 @@ namespace EcmaScript.NET
                             {
                                 c = Char;
 
-                                if (c == 'x')
-                                {
-                                    int i = 0;
-                                    i++;
-                                }
                                 switch (c)
                                 {
                                     case '\\': // backslash
@@ -544,18 +540,40 @@ namespace EcmaScript.NET
                             }
                             if (matchChar ('*')) {
                                 bool lookForSlash = false;
+                                StringBuilder stringBuilder = new StringBuilder();
                                 for (; ; ) {
                                     c = Char;
                                     if (c == EOF_CHAR) {
                                         parser.AddError ("msg.unterminated.comment");
                                         return EcmaScript.NET.Token.ERROR;
                                     }
-                                    else if (c == '*') {
+                                    stringBuilder.Append((char) c);
+                                    if (c == '*') {
                                         lookForSlash = true;
                                     }
                                     else if (c == '/') {
-                                        if (lookForSlash) {
-
+                                        if (lookForSlash)
+                                        {
+                                            stringBuilder.Remove(stringBuilder.Length - 2, 2);
+                                            string s1 = stringBuilder.ToString();
+                                            string s2 = s1.Trim();
+                                            if (s1.StartsWith("!"))
+                                            {
+                                                // Remove the leading '!'
+                                                this.str = s1.Substring(1);
+                                                return EcmaScript.NET.Token.KEEPCOMMENT;
+                                            }
+                                            else if (s2.StartsWith("@cc_on") ||
+                                                     s2.StartsWith("@if") ||
+                                                     s2.StartsWith("@elif") ||
+                                                     s2.StartsWith("@else") ||
+                                                     s2.StartsWith("@end"))
+                                            {
+                                                this.str = s1;
+                                                return EcmaScript.NET.Token.CONDCOMMENT;
+                                            }
+                                        } else
+                                        {
                                             goto retry;
                                         }
                                     }
@@ -969,7 +987,10 @@ namespace EcmaScript.NET
         private const int EOF_CHAR = -1;
 
 
-        internal TokenStream (Parser parser, System.IO.StreamReader sourceReader, string sourceString, int lineno)
+        internal TokenStream (Parser parser, 
+            System.IO.StreamReader sourceReader, 
+            string sourceString, 
+            int lineno)
         {
             this.parser = parser;
             this.lineno = lineno;
@@ -1004,7 +1025,6 @@ namespace EcmaScript.NET
                     case EcmaScript.NET.Token.REGEXP:
                     case EcmaScript.NET.Token.NAME:
                         return name + " `" + this.str + "'";
-
 
                     case EcmaScript.NET.Token.NUMBER:
                         return "NUMBER " + this.dNumber;
@@ -1384,28 +1404,32 @@ namespace EcmaScript.NET
             }
 
             int c;
-            bool inCharClass = false;
+            bool inClass = false;
 
-            while (true) {
-                c = Char;
-                if (c == '[')
-                    inCharClass = true;
-                if (c == ']')
-                    inCharClass = false;
-                if (c == '/' && !inCharClass) {
-                    break;
+            while ((c = Char) != '/' || inClass)
+            {
+                if (c == '\n' || c == EOF_CHAR)
+                {
+                    ungetChar(c);
+                    throw parser.ReportError("msg.unterminated.re.lit");
                 }
-                if (c == '\n' || c == EOF_CHAR) {
-                    ungetChar (c);
-                    throw parser.ReportError ("msg.unterminated.re.lit");
-                }
-                if (c == '\\') {
-                    addToString (c);
+                if (c == '\\')
+                {
+                    addToString(c);
                     c = Char;
                 }
+                else if(c == '[')
+                {
+                    inClass = true;
+                }
+                else if (c == ']')
+                {
+                    inClass = false;
+                }
 
-                addToString (c);
+                addToString(c);
             }
+
             int reEnd = stringBufferTop;
 
             while (true) {
