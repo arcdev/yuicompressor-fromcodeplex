@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using EcmaScript.NET;
 
 namespace Yahoo.Yui.Compressor
@@ -13,14 +14,14 @@ namespace Yahoo.Yui.Compressor
     {
         #region Fields
 
-        private const int BUILDING_SYMBOL_TREE = 1;
         private static readonly object _synLock = new object();
-
+        
         private static readonly Regex SIMPLE_IDENTIFIER_NAME_PATTERN = new Regex("^[a-zA-Z_][a-zA-Z0-9_]*$",
                                                                                  RegexOptions.Compiled);
 
         private static HashSet<string> _builtin;
 
+        private const int BUILDING_SYMBOL_TREE = 1;
         public static int CHECKING_SYMBOL_TREE = 2;
 
         private readonly ScriptOrFunctionScope _globalScope = new ScriptOrFunctionScope(-1, null);
@@ -57,18 +58,26 @@ namespace Yahoo.Yui.Compressor
                                     bool isVerboseLogging)
             : this(javaScript,
                    isVerboseLogging,
-                   Encoding.Default)
+                   Encoding.Default,
+                   CultureInfo.CreateSpecificCulture("en-GB"))
         {
         }
 
         public JavaScriptCompressor(string javaScript,
                                     bool isVerboseLogging,
-                                    Encoding encoding)
+                                    Encoding encoding,
+                                    CultureInfo threadCulture)
         {
             if (string.IsNullOrEmpty(javaScript))
             {
                 throw new ArgumentNullException("javaScript");
             }
+
+            // Lets make sure the current thread is in english. This is because most javascript (yes, this also does css..)
+            // must be in english in case a developer runs this on a non-english OS.
+            // Reference: http://www.codeplex.com/YUICompressor/WorkItem/View.aspx?WorkItemId=3219
+            Thread.CurrentThread.CurrentCulture = threadCulture;
+            Thread.CurrentThread.CurrentUICulture = threadCulture;
 
             Initialise();
 
@@ -112,12 +121,12 @@ namespace Yahoo.Yui.Compressor
                     if (Ones == null)
                     {
                         onesList = new List<string>();
-                        for (char c = 'A'; c <= 'Z'; c++)
+                        for (char c = 'a'; c <= 'z'; c++)
                         {
                             onesList.Add(Convert.ToString(c, CultureInfo.InvariantCulture));
                         }
 
-                        for (char c = 'a'; c <= 'z'; c++)
+                        for (char c = 'A'; c <= 'Z'; c++)
                         {
                             onesList.Add(Convert.ToString(c, CultureInfo.InvariantCulture));
                         }
@@ -196,12 +205,12 @@ namespace Yahoo.Yui.Compressor
                         {
                             string two = Twos[i];
 
-                            for (char c = 'A'; c <= 'Z'; c++)
+                            for (char c = 'a'; c <= 'z'; c++)
                             {
                                 threesList.Add(two + Convert.ToString(c, CultureInfo.InvariantCulture));
-                            }
-
-                            for (char c = 'a'; c <= 'z'; c++)
+                            } 
+                            
+                            for (char c = 'A'; c <= 'Z'; c++)
                             {
                                 threesList.Add(two + Convert.ToString(c, CultureInfo.InvariantCulture));
                             }
@@ -1726,7 +1735,7 @@ namespace Yahoo.Yui.Compressor
                 if (result[result.Length - 1] == '\n')
                 {
                     //result.Append(";", result.Length - 1, 1);
-                    result[result.Length - 1] = '\n';
+                    result[result.Length - 1] = ';';
                 }
                 else
                 {
@@ -1771,7 +1780,8 @@ namespace Yahoo.Yui.Compressor
                 preserveAllSemicolons,
                 disableOptimizations, 
                 lineBreakPosition,
-                Encoding.Default);
+                Encoding.Default,
+                CultureInfo.CreateSpecificCulture("en-GB"));
         }
 
         public static string Compress(string javaScript,
@@ -1780,7 +1790,8 @@ namespace Yahoo.Yui.Compressor
                                       bool preserveAllSemicolons,
                                       bool disableOptimizations,
                                       int lineBreakPosition,
-                                      Encoding encoding)
+                                      Encoding encoding,
+                                      CultureInfo threadCulture)
         {
             if (string.IsNullOrEmpty(javaScript))
             {
@@ -1789,7 +1800,8 @@ namespace Yahoo.Yui.Compressor
 
             JavaScriptCompressor javaScriptCompressor = new JavaScriptCompressor(javaScript,
                                                                                  isVerboseLogging,
-                                                                                 encoding);
+                                                                                 encoding,
+                                                                                 threadCulture);
 
             return javaScriptCompressor.Compress(isVerboseLogging,
                                                  isObfuscateJavascript,

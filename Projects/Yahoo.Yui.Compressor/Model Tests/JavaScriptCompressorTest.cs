@@ -11,20 +11,15 @@ namespace Yahoo.Yui.Compressor.Tests
         [DeploymentItem("bin\\SampleJavaScript1.js")]
         [DeploymentItem("bin\\SampleJavaScript2.js")]
         [DeploymentItem("bin\\SampleJavaScript3.js")]
-        [DeploymentItem("bin\\jquery-1.2.6-vsdoc.js")]
         [DeploymentItem("bin\\jquery-1.3.1.js")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CompressTest()
         {
-            string javascript;
-            string compressedJavascript;
-
-
             // First load up some simple javascript.
-            javascript = File.ReadAllText("SampleJavaScript1.js");
+            string javascript = File.ReadAllText("SampleJavaScript1.js");
 
             // Now compress the small javascript.
-            compressedJavascript = JavaScriptCompressor.Compress(javascript);
+            string compressedJavascript = JavaScriptCompressor.Compress(javascript);
             Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
             Assert.IsTrue(javascript.Length > compressedJavascript.Length);
 
@@ -56,14 +51,6 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
             Assert.IsTrue(javascript.Length > compressedJavascript.Length);
 
-
-            // And now for the jQuery's..
-            javascript = File.ReadAllText("jquery-1.2.6-vsdoc.js");
-            compressedJavascript = JavaScriptCompressor.Compress(javascript);
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
-            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
-            Assert.AreEqual(61951, compressedJavascript.Length);
-
             // Expected failure.
             JavaScriptCompressor.Compress(null);
         }
@@ -72,26 +59,21 @@ namespace Yahoo.Yui.Compressor.Tests
         [DeploymentItem("bin\\SampleJavaScript4.js")]
         public void CompressWithObfuscationTest()
         {
-            string javascript;
-            string compressedJavascript;
-            int notObfuscatedLength;
-
-
             // Now lets try the big mother fraker.
-            javascript = File.ReadAllText("SampleJavaScript4.js");
+            string javascript = File.ReadAllText("SampleJavaScript4.js");
 
             // Now compress the small javascript without obfuscating.
-            compressedJavascript = JavaScriptCompressor.Compress(javascript,
-                true,
-                false,
-                false,
-                false,
-                -1);
+            string compressedJavascript = JavaScriptCompressor.Compress(javascript,
+                                                                        true,
+                                                                        false,
+                                                                        false,
+                                                                        false,
+                                                                        -1);
 
             Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
             Assert.IsTrue(javascript.Length > compressedJavascript.Length);
 
-            notObfuscatedLength = compressedJavascript.Length;
+            int notObfuscatedLength = compressedJavascript.Length;
 
             // Now obfuscate that same javascript.
             compressedJavascript = JavaScriptCompressor.Compress(javascript,
@@ -117,7 +99,7 @@ namespace Yahoo.Yui.Compressor.Tests
             // Compress with full obfuscation
             string compressedJavascript = JavaScriptCompressor.Compress(javascript,
                 true,
-                false,
+                true,
                 false,
                 false,
                 -1);
@@ -134,12 +116,67 @@ namespace Yahoo.Yui.Compressor.Tests
             // Compress with full obfuscation
             string compressedJavascript = JavaScriptCompressor.Compress(javascript,
                 true,
-                false,
+                true,
                 false,
                 false,
                 -1);
 
+            Assert.IsFalse(compressedJavascript.Contains(@"}get var"));
+            Assert.IsTrue(compressedJavascript.Contains(@"\w\u0128"));
+
+            // No obfuscation.
+            string compressedJavascriptNoObfuscation = JavaScriptCompressor.Compress(javascript,
+               true,
+               false,
+               false,
+               false,
+               -1);
+
             Assert.IsTrue(compressedJavascript.Contains(@"\w\u0128"));
         }
+
+        [TestMethod]
+        [DeploymentItem("bin\\jquery-1.2.6-vsdoc.js")]
+        public void CompressFull_JQuery126VSDocTest()
+        {
+            // And now for the jQuery's..
+            string javascript = File.ReadAllText("jquery-1.2.6-vsdoc.js");
+            string compressedJavascript = JavaScriptCompressor.Compress(javascript);
+            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
+            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+            Assert.AreEqual(61591, compressedJavascript.Length);
+        }
+
+        [TestMethod]
+        [DeploymentItem("bin\\jquery-1.3.1.js")]
+        public void CompressFull_JQuery131Test()
+        {
+            // And now for the jQuery's..
+            string javascript = File.ReadAllText("jquery-1.3.1.js");
+            string compressedJavascript = JavaScriptCompressor.Compress(javascript);
+            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
+            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+            Assert.AreEqual(55272, compressedJavascript.Length);
+        }
+
+        [TestMethod]
+        [DeploymentItem("bin\\jquery-1.3.1.js")]
+        public void CompressFull_JQuery131_NoMungeTest()
+        {
+            // And now for the jQuery's..
+            string javascript = File.ReadAllText("jquery-1.3.1.js");
+
+            // All defaults except obfuscation turned off.
+            string compressedJavascript = JavaScriptCompressor.Compress(javascript,
+                false,
+                false,
+                false,
+                false,
+                -1);
+            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
+            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+            Assert.AreEqual(71146, compressedJavascript.Length);
+        }
+        
     }
 }

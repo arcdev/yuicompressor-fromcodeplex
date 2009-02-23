@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using EcmaScript.NET;
 using Iesi.Collections.Generic;
 
@@ -59,18 +60,26 @@ namespace Yahoo.Yui.Compressor
                                     bool isVerboseLogging)
             : this(javaScript,
                    isVerboseLogging,
-                   Encoding.Default)
+                   Encoding.Default,
+                   CultureInfo.CreateSpecificCulture("en-GB"))
         {
         }
 
         public JavaScriptCompressor(string javaScript,
                                     bool isVerboseLogging,
-                                    Encoding encoding)
+                                    Encoding encoding,
+                                    CultureInfo threadCulture)
         {
             if(string.IsNullOrEmpty(javaScript))
             {
                 throw new ArgumentNullException("javaScript");
             }
+
+            // Lets make sure the current thread is in english. This is because most javascript (yes, this also does css..)
+            // must be in english in case a developer runs this on a non-english OS.
+            // Reference: http://www.codeplex.com/YUICompressor/WorkItem/View.aspx?WorkItemId=3219
+            Thread.CurrentThread.CurrentCulture = threadCulture;
+            Thread.CurrentThread.CurrentUICulture = threadCulture;
 
             Initialise();
 
@@ -86,7 +95,7 @@ namespace Yahoo.Yui.Compressor
 
         #region Private Methods
 
-        private static HashedSet<string> InitialiseBuiltIn()
+        private static void InitialiseBuiltIn()
         {
             HashedSet<string> builtin;
 
@@ -105,11 +114,9 @@ namespace Yahoo.Yui.Compressor
                     }
                 }
             }
-
-            return _builtin;
         }
 
-        private static List<string> InitialiseOnesList()
+        private static void InitialiseOnesList()
         {
             List<string> onesList;
 
@@ -135,11 +142,9 @@ namespace Yahoo.Yui.Compressor
                     }
                 }
             }
-
-            return Ones;
         }
 
-        private static List<string> InitialiseTwosList()
+        private static void InitialiseTwosList()
         {
             List<string> twosList;
 
@@ -188,11 +193,9 @@ namespace Yahoo.Yui.Compressor
                     }
                 }
             }
-
-            return Twos;
         }
 
-        private static List<string> InitialiseThreesList()
+        private static void InitialiseThreesList()
         {
             List<string> threesList;
 
@@ -242,11 +245,9 @@ namespace Yahoo.Yui.Compressor
                     }
                 }
             }
-
-            return Threes;
         }
 
-        private static Hashtable InitialiseLiterals()
+        private static void InitialiseLiterals()
         {
             Hashtable literals;
 
@@ -350,11 +351,9 @@ namespace Yahoo.Yui.Compressor
                     }
                 }
             }
-
-            return Literals;
         }
 
-        private static HashedSet<string> InitialiseReserved()
+        private static void InitialiseReserved()
         {
             HashedSet<string> reserved;
 
@@ -444,8 +443,6 @@ namespace Yahoo.Yui.Compressor
                     }
                 }
             }
-
-            return Reserved;
         }
 
         private static void Initialise()
@@ -1698,7 +1695,7 @@ namespace Yahoo.Yui.Compressor
                             // Some source control tools don't like it when files containing lines longer
                             // than, say 8000 characters, are checked in. The linebreak option is used in
                             // that case to split long lines after a specific column.
-                            result.Append(Environment.NewLine);
+                            result.Append('\n');
                             linestartpos = result.Length;
                         }
                         break;
@@ -1786,7 +1783,8 @@ namespace Yahoo.Yui.Compressor
                             preserveAllSemicolons,
                             disableOptimizations,
                             lineBreakPosition,
-                            Encoding.Default);
+                            Encoding.Default,
+                            CultureInfo.CreateSpecificCulture("en-GB"));
         }
 
         public static string Compress(string javaScript,
@@ -1795,7 +1793,8 @@ namespace Yahoo.Yui.Compressor
                                       bool preserveAllSemicolons,
                                       bool disableOptimizations,
                                       int lineBreakPosition,
-                                      Encoding encoding)
+                                      Encoding encoding,
+                                      CultureInfo threadCulture)
         {
             if(string.IsNullOrEmpty(javaScript))
             {
@@ -1804,7 +1803,8 @@ namespace Yahoo.Yui.Compressor
 
             JavaScriptCompressor javaScriptCompressor = new JavaScriptCompressor(javaScript,
                                                                                  isVerboseLogging,
-                                                                                 encoding);
+                                                                                 encoding,
+                                                                                 threadCulture);
             return javaScriptCompressor.Compress(isVerboseLogging,
                                                  isObfuscateJavascript,
                                                  preserveAllSemicolons,

@@ -1,4 +1,6 @@
-﻿namespace Yahoo.Yui.Compressor
+﻿using EcmaScript.NET;
+
+namespace Yahoo.Yui.Compressor
 {
     public class JavaScriptToken
     {
@@ -10,6 +12,14 @@
         {
             TokenType = type;
             Value = value;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Type:[{0}/{1} Value: [{2}]",
+                                 Token.name(TokenType),
+                                 TokenType,
+                                 Value);
         }
     }
 }

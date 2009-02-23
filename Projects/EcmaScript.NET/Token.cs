@@ -117,105 +117,103 @@ namespace EcmaScript.NET
         public const int REF_NS_MEMBER = 74;
         public const int REF_NAME = 75;
         public const int REF_NS_NAME = 76; // Reference for ns::y, @ns::y@[y] etc.		
+        public const int SETPROP_GETTER = 77;
+        public const int SETPROP_SETTER = 78;
 
-        public const int LAST_BYTECODE_TOKEN = REF_NS_NAME;
+        // End of interpreter bytecodes		
+        public const int LAST_BYTECODE_TOKEN = SETPROP_SETTER;
 
-        public const int TRY = 77;
-        public const int SEMI = 78;
-        public const int LB = 79;
-        public const int RB = 80;
-        public const int LC = 81;
-        public const int RC = 82;
-        public const int LP = 83;
-        public const int RP = 84;
-        public const int COMMA = 85;
-        public const int ASSIGN = 86;
-        public const int ASSIGN_BITOR = 87;
-        public const int ASSIGN_BITXOR = 88;
-        public const int ASSIGN_BITAND = 89;
-        public const int ASSIGN_LSH = 90;
-        public const int ASSIGN_RSH = 91;
-        public const int ASSIGN_URSH = 92;
-        public const int ASSIGN_ADD = 93;
-        public const int ASSIGN_SUB = 94;
-        public const int ASSIGN_MUL = 95;
-        public const int ASSIGN_DIV = 96;
-        public const int ASSIGN_MOD = 97; // %=
+        public const int TRY = LAST_BYTECODE_TOKEN + 1;
+        public const int SEMI = LAST_BYTECODE_TOKEN + 2;
+        public const int LB = LAST_BYTECODE_TOKEN + 3;
+        public const int RB = LAST_BYTECODE_TOKEN + 4;
+        public const int LC = LAST_BYTECODE_TOKEN + 5;
+        public const int RC = LAST_BYTECODE_TOKEN + 6;
+        public const int LP = LAST_BYTECODE_TOKEN + 7;
+        public const int RP = LAST_BYTECODE_TOKEN + 8;
+        public const int COMMA = LAST_BYTECODE_TOKEN + 9;
+        public const int ASSIGN = LAST_BYTECODE_TOKEN + 10;
+        public const int ASSIGN_BITOR = LAST_BYTECODE_TOKEN + 11;
+        public const int ASSIGN_BITXOR = LAST_BYTECODE_TOKEN + 12;
+        public const int ASSIGN_BITAND = LAST_BYTECODE_TOKEN + 13;
+        public const int ASSIGN_LSH = LAST_BYTECODE_TOKEN + 14;
+        public const int ASSIGN_RSH = LAST_BYTECODE_TOKEN + 15;
+        public const int ASSIGN_URSH = LAST_BYTECODE_TOKEN + 16;
+        public const int ASSIGN_ADD = LAST_BYTECODE_TOKEN + 17;
+        public const int ASSIGN_SUB = LAST_BYTECODE_TOKEN + 18;
+        public const int ASSIGN_MUL = LAST_BYTECODE_TOKEN + 19;
+        public const int ASSIGN_DIV = LAST_BYTECODE_TOKEN + 20;
+        public const int ASSIGN_MOD = LAST_BYTECODE_TOKEN + 21; // %=
 
         public const int FIRST_ASSIGN = ASSIGN;
         public const int LAST_ASSIGN = ASSIGN_MOD;
 
-        public const int HOOK = 98;
-        public const int COLON = 99;
-        public const int OR = 100;
-        public const int AND = 101;
-        public const int INC = 102;
-        public const int DEC = 103;
-        public const int DOT = 104;
-        public const int FUNCTION = 105;
-        public const int EXPORT = 106;
-        public const int IMPORT = 107;
-        public const int IF = 108;
-        public const int ELSE = 109;
-        public const int SWITCH = 110;
-        public const int CASE = 111;
-        public const int DEFAULT = 112;
-        public const int WHILE = 113;
-        public const int DO = 114;
-        public const int FOR = 115;
-        public const int BREAK = 116;
-        public const int CONTINUE = 117;
-        public const int VAR = 118;
-        public const int WITH = 119;
-        public const int CATCH = 120;
-        public const int FINALLY = 121;
-        public const int VOID = 122;
-        public const int RESERVED = 123;
-        public const int EMPTY = 124;
-        public const int BLOCK = 125;
-        public const int LABEL = 126;
-        public const int TARGET = 127;
-        public const int LOOP = 128;
-        public const int EXPR_VOID = 129;
-        public const int EXPR_RESULT = 130;
-        public const int JSR = 131;
-        public const int SCRIPT = 132;
-        public const int TYPEOFNAME = 133;
-        public const int USE_STACK = 134;
-        public const int SETPROP_OP = 135;
-        public const int SETELEM_OP = 136;
-        public const int LOCAL_BLOCK = 137;
-        public const int SET_REF_OP = 138;
+        public const int HOOK = LAST_BYTECODE_TOKEN + 22;
+        public const int COLON = LAST_BYTECODE_TOKEN + 23;
+        public const int OR = LAST_BYTECODE_TOKEN + 24;
+        public const int AND = LAST_BYTECODE_TOKEN + 25;
+        public const int INC = LAST_BYTECODE_TOKEN + 26;
+        public const int DEC = LAST_BYTECODE_TOKEN + 27;
+        public const int DOT = LAST_BYTECODE_TOKEN + 28;
+        public const int FUNCTION = LAST_BYTECODE_TOKEN + 29;
+        public const int EXPORT = LAST_BYTECODE_TOKEN + 30;
+        public const int IMPORT = LAST_BYTECODE_TOKEN + 31;
+        public const int IF = LAST_BYTECODE_TOKEN + 32;
+        public const int ELSE = LAST_BYTECODE_TOKEN + 33;
+        public const int SWITCH = LAST_BYTECODE_TOKEN + 34;
+        public const int CASE = LAST_BYTECODE_TOKEN + 35;
+        public const int DEFAULT = LAST_BYTECODE_TOKEN + 36;
+        public const int WHILE = LAST_BYTECODE_TOKEN + 37;
+        public const int DO = LAST_BYTECODE_TOKEN + 38;
+        public const int FOR = LAST_BYTECODE_TOKEN + 39;
+        public const int BREAK = LAST_BYTECODE_TOKEN + 40;
+        public const int CONTINUE = LAST_BYTECODE_TOKEN + 41;
+        public const int VAR = LAST_BYTECODE_TOKEN + 42;
+        public const int WITH = LAST_BYTECODE_TOKEN + 43;
+        public const int CATCH = LAST_BYTECODE_TOKEN + 44;
+        public const int FINALLY = LAST_BYTECODE_TOKEN + 45;
+        public const int VOID = LAST_BYTECODE_TOKEN + 46;
+        public const int RESERVED = LAST_BYTECODE_TOKEN + 47;
+        public const int EMPTY = LAST_BYTECODE_TOKEN + 48;
+        public const int BLOCK = LAST_BYTECODE_TOKEN + 49;
+        public const int LABEL = LAST_BYTECODE_TOKEN + 50;
+        public const int TARGET = LAST_BYTECODE_TOKEN + 51;
+        public const int LOOP = LAST_BYTECODE_TOKEN + 52;
+        public const int EXPR_VOID = LAST_BYTECODE_TOKEN + 53;
+        public const int EXPR_RESULT = LAST_BYTECODE_TOKEN + 54;
+        public const int JSR = LAST_BYTECODE_TOKEN + 55;
+        public const int SCRIPT = LAST_BYTECODE_TOKEN + 56;
+        public const int TYPEOFNAME = LAST_BYTECODE_TOKEN + 57;
+        public const int USE_STACK = LAST_BYTECODE_TOKEN + 58;
+        public const int SETPROP_OP = LAST_BYTECODE_TOKEN + 59;
+        public const int SETELEM_OP = LAST_BYTECODE_TOKEN + 60;
+        public const int LOCAL_BLOCK = LAST_BYTECODE_TOKEN + 61;
+        public const int SET_REF_OP = LAST_BYTECODE_TOKEN + 62;
+        public const int DOTDOT = LAST_BYTECODE_TOKEN + 63;
+        public const int COLONCOLON = LAST_BYTECODE_TOKEN + 64;
+        public const int XML = LAST_BYTECODE_TOKEN + 65;
+        public const int DOTQUERY = LAST_BYTECODE_TOKEN + 66;
+        public const int XMLATTR = LAST_BYTECODE_TOKEN + 67;
+        public const int XMLEND = LAST_BYTECODE_TOKEN + 68;
+        public const int TO_OBJECT = LAST_BYTECODE_TOKEN + 69;
+        public const int TO_DOUBLE = LAST_BYTECODE_TOKEN + 70;
 
-        // For XML support:
-        public const int DOTDOT = 139; // member operator (..)
-        public const int COLONCOLON = 140; // namespace::name
-        public const int XML = 141; // XML type
-        public const int DOTQUERY = 142; // .() -- e.g., x.emps.emp.(name == "terry")
-        public const int XMLATTR = 143; // @
-        public const int XMLEND = 144;
+        public const int GET = LAST_BYTECODE_TOKEN + 71;  // JS 1.5 get pseudo keyword
+        public const int SET = LAST_BYTECODE_TOKEN + 72;  // JS 1.5 set pseudo keyword
+        public const int CONST = LAST_BYTECODE_TOKEN + 73;
+        public const int SETCONST = LAST_BYTECODE_TOKEN + 74;
+        public const int SETCONSTVAR = LAST_BYTECODE_TOKEN + 75;
+        public const int CONDCOMMENT = LAST_BYTECODE_TOKEN + 76; // JScript conditional comment
+        public const int KEEPCOMMENT = LAST_BYTECODE_TOKEN + 77; // /*! ... */ comment
 
-        // Optimizer-only-tokens
-        public const int TO_OBJECT = 145;
-        public const int TO_DOUBLE = 146;
 
-        public const int GET = 147;  // JS 1.5 get pseudo keyword
-        public const int SET = 148;  // JS 1.5 set pseudo keyword
-        public const int CONST = 149;
-        public const int SETCONST = 150;
-        public const int SETCONSTVAR = 151;
-
-        public const int CONDCOMMENT = 152;  // JScript conditional comment
-        public const int KEEPCOMMENT = 153;  // /*! ... */ comment
-
-        public const int LAST_TOKEN = 154;
-
+        public const int LAST_TOKEN = LAST_BYTECODE_TOKEN + 78;
 
         public static string name (int token)
         {
-            if (!printNames) {
-                return Convert.ToString (token);
-            }
+            //if (!printNames) {
+            //    return Convert.ToString (token);
+            //}
             switch (token) {
 
                 case ERROR:
@@ -657,7 +655,10 @@ namespace EcmaScript.NET
                 case SET: return "SET";
                 case CONST: return "CONST";
                 case SETCONST: return "SETCONST";
-
+                case SETCONSTVAR: return "SETCONSTVAR";
+                case CONDCOMMENT: return "CONDCOMMENT";
+                case KEEPCOMMENT: return "KEEPCOMMENT";
+                default: return "UNKNOWN Token Type";
             }
 
             // Token without name

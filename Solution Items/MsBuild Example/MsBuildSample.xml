@@ -26,6 +26,7 @@
             LineBreakPosition: [Optional] the position where a line feed is appened when the next semicolon is reached. Default is -1 (never add a line break).
                                0 (zero) means add a line break after every semicolon. (This might help with debugging troublesome files).          
             LoggingType: None | ALittleBit | HardcoreBringItOn;  Hardcore also lists javascript verbose warnings, if there are any (and there usually is :P ).
+            ThreadCulture: [Optional] the culture you want the thread to run under. Default is 'en-gb'.
         -->
         <CompressorTask
             CssFiles="StylesheetSample1.css, StylesheetSample2.css, StylesheetSample3.css, StylesheetSample4.css"
@@ -40,6 +41,7 @@
             DeleteJavaScriptFiles="false"
             LineBreakPosition="-1"
             JavaScriptOutputFile="CompressedJavaScript.js"
-            LoggingType="ALittleBit" />
+            LoggingType="ALittleBit"
+            ThreadCulture="en-gb" />
     </Target>
 </Project>

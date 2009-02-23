@@ -23,6 +23,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
         private bool _disableOptimizations;
         private int _lineBreakPosition;
         private Encoding _encoding;
+        private CultureInfo _threadCulture;
 
         #endregion
 
@@ -41,7 +42,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
         public string DeleteJavaScriptFiles { get; set; }
         public string JavaScriptOutputFile { get; set; }
         public string LoggingType { get; set; }
-        
+        public string ThreadCulture { get; set; }
+
         #endregion
 
         #region Methods
@@ -205,6 +207,19 @@ namespace Yahoo.Yui.Compressor.MsBuild
                     break;
             }
 
+            // Optional Property.
+            if (!string.IsNullOrEmpty(this.ThreadCulture))
+            {
+                try
+                {
+                    this._threadCulture = CultureInfo.CreateSpecificCulture("en-GB");
+                }
+                catch
+                {
+                    this.LogMessage("Failed to read in a legitimate culture value. As such, this property will *not* be set.");
+                }
+            }
+
             #endregion
         }
 
@@ -286,6 +301,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
                     this._disableOptimizations ? "Yeah :(" : "Hell No!"));
                 this.LogMessage(string.Format(CultureInfo.InvariantCulture, "    ** Line break position: {0}",
                     this._lineBreakPosition <= -1 ? "None" : LineBreakPosition));
+                this.LogMessage(string.Format(CultureInfo.InvariantCulture, "    ** Thread Culture: {0}",
+                    this._threadCulture == null ? "Not defined" : this._threadCulture.DisplayName));
 
                 fileList = CompressorTask.ParseFiles(this.JavaScriptFiles);
             }
@@ -334,7 +351,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
                                 this._preserveAllSemicolons,
                                 this._disableOptimizations,
                                 this._lineBreakPosition,
-                                this._encoding);
+                                this._encoding,
+                                this._threadCulture);
                         }
 
                         if (!string.IsNullOrEmpty(compressedContent))
