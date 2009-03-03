@@ -45,6 +45,8 @@ namespace Yahoo.Yui.Compressor
         private static Hashtable Literals { get; set; }
         private static HashSet<string> Reserved { get; set; }
 
+        public CustomErrorReporter CustomErrorReporter { get; private set; }
+
         #endregion
 
         #region Constructors
@@ -81,11 +83,13 @@ namespace Yahoo.Yui.Compressor
 
             Initialise();
 
+            this._verbose = isVerboseLogging;
+
             MemoryStream memoryStream = new MemoryStream(encoding.GetBytes(javaScript));
-            CustomErrorReporter customErrorReporter = new CustomErrorReporter(isVerboseLogging);
-            this._logger = customErrorReporter;
+            CustomErrorReporter = new CustomErrorReporter(isVerboseLogging);
+            this._logger = CustomErrorReporter;
             this._tokens = Parse(new StreamReader(memoryStream),
-                                 customErrorReporter);
+                                 CustomErrorReporter);
         }
 
         #endregion
@@ -1803,21 +1807,26 @@ namespace Yahoo.Yui.Compressor
                                                                                  encoding,
                                                                                  threadCulture);
 
-            return javaScriptCompressor.Compress(isVerboseLogging,
-                                                 isObfuscateJavascript,
+            return javaScriptCompressor.Compress(isObfuscateJavascript,
                                                  preserveAllSemicolons,
                                                  disableOptimizations,
                                                  lineBreakPosition);
         }
 
-        public string Compress(bool verbose,
-                               bool isObfuscateJavascript,
+        public string Compress()
+        {
+            return Compress(true,
+                            false,
+                            false,
+                            -1);
+        }
+
+        public string Compress(bool isObfuscateJavascript,
                                bool preserveAllSemicolons,
                                bool disableOptimizations,
                                int lineBreakPosition)
         {
             this._munge = isObfuscateJavascript;
-            this._verbose = verbose;
 
             ProcessStringLiterals(this._tokens,
                                   !disableOptimizations);

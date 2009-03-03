@@ -35,6 +35,7 @@ namespace Yahoo.Yui.Compressor
         private bool _munge;
         private int _offset;
         private bool _verbose;
+        
 
         #endregion
 
@@ -45,6 +46,8 @@ namespace Yahoo.Yui.Compressor
         internal static List<string> Twos;
         private static Hashtable Literals { get; set; }
         private static HashedSet<string> Reserved { get; set; }
+
+        public CustomErrorReporter CustomErrorReporter { get; private set; }
 
         #endregion
 
@@ -83,10 +86,12 @@ namespace Yahoo.Yui.Compressor
 
             Initialise();
 
+            this._verbose = isVerboseLogging;
+
             MemoryStream memoryStream = new MemoryStream(encoding.GetBytes(javaScript));
-            CustomErrorReporter customErrorReporter = new CustomErrorReporter(isVerboseLogging);
-            _logger = customErrorReporter;
-            _tokens = Parse(new StreamReader(memoryStream), customErrorReporter);
+            CustomErrorReporter = new CustomErrorReporter(isVerboseLogging);
+            _logger = CustomErrorReporter;
+            _tokens = Parse(new StreamReader(memoryStream), CustomErrorReporter);
         }
 
         #endregion
@@ -1805,21 +1810,26 @@ namespace Yahoo.Yui.Compressor
                                                                                  isVerboseLogging,
                                                                                  encoding,
                                                                                  threadCulture);
-            return javaScriptCompressor.Compress(isVerboseLogging,
-                                                 isObfuscateJavascript,
+            return javaScriptCompressor.Compress(isObfuscateJavascript,
                                                  preserveAllSemicolons,
                                                  disableOptimizations,
                                                  lineBreakPosition);
         }
 
-        public string Compress(bool verbose,
-                               bool isObfuscateJavascript,
+        public string Compress()
+        {
+            return Compress(true,
+                            false,
+                            false,
+                            -1);
+        }
+
+        public string Compress(bool isObfuscateJavascript,
                                bool preserveAllSemicolons,
                                bool disableOptimizations,
                               int lineBreakPosition)
         {
             _munge = isObfuscateJavascript;
-            _verbose = verbose;
 
             ProcessStringLiterals(_tokens,
                                   !disableOptimizations);

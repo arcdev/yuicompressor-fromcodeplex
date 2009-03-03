@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Yahoo.Yui.Compressor.Tests
@@ -38,7 +39,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
             var compressor = new JavaScriptCompressor(original);
 
-            var minified = compressor.Compress(false, true, false, false, -1);
+            var minified = compressor.Compress(true, false, false, -1);
             index = minified.IndexOf("Sys.Serialization.JavaScriptSerializer._stringRegEx");
             test = minified.Substring(index);
 
@@ -177,6 +178,37 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.IsTrue(javascript.Length > compressedJavascript.Length);
             Assert.AreEqual(71146, compressedJavascript.Length);
         }
-        
+
+        [TestMethod]
+        [DeploymentItem("bin\\SampleJavaScript-CP46679.js")]
+        public void CompressFull_CodePlex46679Test()
+        {
+            string javascript = File.ReadAllText("SampleJavaScript-CP46679.js");
+
+            // All defaults except obfuscation turned off.
+            string compressedJavascript = JavaScriptCompressor.Compress(javascript,
+                false,
+                true,
+                false,
+                false,
+                -1);
+            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
+            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+        }
+
+        [TestMethod]
+        [DeploymentItem("bin\\jquery-1.3.1.js")]
+        public void CompressFull_CodePlex48610Test()
+        {
+            string javascript = File.ReadAllText("jquery-1.3.1.js");
+
+            JavaScriptCompressor javaScriptCompressor = new JavaScriptCompressor(javascript);
+            string compressedJavascript = javaScriptCompressor.Compress();
+            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
+            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+
+            // Now, check to see that we have some error logging stuff.
+            Assert.IsTrue(javaScriptCompressor.CustomErrorReporter.ErrorMessages.Count > 0);
+        }
     }
 }
