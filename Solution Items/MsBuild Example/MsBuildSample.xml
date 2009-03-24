@@ -10,12 +10,11 @@
     -->
     <Target Name="MyTaskTarget">
         <!--
-            CssFiles/JavaScriptFiles data format: can be delimeted by a space, comma or semicolon. having an extra space after the delimeter is optional also.
-                      Valid examples: 
-                         o) StylesheetSample1.css, StylesheetSample2.css
-                         o) StylesheetSample1.css,StylesheetSample2.css
-                         o) SampleJavaScript1.js;SampleJavaScript2.js
-                         o) SampleJavaScript1.js     SampleJavaScript2.js
+            ItemGroup\CssFiles or ItemGroup\JavaScriptFiles: add zero to many files you wish to include in this compression task.
+                                                             Don't forget, you can use the wildcard (eg. *.css, *.js) if you feel up to it.
+                                                             Finally, at least one item is required - either a css file or a js file.
+                                                             
+            CssFiles/JavaScriptFiles data format: Please do not touch this.
             DeleteCssFiles: [Optional] True | Yes | Yeah | Yep | True | FoSho | Fo Sho. Default is False. Anything else is False. (eg. blah = false, xxxx111 = false, etc)
             CssCompressionType: YuiStockCompression | MichaelAshsRegexEnhancements | HaveMyCakeAndEatIt or BestOfBothWorlds or Hybrid; Default is YuiStockCompression.
             ObfuscateJavaScript: [Optional] refer to DeleteCssFiles, above.
@@ -28,12 +27,20 @@
             LoggingType: None | ALittleBit | HardcoreBringItOn;  Hardcore also lists javascript verbose warnings, if there are any (and there usually is :P ).
             ThreadCulture: [Optional] the culture you want the thread to run under. Default is 'en-gb'.
         -->
+        <ItemGroup>
+            <CssFiles Include="StylesheetSample1.css"/>
+            <CssFiles Include="StylesheetSample2.css"/>
+            <CssFiles Include="StylesheetSample3.css"/>
+            <CssFiles Include="StylesheetSample4.css"/>
+            <!-- or <CssFiles Include="*.css" /> -->
+            <JavaScriptFiles Include="jquery-1.2.6-vsdoc.js"/>
+        </ItemGroup>
         <CompressorTask
-            CssFiles="StylesheetSample1.css, StylesheetSample2.css, StylesheetSample3.css, StylesheetSample4.css"
+            CssFiles="@(CssFiles)"
             DeleteCssFiles="false"
             CssOutputFile="SylesSheetFinal.css"
             CssCompressionType="YuiStockCompression"
-            JavaScriptFiles="jquery-1.2.6-vsdoc.js"
+            JavaScriptFiles="@(JavaScriptFiles)"
             ObfuscateJavaScript="FoSho"
             PreserveAllSemicolons="False"
             DisableOptimizations="Nope"
@@ -42,6 +49,6 @@
             LineBreakPosition="-1"
             JavaScriptOutputFile="CompressedJavaScript.js"
             LoggingType="ALittleBit"
-            ThreadCulture="en-gb" />
+            ThreadCulture="es-es" />
     </Target>
 </Project>

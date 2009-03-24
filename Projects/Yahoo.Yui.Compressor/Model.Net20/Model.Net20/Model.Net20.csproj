@@ -63,6 +63,9 @@
     <Compile Include="..\..\Model\MichaelAshRegexCompressor.cs">
       <Link>MichaelAshRegexCompressor.cs</Link>
     </Compile>
+    <Compile Include="..\..\Model\MsBuild\EmbeddedResourceTask.cs">
+      <Link>MsBuild\EmbeddedResourceTask.cs</Link>
+    </Compile>
     <Compile Include="..\..\Model\ScriptOrFunctionScope.cs">
       <Link>ScriptOrFunctionScope.cs</Link>
     </Compile>
