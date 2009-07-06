@@ -69,6 +69,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsBuild Example", "MsBuild 
 	ProjectSection(SolutionItems) = preProject
 		Solution Items\MsBuild Example\jquery-1.2.6-vsdoc.js = Solution Items\MsBuild Example\jquery-1.2.6-vsdoc.js
 		Solution Items\MsBuild Example\jquery-1.3.1.js = Solution Items\MsBuild Example\jquery-1.3.1.js
+		Solution Items\MsBuild Example\jquery-1.3.2.js = Solution Items\MsBuild Example\jquery-1.3.2.js
+		Solution Items\MsBuild Example\MicrosoftAjax.debug.js = Solution Items\MsBuild Example\MicrosoftAjax.debug.js
 		Solution Items\MsBuild Example\MsBuildSample.xml = Solution Items\MsBuild Example\MsBuildSample.xml
 		Solution Items\MsBuild Example\SampleJavaScript1.js = Solution Items\MsBuild Example\SampleJavaScript1.js
 		Solution Items\MsBuild Example\SampleJavaScript2.js = Solution Items\MsBuild Example\SampleJavaScript2.js
@@ -143,6 +145,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "org.mozilla.javascript", "o
 		Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\TokenStream.java.orig = Solution Items\Yahoo! YUICompressor Java code\v2.4.2\org\mozilla\javascript\TokenStream.java.orig
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Post-build Events WebSite Example", "Post-build Events WebSite Example", "{55383C77-E8F0-4300-8828-79A50033FF7A}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Post-build Events WebSite Example\SampleWebSite.zip = Solution Items\Post-build Events WebSite Example\SampleWebSite.zip
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 5
@@ -194,6 +201,7 @@ Global
 		{D063AA82-CD35-40A7-BA2D-B26C4E291C59} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
 		{3A36C8E2-F5AD-4BB8-B0B0-4268F7AA11B0} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
 		{5F3C3ACA-787D-454F-A6CA-8AACB75B56D9} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
+		{55383C77-E8F0-4300-8828-79A50033FF7A} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
 		{AFDF50F0-286B-4490-9EBD-007561864738} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{D263F886-F883-45C6-B79D-2136E0CE2195} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C} = {540CCEDE-893E-4F91-BA22-B6441D409D28}

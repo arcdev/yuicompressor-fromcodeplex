@@ -49,10 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompressorService.cs" />
     <Compile Include="CssCompressionType.cs" />
     <Compile Include="CssCompressor.cs" />
     <Compile Include="CustomErrorReporter.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="ICompressorTask.cs" />
     <Compile Include="JavaScriptCompressor.cs" />
     <Compile Include="JavaScriptIdentifier.cs" />
     <Compile Include="JavaScriptToken.cs" />

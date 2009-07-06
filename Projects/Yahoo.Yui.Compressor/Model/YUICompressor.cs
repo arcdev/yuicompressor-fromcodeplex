@@ -31,7 +31,7 @@ namespace Yahoo.Yui.Compressor
                 {
                     if (!preserve)
                     {
-                        input.RemoveRange(startIndex, input.Length);
+                        input = input.RemoveRange(startIndex, input.Length);
                     }
                 }
                 else if (endIndex >= startIndex + 2)

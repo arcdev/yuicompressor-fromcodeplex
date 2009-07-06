@@ -21,6 +21,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
         private bool _obfuscateJavaScript;
         private bool _preserveAllSemicolons;
         private CultureInfo _threadCulture;
+        private bool _isEvalIgnored;
 
         public CompressorTask()
         {
@@ -42,7 +43,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
         public string JavaScriptOutputFile { get; set; }
         public string LoggingType { get; set; }
         public string ThreadCulture { get; set; }
-
+        public string IsEvalIgnored { get; set; }
 
         private static bool ParseSillyTrueFalseValue(string value)
         {
@@ -195,6 +196,9 @@ namespace Yahoo.Yui.Compressor.MsBuild
                 _threadCulture = CultureInfo.CreateSpecificCulture("en-GB");
             }
 
+            // Optional property.
+            _isEvalIgnored = !string.IsNullOrEmpty(IsEvalIgnored) && ParseSillyTrueFalseValue(IsEvalIgnored.ToUpperInvariant());
+
             #endregion
         }
 
@@ -330,7 +334,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
                                                                               _disableOptimizations,
                                                                               _lineBreakPosition,
                                                                               _encoding,
-                                                                              _threadCulture);
+                                                                              _threadCulture,
+                                                                              _isEvalIgnored);
                         }
 
                         if (!string.IsNullOrEmpty(compressedContent))

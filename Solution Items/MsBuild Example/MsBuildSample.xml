@@ -8,6 +8,19 @@
         TaskName="CompressorTask"
         AssemblyFile="..\..\Projects\Yahoo.Yui.Compressor\Model.Net20\Model.Net20\bin\Debug\Yahoo.Yui.Compressor.NET20.dll" />
     -->
+
+    <!-- Define the output locations. These can be set via the msbuild command line using
+         /p:CssOutputFile=$(TargetDir)../whatever...
+         /p:JavaScriptOutputFile=$(TargetDir)../whatever...
+         
+         If they are not supplied or are empty, then we the value whatever is supplied, below.
+    -->
+    <PropertyGroup>
+        <CssOutputFile Condition=" '$(CssOutputFile)'=='' ">SylesSheetFinal.css</CssOutputFile>
+        <JavaScriptOutputFile Condition=" '$(JavaScriptOutputFile)'=='' ">JavaScriptFinal.css</JavaScriptOutputFile>
+    </PropertyGroup>
+    
+    
     <Target Name="MyTaskTarget">
         <!--
             ItemGroup\CssFiles or ItemGroup\JavaScriptFiles: add zero to many files you wish to include in this compression task.
@@ -26,29 +39,41 @@
                                0 (zero) means add a line break after every semicolon. (This might help with debugging troublesome files).          
             LoggingType: None | ALittleBit | HardcoreBringItOn;  Hardcore also lists javascript verbose warnings, if there are any (and there usually is :P ).
             ThreadCulture: [Optional] the culture you want the thread to run under. Default is 'en-gb'.
+            IsEvalIgnored: [Optional] compress any functions that contain 'eval'. Default is False, which means a function that contains
+                           'eval' will NOT be compressed. It's deemed risky to compress a function containing 'eval'. That said,
+                           if the usages are deemed safe this check can be disabled by setting this value to True.
         -->
         <ItemGroup>
+            <!-- Single files, listed in order of dependency -->
             <CssFiles Include="StylesheetSample1.css"/>
             <CssFiles Include="StylesheetSample2.css"/>
             <CssFiles Include="StylesheetSample3.css"/>
             <CssFiles Include="StylesheetSample4.css"/>
-            <!-- or <CssFiles Include="*.css" /> -->
-            <JavaScriptFiles Include="jquery-1.2.6-vsdoc.js"/>
+            
+            <JavaScriptFiles Include="jquery-1.3.2.js"/>
+            
+            <!-- All the files. They will be handled (I assume) in alphabetically. -->
+            <!-- <CssFiles Include="*.css" />
+            <JavaScriptFiles Include="*.js" />
+            -->
+            
         </ItemGroup>
         <CompressorTask
             CssFiles="@(CssFiles)"
             DeleteCssFiles="false"
-            CssOutputFile="SylesSheetFinal.css"
+            CssOutputFile="$(CssOutputFile)"
             CssCompressionType="YuiStockCompression"
             JavaScriptFiles="@(JavaScriptFiles)"
-            ObfuscateJavaScript="FoSho"
+            ObfuscateJavaScript="True"
             PreserveAllSemicolons="False"
             DisableOptimizations="Nope"
             EncodingType="Default"
             DeleteJavaScriptFiles="false"
             LineBreakPosition="-1"
-            JavaScriptOutputFile="CompressedJavaScript.js"
+            JavaScriptOutputFile="$(JavaScriptOutputFile)"
             LoggingType="ALittleBit"
-            ThreadCulture="es-es" />
+            ThreadCulture="en-au"
+            IsEvalIgnored="false"
+            />
     </Target>
 </Project>
