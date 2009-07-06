@@ -150,33 +150,40 @@ namespace Yahoo.Yui.Compressor.MsBuild
             }
 
             // Optional Property.
-            switch (EncodingType.ToLowerInvariant())
+            if (!string.IsNullOrEmpty(EncodingType))
             {
-                case "ascii":
-                    _encoding = Encoding.ASCII;
-                    break;
-                case "bigendianunicode":
-                    _encoding = Encoding.BigEndianUnicode;
-                    break;
-                case "unicode":
-                    _encoding = Encoding.Unicode;
-                    break;
-                case "utf32":
-                case "utf-32":
-                    _encoding = Encoding.UTF32;
-                    break;
-                case "utf7":
-                case "utf-7":
-                    _encoding = Encoding.UTF7;
-                    break;
-                case "":
-                case "utf8":
-                case "utf-8":
-                    _encoding = Encoding.UTF8;
-                    break;
-                default:
-                    _encoding = Encoding.Default;
-                    break;
+                switch (EncodingType.ToLowerInvariant())
+                {
+                    case "ascii":
+                        _encoding = Encoding.ASCII;
+                        break;
+                    case "bigendianunicode":
+                        _encoding = Encoding.BigEndianUnicode;
+                        break;
+                    case "unicode":
+                        _encoding = Encoding.Unicode;
+                        break;
+                    case "utf32":
+                    case "utf-32":
+                        _encoding = Encoding.UTF32;
+                        break;
+                    case "utf7":
+                    case "utf-7":
+                        _encoding = Encoding.UTF7;
+                        break;
+                    case "":
+                    case "utf8":
+                    case "utf-8":
+                        _encoding = Encoding.UTF8;
+                        break;
+                    default:
+                        _encoding = Encoding.Default;
+                        break;
+                }
+            }
+            else
+            {
+                _encoding = Encoding.Default;
             }
 
             // Optional Property.

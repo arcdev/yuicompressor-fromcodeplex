@@ -124,19 +124,19 @@ namespace Yahoo.Yui.Compressor.MsBuild
             #region Optional Elements
 
             // Optional property.
-            _deleteCssFiles = !string.IsNullOrEmpty(DeleteCssFiles) && ParseSillyTrueFalseValue(DeleteCssFiles.ToUpperInvariant());
+            _deleteCssFiles = !string.IsNullOrEmpty(DeleteCssFiles) && ParseSillyTrueFalseValue(DeleteCssFiles);
 
             // Optional property.
-            _deleteJavaScriptFiles = !string.IsNullOrEmpty(DeleteJavaScriptFiles) && ParseSillyTrueFalseValue(DeleteJavaScriptFiles.ToUpperInvariant());
+            _deleteJavaScriptFiles = !string.IsNullOrEmpty(DeleteJavaScriptFiles) && ParseSillyTrueFalseValue(DeleteJavaScriptFiles);
 
             // Optional Property.
-            _obfuscateJavaScript = !string.IsNullOrEmpty(ObfuscateJavaScript) && ParseSillyTrueFalseValue(ObfuscateJavaScript.ToUpperInvariant());
+            _obfuscateJavaScript = !string.IsNullOrEmpty(ObfuscateJavaScript) && ParseSillyTrueFalseValue(ObfuscateJavaScript);
 
             // Optional Property.
-            _preserveAllSemicolons = !string.IsNullOrEmpty(PreserveAllSemicolons) && ParseSillyTrueFalseValue(PreserveAllSemicolons.ToUpperInvariant());
+            _preserveAllSemicolons = !string.IsNullOrEmpty(PreserveAllSemicolons) && ParseSillyTrueFalseValue(PreserveAllSemicolons);
 
             // Optional Property.
-            _disableOptimizations = !string.IsNullOrEmpty(DisableOptimizations) && ParseSillyTrueFalseValue(DisableOptimizations.ToUpperInvariant());
+            _disableOptimizations = !string.IsNullOrEmpty(DisableOptimizations) && ParseSillyTrueFalseValue(DisableOptimizations);
 
             // Optional Property.
             int tempLineBreakPosition;
@@ -151,33 +151,40 @@ namespace Yahoo.Yui.Compressor.MsBuild
             }
 
             // Optional Property.
-            switch (EncodingType.ToLowerInvariant())
+            if (!string.IsNullOrEmpty(EncodingType))
             {
-                case "ascii":
-                    _encoding = Encoding.ASCII;
-                    break;
-                case "bigendianunicode":
-                    _encoding = Encoding.BigEndianUnicode;
-                    break;
-                case "unicode":
-                    _encoding = Encoding.Unicode;
-                    break;
-                case "utf32":
-                case "utf-32":
-                    _encoding = Encoding.UTF32;
-                    break;
-                case "utf7":
-                case "utf-7":
-                    _encoding = Encoding.UTF7;
-                    break;
-                case "":
-                case "utf8":
-                case "utf-8":
-                    _encoding = Encoding.UTF8;
-                    break;
-                default:
-                    _encoding = Encoding.Default;
-                    break;
+                switch (EncodingType.ToLowerInvariant())
+                {
+                    case "ascii":
+                        _encoding = Encoding.ASCII;
+                        break;
+                    case "bigendianunicode":
+                        _encoding = Encoding.BigEndianUnicode;
+                        break;
+                    case "unicode":
+                        _encoding = Encoding.Unicode;
+                        break;
+                    case "utf32":
+                    case "utf-32":
+                        _encoding = Encoding.UTF32;
+                        break;
+                    case "utf7":
+                    case "utf-7":
+                        _encoding = Encoding.UTF7;
+                        break;
+                    case "":
+                    case "utf8":
+                    case "utf-8":
+                        _encoding = Encoding.UTF8;
+                        break;
+                    default:
+                        _encoding = Encoding.Default;
+                        break;
+                }
+            }
+            else
+            {
+                _encoding = Encoding.Default;
             }
 
             // Optional Property.
@@ -199,7 +206,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
             // Optional property.
             _isEvalIgnored = !string.IsNullOrEmpty(IsEvalIgnored) &&
-                ParseSillyTrueFalseValue(IsEvalIgnored.ToUpperInvariant());
+                ParseSillyTrueFalseValue(IsEvalIgnored);
 
             #endregion
         }
