@@ -74,15 +74,7 @@ namespace Yahoo.Yui.Compressor
 
         public static string ToHexString(int value)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            string input = value.ToString(CultureInfo.InvariantCulture);
-            
-            foreach (char digit in input)
-            {
-                stringBuilder.AppendFormat("{0:x2}", Convert.ToUInt32(digit));
-            }
-
-            return stringBuilder.ToString();
+            return value.ToString("X");
         }
 
         public static string ToPluralString(int value)
