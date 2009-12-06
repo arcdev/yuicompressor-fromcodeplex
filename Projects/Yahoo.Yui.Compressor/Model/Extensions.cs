@@ -74,18 +74,11 @@ namespace Yahoo.Yui.Compressor
                 StringComparison.OrdinalIgnoreCase) == 0;
         }
 
+        // NOTE: To check out some decimal -> Hex converstions,
+        //       goto http://www.openstrike.co.uk/cgi-bin/decimalhex.cgi
         public static string ToHexString(this int value)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            string input = value.ToString(CultureInfo.InvariantCulture);
-
-
-            foreach (char digit in input)
-            {
-                stringBuilder.Append("{0:x2}".Fill(Convert.ToUInt32(digit)));
-            }
-
-            return stringBuilder.ToString();
+            return value.ToString("X");
         }
 
         public static string ToPluralString(this int value)
