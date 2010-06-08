@@ -92,21 +92,31 @@ namespace Yahoo.Yui.Compressor
                 throw new ArgumentNullException("javaScript");
             }
 
-            // Lets make sure the current thread is in english. This is because most javascript (yes, this also does css..)
-            // must be in english in case a developer runs this on a non-english OS.
-            // Reference: http://www.codeplex.com/YUICompressor/WorkItem/View.aspx?WorkItemId=3219
-            Thread.CurrentThread.CurrentCulture = threadCulture;
-            Thread.CurrentThread.CurrentUICulture = threadCulture;
+            CultureInfo currentCultureInfo = Thread.CurrentThread.CurrentCulture;
+            CultureInfo currentUICulture = Thread.CurrentThread.CurrentCulture;
+            try
+            {
+                // Lets make sure the current thread is in english. This is because most javascript (yes, this also does css..)
+                // must be in english in case a developer runs this on a non-english OS.
+                // Reference: http://www.codeplex.com/YUICompressor/WorkItem/View.aspx?WorkItemId=3219
+                Thread.CurrentThread.CurrentCulture = threadCulture;
+                Thread.CurrentThread.CurrentUICulture = threadCulture;
 
-            Initialise();
+                Initialise();
 
-            _verbose = isVerboseLogging;
+                _verbose = isVerboseLogging;
 
-            var memoryStream = new MemoryStream(encoding.GetBytes(javaScript));
-            ErrorReporter = errorReporter ?? new CustomErrorReporter(isVerboseLogging);
-            _logger = ErrorReporter;
-            _tokens = Parse(new StreamReader(memoryStream), ErrorReporter);
-            _isEvalIgnored = isEvalIgnored;
+                var memoryStream = new MemoryStream(encoding.GetBytes(javaScript));
+                ErrorReporter = errorReporter ?? new CustomErrorReporter(isVerboseLogging);
+                _logger = ErrorReporter;
+                _tokens = Parse(new StreamReader(memoryStream), ErrorReporter);
+                _isEvalIgnored = isEvalIgnored;    
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = currentCultureInfo;
+                Thread.CurrentThread.CurrentUICulture = currentUICulture;
+            }
         }
 
         #endregion

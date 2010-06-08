@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Yahoo.Yui.Compressor.Tests
@@ -252,6 +253,41 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
             Assert.IsTrue(compressedJavascript.Contains("number"),
                           "Functions that call eval should not be compressed when ignoreEval is false");
+        }
+
+        [TestMethod]
+        [DeploymentItem("bin\\SampleJavaScript-ignoreEval.js")]
+        public void CompressFull_DontChangeThreadCulture()
+        {
+            var currentThreadCulture = Thread.CurrentThread.CurrentCulture;
+            var currentThreadUICulture = Thread.CurrentThread.CurrentUICulture;
+            
+            try
+            {
+                string javascript = File.ReadAllText("SampleJavaScript-ignoreEval.js");
+
+                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("fr-FR");
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("fr-FR");
+
+                string compressedJavascript = JavaScriptCompressor.Compress(javascript,
+                                                                            false,
+                                                                            true,
+                                                                            false,
+                                                                            false,
+                                                                            -1,
+                                                                            Encoding.Default,
+                                                                            CultureInfo.CreateSpecificCulture("en-GB"),
+                                                                            false);
+
+                Assert.AreEqual(Thread.CurrentThread.CurrentCulture, CultureInfo.CreateSpecificCulture("fr-FR"));
+                Assert.AreEqual(Thread.CurrentThread.CurrentUICulture, CultureInfo.CreateSpecificCulture("fr-FR"));
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = currentThreadCulture;
+                Thread.CurrentThread.CurrentUICulture = currentThreadUICulture;
+            }
+
         }
     }
 }
