@@ -1190,6 +1190,11 @@ namespace EcmaScript.NET
                         break;
                     }
 
+                case Token.DEBUGGER:
+                    consumeToken();
+                    decompiler.AddToken(Token.DEBUGGER);
+                    pn = nf.CreateDebugger(ts.Lineno);
+                    break;
 
                 case Token.LC:
                     consumeToken();

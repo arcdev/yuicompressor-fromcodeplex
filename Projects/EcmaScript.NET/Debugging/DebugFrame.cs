@@ -58,5 +58,11 @@ namespace EcmaScript.NET.Debugging
         /// exception object if about to throw exception
         /// </param>
         void OnExit (Context cx, bool byThrow, object resultOrException);
+
+        /// <summary>
+        /// Called when the function or script executes a 'debugger' statement.
+        /// </summary>
+        /// <param name="cx">current Context for this thread</param>
+        void OnDebuggerStatement(Context cx);
     }
 }

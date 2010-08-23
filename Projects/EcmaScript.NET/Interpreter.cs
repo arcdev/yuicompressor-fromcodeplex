@@ -80,7 +80,10 @@ namespace EcmaScript.NET
         const int Icode_LEAVEDQ = -54;
         const int Icode_TAIL_CALL = -55;
         const int Icode_LOCAL_CLEAR = -56;
-        const int MIN_ICODE = -56;
+        const int Icode_DEBUGGER = -57;
+
+        // Last icode
+        const int MIN_ICODE = -57;
 
 
         // data for parsing
@@ -431,6 +434,9 @@ namespace EcmaScript.NET
 
                 case Icode_LOCAL_CLEAR:
                     return "LOCAL_CLEAR";
+
+                case Icode_DEBUGGER:
+                    return "DEBUGGER";
             }
 
             // icode without name
@@ -697,6 +703,10 @@ namespace EcmaScript.NET
                     }
                     break;
 
+                case Token.DEBUGGER:
+                    updateLineNumber (node);
+                    addIcode (Icode_DEBUGGER);
+                    break;
 
                 case Token.SWITCH:
                     updateLineNumber (node); {
@@ -4000,6 +4010,13 @@ namespace EcmaScript.NET
                                         goto Loop;
                                     }
                                     goto case Icode_LINE;
+
+                                case Icode_DEBUGGER: {
+                                        if (frame.debuggerFrame != null) {
+                                            frame.debuggerFrame.OnDebuggerStatement(cx);
+                                        }
+                                        break;
+                                    }
 
                                 case Icode_LINE:
                                     frame.pcSourceLineStart = frame.pc;

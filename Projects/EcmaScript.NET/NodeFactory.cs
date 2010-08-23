@@ -227,6 +227,12 @@ namespace EcmaScript.NET
             return expr == null ? new Node (Token.RETURN, lineno) : new Node (Token.RETURN, expr, lineno);
         }
 
+        /// <summary> Debugger</summary>
+        internal Node CreateDebugger(int lineno)
+        {
+            return new Node(Token.DEBUGGER, lineno);
+        }
+
         /// <summary> Label</summary>
         internal Node CreateLabel (int lineno)
         {

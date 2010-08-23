@@ -205,9 +205,9 @@ namespace EcmaScript.NET
         public const int SETCONSTVAR = LAST_BYTECODE_TOKEN + 75;
         public const int CONDCOMMENT = LAST_BYTECODE_TOKEN + 76; // JScript conditional comment
         public const int KEEPCOMMENT = LAST_BYTECODE_TOKEN + 77; // /*! ... */ comment
+        public const int DEBUGGER = LAST_BYTECODE_TOKEN + 78;
 
-
-        public const int LAST_TOKEN = LAST_BYTECODE_TOKEN + 78;
+        public const int LAST_TOKEN = LAST_BYTECODE_TOKEN + 79;
 
         public static string name (int token)
         {
@@ -658,6 +658,7 @@ namespace EcmaScript.NET
                 case SETCONSTVAR: return "SETCONSTVAR";
                 case CONDCOMMENT: return "CONDCOMMENT";
                 case KEEPCOMMENT: return "KEEPCOMMENT";
+                case DEBUGGER: return "DEBUGGER";
                 default: return "UNKNOWN Token Type";
             }
 
