@@ -13,6 +13,11 @@ namespace Yahoo.Yui.Compressor
 
         public static string Compress(string css, int columnWidth)
         {
+            return Compress(css, columnWidth, true);
+        }
+
+        public static string Compress(string css, int columnWidth, bool removeComments)
+        {
             // BSD License http://developer.yahoo.net/yui/license.txt
             // New css tests and regexes by Michael Ash
 
@@ -20,7 +25,10 @@ namespace Yahoo.Yui.Compressor
             MatchEvaluator rgbDelegate = new MatchEvaluator(RGBMatchHandler);
             MatchEvaluator shortColorNameDelegate = new MatchEvaluator(ShortColorNameMatchHandler);
             MatchEvaluator shortColorHexDelegate = new MatchEvaluator(ShortColorHexMatchHandler);
-            css = RemoveCommentBlocks(css);
+
+            if(removeComments)
+                css = RemoveCommentBlocks(css);
+
             css = Regex.Replace(css, @"\s+", " "); //Normalize whitespace
             css = Regex.Replace(css, @"\x22\x5C\x22}\x5C\\x22\x22", "___PSEUDOCLASSBMH___"); //hide Box model hack 
             /* Remove the spaces before the things that should not have spaces before them.

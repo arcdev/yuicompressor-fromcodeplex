@@ -198,8 +198,14 @@ namespace Yahoo.Yui.Compressor
 
         #endregion
 
+        public static string Compress(string css, int columnWidth)
+        {
+            return Compress(css, columnWidth, true);
+        }
+
         public static string Compress(string css,
-            int columnWidth)
+            int columnWidth,
+            bool removeComments)
         {
             if (string.IsNullOrEmpty(css))
             {
@@ -213,7 +219,9 @@ namespace Yahoo.Yui.Compressor
             }
 
             // Now compress the css!
-            css = css.RemoveCommentBlocks();
+            if(removeComments)
+                css = css.RemoveCommentBlocks();
+            
             css = css.RegexReplace("\\s+", " ");
             css = css.RegexReplace("\"\\\\\"}\\\\\"\"", "___PSEUDOCLASSBMH___");
             css = css.RemovePrecedingSpaces();

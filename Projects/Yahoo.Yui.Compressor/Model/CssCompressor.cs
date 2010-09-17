@@ -11,9 +11,17 @@ namespace Yahoo.Yui.Compressor
                 CssCompressionType.StockYuiCompressor);
         }
 
+
         public static string Compress(string css,
             int columnWidth,
             CssCompressionType cssCompressionType)
+        {
+            return CssCompressor.Compress(css, columnWidth, cssCompressionType, true);
+        }
+
+        public static string Compress(string css,
+            int columnWidth,
+            CssCompressionType cssCompressionType, bool removeComments)
         {
             string compressedCss = null;
 
@@ -21,7 +29,7 @@ namespace Yahoo.Yui.Compressor
             switch (cssCompressionType)
             {
                 case CssCompressionType.StockYuiCompressor: compressedCss = YUICompressor.Compress(css,
-                    columnWidth);
+                    columnWidth, removeComments);
                     break;
                 case CssCompressionType.MichaelAshRegexEnhancements: compressedCss = MichaelAshRegexCompressor.Compress(css,
                     columnWidth);
@@ -29,9 +37,9 @@ namespace Yahoo.Yui.Compressor
                 case CssCompressionType.Hybrid :
                     // We need to try both types. We get the keep size.
                     string yuiCompressedCss = YUICompressor.Compress(css,
-                        columnWidth);
+                        columnWidth, removeComments);
                     string michaelAshsRegexEnhancementsCompressedCss = MichaelAshRegexCompressor.Compress(css,
-                        columnWidth);
+                        columnWidth, removeComments);
                     compressedCss = yuiCompressedCss.Length < michaelAshsRegexEnhancementsCompressedCss.Length ? yuiCompressedCss : michaelAshsRegexEnhancementsCompressedCss;
                     break;
                 default: throw new InvalidOperationException("Unhandled CssCompressionType found when trying to determine which compression method to use.");
