@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Yahoo.Yui.Compressor
 {
@@ -10,10 +11,9 @@ namespace Yahoo.Yui.Compressor
         public int BraceNesting { get; private set; }
         public ScriptOrFunctionScope ParentScope { get; private set; }
         private ArrayList SubScopes { get; set; }
-        
-        private Hashtable Identifiers = new Hashtable();
-        private Hashtable Hints = new Hashtable();
-        private bool MarkedForMunging = true;
+        private readonly IDictionary<string, JavaScriptIdentifier> _identifiers = new SortedDictionary<string, JavaScriptIdentifier>();
+        private readonly IDictionary<string,string> _hints = new SortedDictionary<string,string>();
+        private bool _markedForMunging = true;
         public int VarCount { get; set; }
 
         #endregion
@@ -41,7 +41,7 @@ namespace Yahoo.Yui.Compressor
         private ArrayList GetUsedSymbols()
         {
             ArrayList result = new ArrayList();
-            foreach (JavaScriptIdentifier identifier in this.Identifiers.Values)
+            foreach (JavaScriptIdentifier identifier in this._identifiers.Values)
             {
                 string mungedValue = identifier.MungedValue;
                 if (string.IsNullOrEmpty(mungedValue))
@@ -74,12 +74,13 @@ namespace Yahoo.Yui.Compressor
 
         public JavaScriptIdentifier DeclareIdentifier(string symbol)
         {
-            JavaScriptIdentifier identifier = (JavaScriptIdentifier)this.Identifiers[symbol];
+            JavaScriptIdentifier identifier = _identifiers.ContainsKey(symbol) ? _identifiers[symbol] : null;
+            //JavaScriptIdentifier identifier = (JavaScriptIdentifier)this._identifiers[symbol];
 
             if (identifier == null)
             {
                 identifier = new JavaScriptIdentifier(symbol, this);
-                this.Identifiers.Add(symbol, identifier);
+                this._identifiers.Add(symbol, identifier);
             }
 
             return identifier;
@@ -87,7 +88,7 @@ namespace Yahoo.Yui.Compressor
 
         public void Munge()
         {
-            if (!this.MarkedForMunging)
+            if (!this._markedForMunging)
             {
                 // Stop right here if this scope was flagged as unsafe for munging.
                 return;
@@ -131,7 +132,7 @@ namespace Yahoo.Yui.Compressor
                     throw new InvalidOperationException("The YUI Compressor ran out of symbols. Aborting...");
                 }
 
-                foreach (JavaScriptIdentifier identifier in this.Identifiers.Values)
+                foreach (JavaScriptIdentifier identifier in this._identifiers.Values)
                 {
                     if (freeSymbols.Count == 0)
                     {
@@ -186,19 +187,20 @@ namespace Yahoo.Yui.Compressor
             {
                 // The symbols in the global scope don't get munged,
                 // but the sub-scopes it contains do get munged.
-                this.MarkedForMunging = false;
+                this._markedForMunging = false;
             }
         }
 
         public JavaScriptIdentifier GetIdentifier(string symbol)
         {
-            return (JavaScriptIdentifier)this.Identifiers[symbol];
+            return _identifiers.ContainsKey(symbol) ? _identifiers[symbol] : null;
+            //return (JavaScriptIdentifier)this._identifiers[symbol];
         }
 
         public void AddHint(string variableName,
             string variableType)
         {
-            this.Hints.Add(variableName, variableType);
+            this._hints.Add(variableName, variableType);
         }
 
         #endregion

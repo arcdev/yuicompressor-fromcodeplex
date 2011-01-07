@@ -62,7 +62,7 @@ namespace Yahoo.Yui.Compressor
             : this(javaScript,
                    isVerboseLogging,
                    Encoding.Default,
-                   CultureInfo.CreateSpecificCulture("en-GB"))
+                   null)
         {
         }
 
@@ -91,14 +91,16 @@ namespace Yahoo.Yui.Compressor
             }
 
             CultureInfo currentCultureInfo = Thread.CurrentThread.CurrentCulture;
-            CultureInfo currentUICulture = Thread.CurrentThread.CurrentCulture;
+            CultureInfo currentUiCulture = Thread.CurrentThread.CurrentCulture;
             try
             {
-                // Lets make sure the current thread is in english. This is because most javascript (yes, this also does css..)
-                // must be in english in case a developer runs this on a non-english OS.
+                // Change the current Thread Culture if the user has asked for something specific.
                 // Reference: http://www.codeplex.com/YUICompressor/WorkItem/View.aspx?WorkItemId=3219
-                Thread.CurrentThread.CurrentCulture = threadCulture;
-                Thread.CurrentThread.CurrentUICulture = threadCulture;
+                if (threadCulture != null)
+                {
+                    Thread.CurrentThread.CurrentCulture = threadCulture;
+                    Thread.CurrentThread.CurrentUICulture = threadCulture;
+                }
 
                 Initialise();
 
@@ -112,8 +114,11 @@ namespace Yahoo.Yui.Compressor
             }
             finally
             {
-                Thread.CurrentThread.CurrentCulture = currentCultureInfo;
-                Thread.CurrentThread.CurrentUICulture = currentUICulture;
+                if (threadCulture != null)
+                {
+                    Thread.CurrentThread.CurrentCulture = currentCultureInfo;
+                    Thread.CurrentThread.CurrentUICulture = currentUiCulture;
+                }
             }
         }
 
@@ -1002,7 +1007,9 @@ namespace Yahoo.Yui.Compressor
                 string hints = token.Value;
 
                 // Remove the leading and trailing quotes...
-                hints = hints.Substring(1, hints.Length - 1).Trim();
+                // NOTE: -2 because -1 == the length of the hints BUT we need to start from slot #1, not #0.
+                //       Then -2 because we need to ignore the last slot (which is a " )
+                hints = hints.Substring(1, hints.Length - 2).Trim();
 
                 foreach (string hint in hints.Split(','))
                 {
@@ -1204,7 +1211,15 @@ namespace Yahoo.Yui.Compressor
                                         // We don't need to declare longer symbols since they won't cause
                                         // any conflict with other munged symbols.
                                         _globalScope.DeclareIdentifier(symbol);
-                                        Warn("Found an undeclared symbol: " + symbol, true);
+
+                                        // I removed the warning since was only being done when
+                                        // for identifiers 3 chars or less, and was just causing
+                                        // noise for people who happen to rely on an externally
+                                        // declared variable that happen to be that short.  We either
+                                        // should always warn or never warn -- the fact that we
+                                        // declare the short symbols in the global space doesn't
+                                        // change anything.
+                                        //Warn("Found an undeclared symbol: " + symbol, true);
                                     }
                                 }
                                 else
@@ -1384,7 +1399,7 @@ namespace Yahoo.Yui.Compressor
                                         // We don't need to declare longer symbols since they won't cause
                                         // any conflict with other munged symbols.
                                         _globalScope.DeclareIdentifier(symbol);
-                                        Warn("Found an undeclared symbol: " + symbol, true);
+                                        //Warn("Found an undeclared symbol: " + symbol, true);
                                     }
                                 }
                                 else
@@ -1812,7 +1827,7 @@ namespace Yahoo.Yui.Compressor
                             disableOptimizations,
                             lineBreakPosition,
                             Encoding.Default,
-                            CultureInfo.CreateSpecificCulture("en-GB"));
+                            null);
         }
 
         public static string Compress(string javaScript,

@@ -38,7 +38,7 @@
             LineBreakPosition: [Optional] the position where a line feed is appened when the next semicolon is reached. Default is -1 (never add a line break).
                                0 (zero) means add a line break after every semicolon. (This might help with debugging troublesome files).          
             LoggingType: None | ALittleBit | HardcoreBringItOn;  Hardcore also lists javascript verbose warnings, if there are any (and there usually is :P ).
-            ThreadCulture: [Optional] the culture you want the thread to run under. Default is 'en-gb'.
+            ThreadCulture: [Optional] the culture you want the thread to run under. Default value is whatever the system culture is.
             IsEvalIgnored: [Optional] compress any functions that contain 'eval'. Default is False, which means a function that contains
                            'eval' will NOT be compressed. It's deemed risky to compress a function containing 'eval'. That said,
                            if the usages are deemed safe this check can be disabled by setting this value to True.

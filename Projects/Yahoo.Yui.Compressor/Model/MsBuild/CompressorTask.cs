@@ -10,19 +10,20 @@ using Microsoft.Build.Utilities;
 
 namespace Yahoo.Yui.Compressor.MsBuild
 {
-    public class CompressorTask : Task
+    public class CompressorTask : Task, ICompressorTask
     {
         private CssCompressionType _cssCompressionType;
         private bool _deleteCssFiles;
         private bool _deleteJavaScriptFiles;
         private bool _disableOptimizations;
+        private bool _doNotErrorWhenNoFilesAreProvided;
         private Encoding _encoding;
+        private bool _isEvalIgnored;
         private int _lineBreakPosition;
         private LoggingType _loggingType;
         private bool _obfuscateJavaScript;
         private bool _preserveAllSemicolons;
         private CultureInfo _threadCulture;
-        private bool _isEvalIgnored;
 
         public CompressorTask()
         {
@@ -45,6 +46,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
         public string LoggingType { get; set; }
         public string ThreadCulture { get; set; }
         public string IsEvalIgnored { get; set; }
+        public string DoNotErrorWhenNoFilesAreProvided { get; set; }
 
         private static bool ParseSillyTrueFalseValue(string value)
         {
@@ -127,16 +129,20 @@ namespace Yahoo.Yui.Compressor.MsBuild
             _deleteCssFiles = !string.IsNullOrEmpty(DeleteCssFiles) && ParseSillyTrueFalseValue(DeleteCssFiles);
 
             // Optional property.
-            _deleteJavaScriptFiles = !string.IsNullOrEmpty(DeleteJavaScriptFiles) && ParseSillyTrueFalseValue(DeleteJavaScriptFiles);
+            _deleteJavaScriptFiles = !string.IsNullOrEmpty(DeleteJavaScriptFiles) &&
+                                     ParseSillyTrueFalseValue(DeleteJavaScriptFiles);
 
             // Optional Property.
-            _obfuscateJavaScript = !string.IsNullOrEmpty(ObfuscateJavaScript) && ParseSillyTrueFalseValue(ObfuscateJavaScript);
+            _obfuscateJavaScript = !string.IsNullOrEmpty(ObfuscateJavaScript) &&
+                                   ParseSillyTrueFalseValue(ObfuscateJavaScript);
 
             // Optional Property.
-            _preserveAllSemicolons = !string.IsNullOrEmpty(PreserveAllSemicolons) && ParseSillyTrueFalseValue(PreserveAllSemicolons);
+            _preserveAllSemicolons = !string.IsNullOrEmpty(PreserveAllSemicolons) &&
+                                     ParseSillyTrueFalseValue(PreserveAllSemicolons);
 
             // Optional Property.
-            _disableOptimizations = !string.IsNullOrEmpty(DisableOptimizations) && ParseSillyTrueFalseValue(DisableOptimizations);
+            _disableOptimizations = !string.IsNullOrEmpty(DisableOptimizations) &&
+                                    ParseSillyTrueFalseValue(DisableOptimizations);
 
             // Optional Property.
             int tempLineBreakPosition;
@@ -199,14 +205,15 @@ namespace Yahoo.Yui.Compressor.MsBuild
                     LogMessage("Failed to read in a legitimate culture value. As such, this property will *not* be set.");
                 }
             }
-            else
-            {
-                _threadCulture = CultureInfo.CreateSpecificCulture("en-GB");
-            }
 
             // Optional property.
             _isEvalIgnored = !string.IsNullOrEmpty(IsEvalIgnored) &&
-                ParseSillyTrueFalseValue(IsEvalIgnored);
+                             ParseSillyTrueFalseValue(IsEvalIgnored);
+
+
+            // Optional Property.
+            _doNotErrorWhenNoFilesAreProvided = !string.IsNullOrEmpty(DoNotErrorWhenNoFilesAreProvided) &&
+                                                ParseSillyTrueFalseValue(DoNotErrorWhenNoFilesAreProvided);
 
             #endregion
         }
@@ -240,7 +247,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
             int totalOriginalContentLength = 0;
             string compressedContent = null;
             StringBuilder finalContent = null;
-            
+
             const string yep = "Yep!";
             const string nope = "Nope :(";
 
@@ -398,12 +405,10 @@ namespace Yahoo.Yui.Compressor.MsBuild
                                              "Css Compression Type: {0}.",
                                              _cssCompressionType == Compressor.CssCompressionType.StockYuiCompressor
                                                  ? "Stock YUI compression"
-                                                 :
-                                                     _cssCompressionType ==
-                                                     Compressor.CssCompressionType.MichaelAshRegexEnhancements
-                                                         ? "Micahel Ash's Regex Enhancement compression"
-                                                         :
-                                                             "Hybrid compresssion (the best compression out of all compression types)"));
+                                                 : _cssCompressionType ==
+                                                   Compressor.CssCompressionType.MichaelAshRegexEnhancements
+                                                       ? "Micahel Ash's Regex Enhancement compression"
+                                                       : "Hybrid compresssion (the best compression out of all compression types)"));
                 }
             }
 
@@ -412,25 +417,18 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
         [SuppressMessage("Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private bool SaveCompressedText(StringBuilder compressedText,
-                                        ActionType actionType)
+        private bool SaveCompressedText(StringBuilder compressedText, ActionType actionType)
         {
             // Note: compressedText CAN be null or empty, so no check.
-            //if (string.IsNullOrEmpty(compressedText))
-            //{
-            //    compressedText == string.Empty;
-            //}
 
             string destinationFileName = actionType == ActionType.Css ? CssOutputFile : JavaScriptOutputFile;
 
             try
             {
-                File.WriteAllText(destinationFileName,
-                                  compressedText == null ? string.Empty : compressedText.ToString());
-                Log.LogMessage(string.Format(CultureInfo.InvariantCulture,
-                                             "Compressed content saved to file [{0}].{1}",
-                                             destinationFileName,
-                                             Environment.NewLine));
+                File.WriteAllText(destinationFileName, compressedText == null ? string.Empty : compressedText.ToString(),
+                                  _encoding);
+                Log.LogMessage(string.Format(CultureInfo.InvariantCulture, "Compressed content saved to file [{0}].{1}",
+                                             destinationFileName, Environment.NewLine));
             }
             catch (Exception exception)
             {
@@ -439,8 +437,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
                 Log.LogError(string.Format(CultureInfo.InvariantCulture,
                                            "Failed to save the compressed text into the output file [{0}]. Please check the path/file name and make sure the file isn't magically locked, read-only, etc..",
                                            destinationFileName));
-                Log.LogErrorFromException(exception,
-                                          false);
+                Log.LogErrorFromException(exception, false);
 
                 return false;
             }
@@ -452,31 +449,37 @@ namespace Yahoo.Yui.Compressor.MsBuild
         {
             StringBuilder compressedText;
 
+            InitialiseBuildSettings();
 
             // Check to make sure we have the bare minimum arguments supplied to the task.
             if (CssFiles.Length == 0 &&
                 JavaScriptFiles.Length == 0)
             {
+                if (_doNotErrorWhenNoFilesAreProvided)
+                {
+                    // No files were provided. Fine .. BUT the user optionally asked that, if there are no files found .. then don't error .. but just quit gracefully.
+                    // Sure! We can do that, too :)
+                    return true;
+                }
+
                 Log.LogError("At least one css or javascript file is required to be compressed / minified.");
                 return false;
             }
-            
+
             if (CssFiles.Length > 0 &&
-                     (string.IsNullOrEmpty(CssOutputFile)))
+                (string.IsNullOrEmpty(CssOutputFile)))
             {
                 Log.LogError("The css outfile is required if one or more css input files have been defined.");
                 return false;
             }
-            
-            if (JavaScriptFiles.Length > 0&&
-                     (string.IsNullOrEmpty(JavaScriptOutputFile)))
+
+            if (JavaScriptFiles.Length > 0 &&
+                (string.IsNullOrEmpty(JavaScriptOutputFile)))
             {
                 Log.LogError(
                     "The javascript outfile is required if one or more javascript input files have been defined.");
                 return false;
             }
-
-            InitialiseBuildSettings();
 
             Log.LogMessage("Starting Css/Javascript compression...");
             Log.LogMessage(Environment.NewLine);

@@ -63,7 +63,7 @@ namespace Yahoo.Yui.Compressor
             : this(javaScript,
                    isVerboseLogging,
                    Encoding.Default,
-                   CultureInfo.CreateSpecificCulture("en-GB"))
+                   null)
         {
         }
 
@@ -93,14 +93,16 @@ namespace Yahoo.Yui.Compressor
             }
 
             CultureInfo currentCultureInfo = Thread.CurrentThread.CurrentCulture;
-            CultureInfo currentUICulture = Thread.CurrentThread.CurrentCulture;
+            CultureInfo currentUiCulture = Thread.CurrentThread.CurrentCulture;
             try
             {
-                // Lets make sure the current thread is in english. This is because most javascript (yes, this also does css..)
-                // must be in english in case a developer runs this on a non-english OS.
+                // Change the current Thread Culture if the user has asked for something specific.
                 // Reference: http://www.codeplex.com/YUICompressor/WorkItem/View.aspx?WorkItemId=3219
-                Thread.CurrentThread.CurrentCulture = threadCulture;
-                Thread.CurrentThread.CurrentUICulture = threadCulture;
+                if (threadCulture != null)
+                {
+                    Thread.CurrentThread.CurrentCulture = threadCulture;
+                    Thread.CurrentThread.CurrentUICulture = threadCulture;
+                }
 
                 Initialise();
 
@@ -114,8 +116,11 @@ namespace Yahoo.Yui.Compressor
             }
             finally
             {
-                Thread.CurrentThread.CurrentCulture = currentCultureInfo;
-                Thread.CurrentThread.CurrentUICulture = currentUICulture;
+                if (threadCulture != null)
+                {
+                    Thread.CurrentThread.CurrentCulture = currentCultureInfo;
+                    Thread.CurrentThread.CurrentUICulture = currentUiCulture;
+                }
             }
         }
 
@@ -1818,7 +1823,7 @@ namespace Yahoo.Yui.Compressor
                             disableOptimizations,
                             lineBreakPosition,
                             Encoding.Default,
-                            CultureInfo.CreateSpecificCulture("en-GB"));
+                            null);
         }
 
         public static string Compress(string javaScript,

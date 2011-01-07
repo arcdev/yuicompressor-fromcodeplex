@@ -32,23 +32,23 @@ namespace Yahoo.Yui.Compressor
             value.Append(input.Substring(index));
         }
 
-        public static string RegexReplace(this string input, 
-            string pattern, 
-            string replacement)
-        {
-            return Regex.Replace(input, pattern, replacement);
-        }
+    public static string RegexReplace(this string input, 
+        string pattern, 
+        string replacement)
+    {
+        return Regex.Replace(input, pattern, replacement);
+    }
 
-        public static string RegexReplace(this string input, 
-            string pattern,
-            string replacement, 
-            RegexOptions options)
-        {
-            return Regex.Replace(input, 
-                pattern, 
-                replacement, 
-                options);
-        }
+    public static string RegexReplace(this string input, 
+        string pattern,
+        string replacement, 
+        RegexOptions options)
+    {
+        return Regex.Replace(input, 
+            pattern, 
+            replacement, 
+            options);
+    }
 
         public static string Fill(this string format, 
             params object[] args)
@@ -95,6 +95,19 @@ namespace Yahoo.Yui.Compressor
         public static IList<T> ToListIfNotNullOrEmpty<T>(this IList<T> value)
         {
             return value.IsNullOrEmpty() ? null : value;
+        }
+
+        public static string Replace(this string value, int startIndex, int endIndex, string newContent)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            // Chop the string into two parts, the before and then the after.
+            string before = value.Substring(0, startIndex);
+            string after = value.Substring(endIndex);
+            return before + newContent + after;
         }
     }
 }
