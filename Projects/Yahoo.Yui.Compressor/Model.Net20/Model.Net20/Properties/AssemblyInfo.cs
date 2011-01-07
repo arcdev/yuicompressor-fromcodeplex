@@ -12,7 +12,7 @@ using System.Security;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("YUI Compressor (.NET 2.0 port)")]
-[assembly: AssemblyCopyright("Copyright © Dimebrain 2008")]
+[assembly: AssemblyCopyright("Copyright © 2008 - 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
