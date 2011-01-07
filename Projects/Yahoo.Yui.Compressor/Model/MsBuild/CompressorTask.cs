@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -482,7 +483,17 @@ namespace Yahoo.Yui.Compressor.MsBuild
             }
 
             Log.LogMessage("Starting Css/Javascript compression...");
+
+            Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            object[] fileVersionAttributes = assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
+            string assemblyFileVersion = fileVersionAttributes.Length > 0 ? ((AssemblyFileVersionAttribute)fileVersionAttributes[0]).Version : "Unknown File Version";
+
+            object[] assemblyTitleAttributes = assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+            string assemblyTitle = assemblyTitleAttributes.Length > 0 ? ((AssemblyTitleAttribute)assemblyTitleAttributes[0]).Title : "Unknown Title";
+
+            Log.LogMessage(string.Format("Using version {0} of {1}.", assemblyFileVersion, assemblyTitle));
             Log.LogMessage(Environment.NewLine);
+
             DateTime startTime = DateTime.Now;
 
             if (CssFiles.Length > 0)

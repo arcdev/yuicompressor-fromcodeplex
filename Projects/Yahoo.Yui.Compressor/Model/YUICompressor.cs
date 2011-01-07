@@ -53,8 +53,6 @@ namespace Yahoo.Yui.Compressor
             while (match.Success)
             {
                 string text = match.Groups[0].Value;
-                Console.WriteLine(text);
-                Debug.WriteLine(text);
                 if (!string.IsNullOrEmpty(text))
                 {
                     var token = match.Value;
