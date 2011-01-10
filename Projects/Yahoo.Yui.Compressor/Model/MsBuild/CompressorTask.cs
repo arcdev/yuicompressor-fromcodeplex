@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -32,11 +33,15 @@ namespace Yahoo.Yui.Compressor.MsBuild
             CssFiles = new ITaskItem[0];
         }
 
-        public string CssCompressionType { get; set; }
         public ITaskItem[] CssFiles { get; set; }
+        public ITaskItem[] JavaScriptFiles { get; set; }
+        public string DoNotErrorWhenNoFilesAreProvided { get; set; }
+
+        #region ICompressorTask Members
+
+        public string CssCompressionType { get; set; }
         public string DeleteCssFiles { get; set; }
         public string CssOutputFile { get; set; }
-        public ITaskItem[] JavaScriptFiles { get; set; }
         public string ObfuscateJavaScript { get; set; }
         public string PreserveAllSemicolons { get; set; }
         public string DisableOptimizations { get; set; }
@@ -47,7 +52,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
         public string LoggingType { get; set; }
         public string ThreadCulture { get; set; }
         public string IsEvalIgnored { get; set; }
-        public string DoNotErrorWhenNoFilesAreProvided { get; set; }
+
+        #endregion
 
         private static bool ParseSillyTrueFalseValue(string value)
         {
@@ -484,15 +490,26 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
             Log.LogMessage("Starting Css/Javascript compression...");
 
-            Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            object[] fileVersionAttributes = assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
-            string assemblyFileVersion = fileVersionAttributes.Length > 0 ? ((AssemblyFileVersionAttribute)fileVersionAttributes[0]).Version : "Unknown File Version";
+            // Determine and log the Assembly version.
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            object[] fileVersionAttributes = assembly.GetCustomAttributes(typeof (AssemblyFileVersionAttribute), false);
+            string assemblyFileVersion = fileVersionAttributes.Length > 0
+                                             ? ((AssemblyFileVersionAttribute) fileVersionAttributes[0]).Version
+                                             : "Unknown File Version";
 
-            object[] assemblyTitleAttributes = assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-            string assemblyTitle = assemblyTitleAttributes.Length > 0 ? ((AssemblyTitleAttribute)assemblyTitleAttributes[0]).Title : "Unknown Title";
+            object[] assemblyTitleAttributes = assembly.GetCustomAttributes(typeof (AssemblyTitleAttribute), false);
+            string assemblyTitle = assemblyTitleAttributes.Length > 0
+                                       ? ((AssemblyTitleAttribute) assemblyTitleAttributes[0]).Title
+                                       : "Unknown Title";
 
             Log.LogMessage(string.Format("Using version {0} of {1}.", assemblyFileVersion, assemblyTitle));
-            Log.LogMessage(Environment.NewLine);
+
+            // What is the current thread culture?
+            Log.LogMessage(string.Format(
+                "Current thread culture / UI culture (before modifying, if requested): {0}/{1}",
+                Thread.CurrentThread.CurrentCulture.EnglishName, Thread.CurrentThread.CurrentUICulture.EnglishName));
+            
+            Log.LogMessage(string.Empty); // This, in effect, is a new line.
 
             DateTime startTime = DateTime.Now;
 
@@ -521,9 +538,15 @@ namespace Yahoo.Yui.Compressor.MsBuild
             }
 
             Log.LogMessage("Finished Css/Javascript compression.");
+            // What is the current thread culture?
+            Log.LogMessage(string.Format(
+                "Reverted back to thread culture / UI culture: {0}/{1}",
+                Thread.CurrentThread.CurrentCulture.EnglishName, Thread.CurrentThread.CurrentUICulture.EnglishName));
             Log.LogMessage(string.Format(CultureInfo.InvariantCulture,
                                          "Total time to execute task: {0}",
                                          (DateTime.Now - startTime)));
+            Log.LogMessage("8< ---------------------------------  ( o Y o )  --------------------------------- >8");
+            Log.LogMessage(string.Empty); // This, in effect, is a new line.
 
             return true;
         }

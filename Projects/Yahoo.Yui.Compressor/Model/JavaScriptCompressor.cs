@@ -91,7 +91,7 @@ namespace Yahoo.Yui.Compressor
             }
 
             CultureInfo currentCultureInfo = Thread.CurrentThread.CurrentCulture;
-            CultureInfo currentUiCulture = Thread.CurrentThread.CurrentCulture;
+            CultureInfo currentUiCulture = Thread.CurrentThread.CurrentUICulture;
             try
             {
                 // Change the current Thread Culture if the user has asked for something specific.
