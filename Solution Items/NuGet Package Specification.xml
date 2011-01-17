@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package>
     <metadata>
         <id>YUICompressor.NET</id>
@@ -18,8 +18,8 @@ This is a direct .NET port of the original Yahoo! UI Library: YUI Compressor.
         <licenseUrl>http://yuicompressor.codeplex.com/license/</licenseUrl>
     </metadata>
     <files>
-        <file src="..\Projects\Yahoo.Yui.Compressor\Model\bin\Release\*.dll" target="lib\.NetFramework 3.5" />
-        <file src="..\Projects\Yahoo.Yui.Compressor\Model.Net20\Model.Net20\bin\Release\*.dll" target="lib\.NetFramework 2.0" />
+        <file src="..\Projects\Yahoo.Yui.Compressor\Model\bin\Release\*.dll" target="lib\NET35" />
+        <file src="..\Projects\Yahoo.Yui.Compressor\Model.Net20\Model.Net20\bin\Release\*.dll" target="lib\NET20" />
     </files>
     <!-- <tags>yuicompressor javascript cascading-style-sheets cascadingstylesheets js css tfs</tags> -->
 </package>
