@@ -80,6 +80,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsBuild Example", "MsBuild 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web Deployment Project Example", "Web Deployment Project Example", "{5F3C3ACA-787D-454F-A6CA-8AACB75B56D9}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Web Deployment Project Example\Sample WebSite and WDP.zip = Solution Items\Web Deployment Project Example\Sample WebSite and WDP.zip
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2.4.1", "v2.4.1", "{0F58ACB2-6E77-42A1-8806-FB07D70A4D5C}"
 EndProject
@@ -136,6 +139,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "org.mozilla.javascript", "o
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Post-build Events WebSite Example", "Post-build Events WebSite Example", "{55383C77-E8F0-4300-8828-79A50033FF7A}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Post-build Events WebSite Example\SampleWebSite.zip = Solution Items\Post-build Events WebSite Example\SampleWebSite.zip
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Projects\Yahoo.Yui.Compressor\Model\Model.csproj", "{AFDF50F0-286B-4490-9EBD-007561864738}"
 EndProject
