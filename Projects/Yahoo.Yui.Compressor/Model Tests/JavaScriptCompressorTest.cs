@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -264,6 +265,20 @@ namespace Yahoo.Yui.Compressor.Tests
             // do a file LENGTH compare .. which might be a bit closer to fair Assert test.
             CompareTwoFiles(@"Javascript Files\_syntax_error.js", @"Javascript Files\_syntax_error.js.min",
                             CompressorType.JavaScript, ComparingTwoFileTypes.FileLength);
+        }
+
+        [TestMethod]
+        public void Bug8092JavascriptTest()
+        {
+            // Arrange.
+            string javascript = string.Format("var anObject = {{{0}property: \"value\",{0}propertyTwo: \"value2\"{0}}};{0}{0}alert('single quoted string ' + anObject.property + ' end string');{0}// Outputs: single quoted string value end string", Environment.NewLine);
+
+            // Act.
+            string compressedJavascript = JavaScriptCompressor.Compress(javascript);
+
+            // Assert.
+            Assert.AreEqual("var anObject={property:\"value\",propertyTwo:\"value2\"};alert(\"single quoted string \"+anObject.property+\" end string\");",
+                compressedJavascript);
         }
     }
 }

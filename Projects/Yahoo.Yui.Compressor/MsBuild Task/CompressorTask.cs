@@ -10,7 +10,7 @@ using System.Threading;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace Yahoo.Yui.Compressor.MsBuild
+namespace Yahoo.Yui.Compressor.MsBuildTask
 {
     public class CompressorTask : Task, ICompressorTask
     {
@@ -25,6 +25,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
         private LoggingType _loggingType;
         private bool _obfuscateJavaScript;
         private bool _preserveAllSemicolons;
+        private bool _preseveCssComments;
         private CultureInfo _threadCulture;
 
         public CompressorTask()
@@ -35,7 +36,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
         public ITaskItem[] CssFiles { get; set; }
         public ITaskItem[] JavaScriptFiles { get; set; }
-        public string DoNotErrorWhenNoFilesAreProvided { get; set; }
+        
 
         #region ICompressorTask Members
 
@@ -52,6 +53,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
         public string LoggingType { get; set; }
         public string ThreadCulture { get; set; }
         public string IsEvalIgnored { get; set; }
+        public string DoNotErrorWhenNoFilesAreProvided { get; set; }
+        public string PreserveCssComments { get; set; }
 
         #endregion
 
@@ -118,13 +121,13 @@ namespace Yahoo.Yui.Compressor.MsBuild
             switch (LoggingType.ToLowerInvariant())
             {
                 case "none":
-                    _loggingType = MsBuild.LoggingType.None;
+                    _loggingType = MsBuildTask.LoggingType.None;
                     break;
                 case "hardcorebringiton":
-                    _loggingType = MsBuild.LoggingType.HardcoreBringItOn;
+                    _loggingType = MsBuildTask.LoggingType.HardcoreBringItOn;
                     break;
                 default:
-                    _loggingType = MsBuild.LoggingType.ALittleBit;
+                    _loggingType = MsBuildTask.LoggingType.ALittleBit;
                     break;
             }
 
@@ -205,12 +208,33 @@ namespace Yahoo.Yui.Compressor.MsBuild
             {
                 try
                 {
-                    _threadCulture = CultureInfo.CreateSpecificCulture(ThreadCulture);
+                    switch (ThreadCulture.ToLowerInvariant())
+                    {
+                        case "iv":
+                        case "ivl":
+                        case "invariantculture":
+                        case "invariant culture":
+                        case "invariant language":
+                        case "invariant language (invariant country)":
+                            {
+                                _threadCulture = CultureInfo.InvariantCulture;
+                                break;
+                            }
+                        default:
+                            {
+                                _threadCulture = CultureInfo.CreateSpecificCulture(ThreadCulture);
+                                break;
+                            }
+                    }
                 }
                 catch
                 {
                     LogMessage("Failed to read in a legitimate culture value. As such, this property will *not* be set.");
                 }
+            }
+            else
+            {
+                _threadCulture = CultureInfo.CreateSpecificCulture("en-gb");
             }
 
             // Optional property.
@@ -222,20 +246,18 @@ namespace Yahoo.Yui.Compressor.MsBuild
             _doNotErrorWhenNoFilesAreProvided = !string.IsNullOrEmpty(DoNotErrorWhenNoFilesAreProvided) &&
                                                 ParseSillyTrueFalseValue(DoNotErrorWhenNoFilesAreProvided);
 
+            // Optional Property.
+            _preseveCssComments = !string.IsNullOrEmpty(PreserveCssComments) &&
+                                  ParseSillyTrueFalseValue(PreserveCssComments);
+
             #endregion
         }
 
-        private void LogMessage(string message)
-        {
-            LogMessage(message,
-                       false);
-        }
-
         private void LogMessage(string message,
-                                bool isIndented)
+                                bool isIndented = false)
         {
-            if (_loggingType == MsBuild.LoggingType.ALittleBit ||
-                _loggingType == MsBuild.LoggingType.HardcoreBringItOn)
+            if (_loggingType == MsBuildTask.LoggingType.ALittleBit ||
+                _loggingType == MsBuildTask.LoggingType.HardcoreBringItOn)
             {
                 Log.LogMessage(string.Format(CultureInfo.InvariantCulture,
                                              "{0}{1}",
@@ -250,7 +272,6 @@ namespace Yahoo.Yui.Compressor.MsBuild
         {
             string actionDescription;
             IList<string> fileList = null;
-            string originalContent;
             int totalOriginalContentLength = 0;
             string compressedContent = null;
             StringBuilder finalContent = null;
@@ -318,7 +339,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
                     // Load up the file.
                     try
                     {
-                        originalContent = File.ReadAllText(file);
+                        string originalContent = File.ReadAllText(file);
                         totalOriginalContentLength += originalContent.Length;
 
                         if (string.IsNullOrEmpty(originalContent))
@@ -330,15 +351,14 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
                         if (actionType == ActionType.Css)
                         {
-                            compressedContent = CssCompressor.Compress(originalContent,
-                                                                       0,
-                                                                       _cssCompressionType);
+                            compressedContent = CssCompressor.Compress(originalContent, 0, _cssCompressionType,
+                                                                       _preseveCssComments);
                         }
                         else if (actionType == ActionType.JavaScript)
                         {
                             compressedContent = JavaScriptCompressor.Compress(originalContent,
                                                                               _loggingType ==
-                                                                              MsBuild.LoggingType.HardcoreBringItOn,
+                                                                              MsBuildTask.LoggingType.HardcoreBringItOn,
                                                                               _obfuscateJavaScript,
                                                                               _preserveAllSemicolons,
                                                                               _disableOptimizations,
@@ -508,7 +528,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
             Log.LogMessage(string.Format(
                 "Current thread culture / UI culture (before modifying, if requested): {0}/{1}",
                 Thread.CurrentThread.CurrentCulture.EnglishName, Thread.CurrentThread.CurrentUICulture.EnglishName));
-            
+
             Log.LogMessage(string.Empty); // This, in effect, is a new line.
 
             DateTime startTime = DateTime.Now;

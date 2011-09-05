@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace Yahoo.Yui.Compressor.MsBuild
+namespace Yahoo.Yui.Compressor.MsBuildTask
 {
     public class EmbeddedResourcesTask : Task
     {
@@ -50,7 +50,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
                             {
                                 case ".css":
                                     {
-                                        str = CssCompressor.Compress(str, 0, CssCompressionType.StockYuiCompressor);
+                                        str = CssCompressor.Compress(str, 0, CssCompressionType.StockYuiCompressor, true);
                                         break;
                                     }
                                 case ".js":

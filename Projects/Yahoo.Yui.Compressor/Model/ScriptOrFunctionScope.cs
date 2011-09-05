@@ -8,24 +8,29 @@ namespace Yahoo.Yui.Compressor
     {
         #region Fields
 
+        private readonly IDictionary<string, string> _hints = new SortedDictionary<string, string>();
+
+        private readonly IDictionary<string, JavaScriptIdentifier> _identifiers =
+            new SortedDictionary<string, JavaScriptIdentifier>();
+
+        private bool _markedForMunging = true;
+
         public int BraceNesting { get; private set; }
         public ScriptOrFunctionScope ParentScope { get; private set; }
         private ArrayList SubScopes { get; set; }
-        private readonly IDictionary<string, JavaScriptIdentifier> _identifiers = new SortedDictionary<string, JavaScriptIdentifier>();
-        private readonly IDictionary<string,string> _hints = new SortedDictionary<string,string>();
-        private bool _markedForMunging = true;
+
         public int VarCount { get; set; }
 
         #endregion
-        
+
         #region Constructors
 
-        public ScriptOrFunctionScope(int braceNesting, 
-            ScriptOrFunctionScope parentScope)
+        public ScriptOrFunctionScope(int braceNesting,
+                                     ScriptOrFunctionScope parentScope)
         {
-            this.BraceNesting = braceNesting;
-            this.ParentScope = parentScope;
-            this.SubScopes = new ArrayList();
+            BraceNesting = braceNesting;
+            ParentScope = parentScope;
+            SubScopes = new ArrayList();
             if (parentScope != null)
             {
                 parentScope.SubScopes.Add(this);
@@ -40,8 +45,8 @@ namespace Yahoo.Yui.Compressor
 
         private ArrayList GetUsedSymbols()
         {
-            ArrayList result = new ArrayList();
-            foreach (JavaScriptIdentifier identifier in this._identifiers.Values)
+            var result = new ArrayList();
+            foreach (JavaScriptIdentifier identifier in _identifiers.Values)
             {
                 string mungedValue = identifier.MungedValue;
                 if (string.IsNullOrEmpty(mungedValue))
@@ -57,7 +62,7 @@ namespace Yahoo.Yui.Compressor
 
         private ArrayList GetAllUsedSymbols()
         {
-            ArrayList result = new ArrayList();
+            var result = new ArrayList();
             ScriptOrFunctionScope scope = this;
             while (scope != null)
             {
@@ -80,7 +85,7 @@ namespace Yahoo.Yui.Compressor
             if (identifier == null)
             {
                 identifier = new JavaScriptIdentifier(symbol, this);
-                this._identifiers.Add(symbol, identifier);
+                _identifiers.Add(symbol, identifier);
             }
 
             return identifier;
@@ -88,7 +93,7 @@ namespace Yahoo.Yui.Compressor
 
         public void Munge()
         {
-            if (!this._markedForMunging)
+            if (!_markedForMunging)
             {
                 // Stop right here if this scope was flagged as unsafe for munging.
                 return;
@@ -97,12 +102,12 @@ namespace Yahoo.Yui.Compressor
             int pickFromSet = 1;
 
             // Do not munge symbols in the global scope!
-            if (this.ParentScope != null)
+            if (ParentScope != null)
             {
-                ArrayList freeSymbols = new ArrayList();
+                var freeSymbols = new ArrayList();
 
                 freeSymbols.AddRange(JavaScriptCompressor.Ones);
-                foreach (string symbol in this.GetAllUsedSymbols())
+                foreach (string symbol in GetAllUsedSymbols())
                 {
                     freeSymbols.Remove(symbol);
                 }
@@ -111,7 +116,7 @@ namespace Yahoo.Yui.Compressor
                 {
                     pickFromSet = 2;
                     freeSymbols.AddRange(JavaScriptCompressor.Twos);
-                    foreach (string symbol in this.GetAllUsedSymbols())
+                    foreach (string symbol in GetAllUsedSymbols())
                     {
                         freeSymbols.Remove(symbol);
                     }
@@ -121,7 +126,7 @@ namespace Yahoo.Yui.Compressor
                 {
                     pickFromSet = 3;
                     freeSymbols.AddRange(JavaScriptCompressor.Threes);
-                    foreach (string symbol in this.GetAllUsedSymbols())
+                    foreach (string symbol in GetAllUsedSymbols())
                     {
                         freeSymbols.Remove(symbol);
                     }
@@ -132,7 +137,7 @@ namespace Yahoo.Yui.Compressor
                     throw new InvalidOperationException("The YUI Compressor ran out of symbols. Aborting...");
                 }
 
-                foreach (JavaScriptIdentifier identifier in this._identifiers.Values)
+                foreach (JavaScriptIdentifier identifier in _identifiers.Values)
                 {
                     if (freeSymbols.Count == 0)
                     {
@@ -153,7 +158,7 @@ namespace Yahoo.Yui.Compressor
                         // the containing scopes, or some of the variables declared
                         // in the containing scopes will be redeclared, which can
                         // lead to errors.
-                        foreach (string symbol in this.GetAllUsedSymbols())
+                        foreach (string symbol in GetAllUsedSymbols())
                         {
                             freeSymbols.Remove(symbol);
                         }
@@ -162,7 +167,7 @@ namespace Yahoo.Yui.Compressor
                     string mungedValue;
                     if (identifier.MarkedForMunging)
                     {
-                        mungedValue = (string)freeSymbols[0];
+                        mungedValue = (string) freeSymbols[0];
                         freeSymbols.RemoveAt(0);
                     }
                     else
@@ -174,20 +179,20 @@ namespace Yahoo.Yui.Compressor
                 }
             }
 
-            for (int i = 0; i < this.SubScopes.Count; i++)
+            for (int i = 0; i < SubScopes.Count; i++)
             {
-                ScriptOrFunctionScope scope = (ScriptOrFunctionScope)this.SubScopes[i];
+                var scope = (ScriptOrFunctionScope) SubScopes[i];
                 scope.Munge();
             }
         }
 
         public void PreventMunging()
         {
-            if (this.ParentScope != null)
+            if (ParentScope != null)
             {
                 // The symbols in the global scope don't get munged,
                 // but the sub-scopes it contains do get munged.
-                this._markedForMunging = false;
+                _markedForMunging = false;
             }
         }
 
@@ -198,9 +203,9 @@ namespace Yahoo.Yui.Compressor
         }
 
         public void AddHint(string variableName,
-            string variableType)
+                            string variableType)
         {
-            this._hints.Add(variableName, variableType);
+            _hints.Add(variableName, variableType);
         }
 
         #endregion

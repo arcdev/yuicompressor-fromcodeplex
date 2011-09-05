@@ -43,7 +43,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
             var result = compressorType == CompressorType.JavaScript
                              ? JavaScriptCompressor.Compress(sourceFileContext, true, true, false, false, -1)
-                             : CssCompressor.Compress(sourceFileContext, -1, CssCompressionType.StockYuiCompressor);
+                             : CssCompressor.Compress(sourceFileContext, -1, CssCompressionType.StockYuiCompressor, true);
 
             // Assert.
             Assert.IsNotNull(minifiedDestinationContent);

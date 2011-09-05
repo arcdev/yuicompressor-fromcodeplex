@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Yahoo.Yui.Compressor.MsBuild;
+using Yahoo.Yui.Compressor.MsBuildTask;
 
 namespace Yahoo.Yui.Compressor.Tests
 {

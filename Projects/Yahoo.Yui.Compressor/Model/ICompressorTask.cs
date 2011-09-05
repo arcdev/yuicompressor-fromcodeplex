@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using Microsoft.Build.Framework;
-using Yahoo.Yui.Compressor.MsBuild;
-
-namespace Yahoo.Yui.Compressor
+﻿namespace Yahoo.Yui.Compressor
 {
     public interface ICompressorTask
     {
@@ -23,5 +15,7 @@ namespace Yahoo.Yui.Compressor
         string LoggingType { get; set; }
         string ThreadCulture { get; set; }
         string IsEvalIgnored { get; set; }
+        string DoNotErrorWhenNoFilesAreProvided { get; set; }
+        string PreserveCssComments { get; set; }
     }
 }

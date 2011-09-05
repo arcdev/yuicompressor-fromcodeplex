@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -10,6 +9,11 @@ namespace Yahoo.Yui.Compressor
     {
         public static string Compress(string css, int columnWidth)
         {
+            return Compress(css, columnWidth, true);
+        }
+
+        public static string Compress(string css, int columnWidth, bool removeComments)
+        {
             if (string.IsNullOrEmpty(css))
             {
                 throw new ArgumentNullException("css");
@@ -17,37 +21,41 @@ namespace Yahoo.Yui.Compressor
 
             int totalLen = css.Length;
             int startIndex = 0;
-            ArrayList comments = new ArrayList();
-            ArrayList preservedTokens = new ArrayList();
+            var comments = new ArrayList();
+            var preservedTokens = new ArrayList();
             int max;
 
 
-            while ((startIndex = css.IndexOf(@"/*", startIndex, StringComparison.OrdinalIgnoreCase)) >= 0)
+            if (removeComments)
             {
-                var endIndex = css.IndexOf(@"*/", startIndex + 2, StringComparison.OrdinalIgnoreCase);
-                if (endIndex < 0)
+                while ((startIndex = css.IndexOf(@"/*", startIndex, StringComparison.OrdinalIgnoreCase)) >= 0)
                 {
-                    endIndex = totalLen;
+                    int endIndex = css.IndexOf(@"*/", startIndex + 2, StringComparison.OrdinalIgnoreCase);
+                    if (endIndex < 0)
+                    {
+                        endIndex = totalLen;
+                    }
+
+                    // Note: java substring-length param = end index - 2 (which is end index - (startindex + 2))
+                    string token = css.Substring(startIndex + 2, endIndex - (startIndex + 2));
+
+                    comments.Add(token);
+
+                    string newResult = css.Replace(startIndex + 2, endIndex,
+                                                   "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + (comments.Count - 1) +
+                                                   "___");
+
+                    //var newResult = css.Substring(startIndex + 2, endIndex - (startIndex + 2)) + "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" +
+                    //                (comments.Count - 1) + "___" + css.Substring(endIndex + 1);
+
+                    startIndex += 2;
+                    css = newResult;
                 }
-
-                // Note: java substring-length param = end index - 2 (which is end index - (startindex + 2))
-                var token = css.Substring(startIndex + 2, endIndex - (startIndex + 2));
-                    
-                comments.Add(token);
-
-                var newResult = css.Replace(startIndex + 2, endIndex,
-                                            "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + (comments.Count - 1) + "___");
-
-                //var newResult = css.Substring(startIndex + 2, endIndex - (startIndex + 2)) + "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" +
-                //                (comments.Count - 1) + "___" + css.Substring(endIndex + 1);
-
-                startIndex += 2;
-                css = newResult;
             }
 
             // Preserve strings so their content doesn't get accidently minified
-            StringBuilder stringBuilder = new StringBuilder();
-            Regex pattern = new Regex("(\"([^\\\\\"]|\\\\.|\\\\)*\")|(\'([^\\\\\']|\\\\.|\\\\)*\')");
+            var stringBuilder = new StringBuilder();
+            var pattern = new Regex("(\"([^\\\\\"]|\\\\.|\\\\)*\")|(\'([^\\\\\']|\\\\.|\\\\)*\')");
             Match match = pattern.Match(css);
             int index = 0;
             while (match.Success)
@@ -55,7 +63,7 @@ namespace Yahoo.Yui.Compressor
                 string text = match.Groups[0].Value;
                 if (!string.IsNullOrEmpty(text))
                 {
-                    var token = match.Value;
+                    string token = match.Value;
                     char quote = token[0];
 
                     // Java code: token.substring(1, token.length() -1) .. but that's ...
@@ -79,8 +87,8 @@ namespace Yahoo.Yui.Compressor
                                                "alpha(opacity=");
 
                     preservedTokens.Add(token);
-                    var preserver = quote + "___YUICSSMIN_PRESERVED_TOKEN_" + (preservedTokens.Count - 1) + "___" +
-                                    quote;
+                    string preserver = quote + "___YUICSSMIN_PRESERVED_TOKEN_" + (preservedTokens.Count - 1) + "___" +
+                                       quote;
 
                     index = match.AppendReplacement(stringBuilder, css, preserver, index);
                     match = match.NextMatch();
@@ -94,7 +102,7 @@ namespace Yahoo.Yui.Compressor
             for (int i = 0; i < max; i += 1)
             {
                 string token = comments[i].ToString();
-                var placeholder = "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + i + "___";
+                string placeholder = "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + i + "___";
 
                 // ! in the first position of the comment means preserve
                 // so push to the preserved tokens while stripping the !
@@ -225,7 +233,7 @@ namespace Yahoo.Yui.Compressor
             while (match.Success)
             {
                 string[] rgbcolors = match.Groups[1].Value.Split(',');
-                StringBuilder hexcolor = new StringBuilder("#");
+                var hexcolor = new StringBuilder("#");
                 foreach (string rgbColour in rgbcolors)
                 {
                     if (!Int32.TryParse(rgbColour, out value))
@@ -266,8 +274,9 @@ namespace Yahoo.Yui.Compressor
                     match.Groups[5].Value.EqualsIgnoreCase(match.Groups[6].Value) &&
                     match.Groups[7].Value.EqualsIgnoreCase(match.Groups[8].Value))
                 {
-                    var replacement = String.Concat(match.Groups[1].Value, match.Groups[2].Value, "#",
-                                                    match.Groups[3].Value, match.Groups[5].Value, match.Groups[7].Value);
+                    string replacement = String.Concat(match.Groups[1].Value, match.Groups[2].Value, "#",
+                                                       match.Groups[3].Value, match.Groups[5].Value,
+                                                       match.Groups[7].Value);
                     index = match.AppendReplacement(stringBuilder, css, replacement, index);
                 }
                 else
@@ -288,7 +297,7 @@ namespace Yahoo.Yui.Compressor
             index = 0;
             while (match.Success)
             {
-                var replacement = match.Groups[1].Value.ToLowerInvariant() + ":0" + match.Groups[2].Value;
+                string replacement = match.Groups[1].Value.ToLowerInvariant() + ":0" + match.Groups[2].Value;
                 index = match.AppendReplacement(stringBuilder, css, replacement, index);
                 match = match.NextMatch();
             }

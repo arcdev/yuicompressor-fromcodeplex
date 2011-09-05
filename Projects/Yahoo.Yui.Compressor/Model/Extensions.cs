@@ -5,19 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-
 namespace Yahoo.Yui.Compressor
 {
     public static class Extensions
     {
-        public static int AppendReplacement(this Capture capture, 
-            StringBuilder value, 
-            string input, 
-            string replacement, 
-            int index)
+        public static int AppendReplacement(this Capture capture,
+                                            StringBuilder value,
+                                            string input,
+                                            string replacement,
+                                            int index)
         {
-            string preceding = input.Substring(index, 
-                capture.Index - index);
+            string preceding = input.Substring(index,
+                                               capture.Index - index);
 
             value.Append(preceding);
             value.Append(replacement);
@@ -25,53 +24,53 @@ namespace Yahoo.Yui.Compressor
             return capture.Index + capture.Length;
         }
 
-        public static void AppendTail(this StringBuilder value, 
-            string input, 
-            int index)
+        public static void AppendTail(this StringBuilder value,
+                                      string input,
+                                      int index)
         {
             value.Append(input.Substring(index));
         }
 
-    public static string RegexReplace(this string input, 
-        string pattern, 
-        string replacement)
-    {
-        return Regex.Replace(input, pattern, replacement);
-    }
+        public static string RegexReplace(this string input,
+                                          string pattern,
+                                          string replacement)
+        {
+            return Regex.Replace(input, pattern, replacement);
+        }
 
-    public static string RegexReplace(this string input, 
-        string pattern,
-        string replacement, 
-        RegexOptions options)
-    {
-        return Regex.Replace(input, 
-            pattern, 
-            replacement, 
-            options);
-    }
+        public static string RegexReplace(this string input,
+                                          string pattern,
+                                          string replacement,
+                                          RegexOptions options)
+        {
+            return Regex.Replace(input,
+                                 pattern,
+                                 replacement,
+                                 options);
+        }
 
-        public static string Fill(this string format, 
-            params object[] args)
+        public static string Fill(this string format,
+                                  params object[] args)
         {
             return String.Format(CultureInfo.InvariantCulture,
-                format, 
-                args);
+                                 format,
+                                 args);
         }
 
-        public static string RemoveRange(this string input, 
-            int startIndex, 
-            int endIndex)
+        public static string RemoveRange(this string input,
+                                         int startIndex,
+                                         int endIndex)
         {
-            return input.Remove(startIndex, 
-                endIndex - startIndex);
+            return input.Remove(startIndex,
+                                endIndex - startIndex);
         }
 
-        public static bool EqualsIgnoreCase(this string left, 
-            string right)
+        public static bool EqualsIgnoreCase(this string left,
+                                            string right)
         {
             return String.Compare(left,
-                right, 
-                StringComparison.OrdinalIgnoreCase) == 0;
+                                  right,
+                                  StringComparison.OrdinalIgnoreCase) == 0;
         }
 
         // NOTE: To check out some decimal -> Hex converstions,
@@ -89,7 +88,9 @@ namespace Yahoo.Yui.Compressor
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> value)
         {
             return value == null ||
-                value.Count() <= 0 ? true : false;
+                   value.Count() <= 0
+                       ? true
+                       : false;
         }
 
         public static IList<T> ToListIfNotNullOrEmpty<T>(this IList<T> value)

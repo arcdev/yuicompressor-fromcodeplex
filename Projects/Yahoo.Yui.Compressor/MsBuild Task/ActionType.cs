@@ -1,7 +1,4 @@
-﻿using System;
-
-
-namespace Yahoo.Yui.Compressor.MsBuild
+﻿namespace Yahoo.Yui.Compressor.MsBuildTask
 {
     public enum ActionType
     {

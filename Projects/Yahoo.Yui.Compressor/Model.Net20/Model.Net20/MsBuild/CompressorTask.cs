@@ -23,6 +23,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
         private bool _obfuscateJavaScript;
         private bool _preserveAllSemicolons;
         private CultureInfo _threadCulture;
+        private bool _preseveCssComments;
 
         public CompressorTask()
         {
@@ -46,6 +47,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
         public string ThreadCulture { get; set; }
         public string IsEvalIgnored { get; set; }
         public string DoNotErrorWhenNoFilesAreProvided { get; set; }
+        public string PreserveCssComments { get; set; }
 
         private static bool ParseSillyTrueFalseValue(string value)
         {
@@ -214,6 +216,10 @@ namespace Yahoo.Yui.Compressor.MsBuild
             _doNotErrorWhenNoFilesAreProvided = !string.IsNullOrEmpty(DoNotErrorWhenNoFilesAreProvided) &&
                                                 ParseSillyTrueFalseValue(DoNotErrorWhenNoFilesAreProvided);
 
+            // Optional Property.
+            _preseveCssComments = !string.IsNullOrEmpty(PreserveCssComments) &&
+                                  ParseSillyTrueFalseValue(PreserveCssComments);
+
             #endregion
         }
 
@@ -337,7 +343,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
                         {
                             compressedContent = CssCompressor.Compress(originalContent,
                                                                        0,
-                                                                       _cssCompressionType);
+                                                                       _cssCompressionType,
+                                                                       _preseveCssComments);
                         }
                         else if (actionType == ActionType.JavaScript)
                         {

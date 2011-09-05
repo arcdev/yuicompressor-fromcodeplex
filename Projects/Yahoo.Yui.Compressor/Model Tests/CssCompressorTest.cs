@@ -42,7 +42,7 @@ namespace Yahoo.Yui.Compressor.Tests
             string css = File.ReadAllText(@"Cascading Style Sheet Files\SampleStylesheet1.css");
 
             // Act.
-            string compressedCss = CssCompressor.Compress(css,73,CssCompressionType.StockYuiCompressor);
+            string compressedCss = CssCompressor.Compress(css, 73, CssCompressionType.StockYuiCompressor, true);
             
             // Assert.
             Assert.IsTrue(!string.IsNullOrEmpty(compressedCss));
@@ -71,7 +71,7 @@ namespace Yahoo.Yui.Compressor.Tests
             string css = File.ReadAllText(@"Cascading Style Sheet Files\SampleStylesheet1.css");
 
             // Act.
-            string compressedCss = CssCompressor.Compress(css,0,CssCompressionType.MichaelAshRegexEnhancements);
+            string compressedCss = CssCompressor.Compress(css,0,CssCompressionType.MichaelAshRegexEnhancements, true);
             
             // Assert.
             Assert.IsTrue(!string.IsNullOrEmpty(compressedCss));
@@ -86,7 +86,7 @@ namespace Yahoo.Yui.Compressor.Tests
             string css = File.ReadAllText(@"Cascading Style Sheet Files\SampleStylesheet1.css");
 
             // Act.
-            string compressedCss = CssCompressor.Compress(css,73,CssCompressionType.MichaelAshRegexEnhancements);
+            string compressedCss = CssCompressor.Compress(css,73,CssCompressionType.MichaelAshRegexEnhancements, true);
             
             // Assert.
             Assert.IsTrue(!string.IsNullOrEmpty(compressedCss));
