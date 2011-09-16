@@ -54,6 +54,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EcmaScript.NET\EcmaScript.NET.csproj">
+      <Project>{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}</Project>
+      <Name>EcmaScript.NET</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{AFDF50F0-286B-4490-9EBD-007561864738}</Project>
       <Name>Model</Name>

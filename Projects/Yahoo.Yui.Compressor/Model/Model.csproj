@@ -87,12 +87,6 @@
     <None Include="YuiCompressorKeyFile.pfx.snk" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EcmaScript.NET\EcmaScript.NET.csproj">
-      <Project>{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}</Project>
-      <Name>EcmaScript.NET</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -109,7 +103,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\EcmaScript.NET\EcmaScript.NET.csproj">
+      <Project>{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}</Project>
+      <Name>EcmaScript.NET</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
