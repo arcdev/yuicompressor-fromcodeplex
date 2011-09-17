@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/MsBuild/2003">
     <UsingTask
         TaskName="CompressorTask"
-        AssemblyFile="..\..\Projects\Yahoo.Yui.Compressor\Model\bin\Debug\Yahoo.Yui.Compressor.dll" />
+        AssemblyFile="..\..\Projects\Yahoo.Yui.Compressor\MsBuild Task\bin\Debug\Yahoo.Yui.Compressor.MsBuildTask.dll" />
     <!-- The .NET 2.0 version of the task .. and yes .. that's Model.Net20 folder listed twice .. i know i know...
     <UsingTask
         TaskName="CompressorTask"
@@ -19,8 +19,7 @@
         <CssOutputFile Condition=" '$(CssOutputFile)'=='' ">SylesSheetFinal.css</CssOutputFile>
         <JavaScriptOutputFile Condition=" '$(JavaScriptOutputFile)'=='' ">JavaScriptFinal.css</JavaScriptOutputFile>
     </PropertyGroup>
-    
-    
+
     <Target Name="MyTaskTarget">
         <!--
             ItemGroup\CssFiles or ItemGroup\JavaScriptFiles: add zero to many files you wish to include in this compression task.
