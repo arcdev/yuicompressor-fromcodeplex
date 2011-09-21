@@ -109,7 +109,7 @@ namespace Yahoo.Yui.Compressor
                 var memoryStream = new MemoryStream(encoding.GetBytes(javaScript));
                 ErrorReporter = errorReporter ?? new CustomErrorReporter(isVerboseLogging);
                 _logger = ErrorReporter;
-                _tokens = Parse(new StreamReader(memoryStream), ErrorReporter);
+                _tokens = Parse(new StreamReader(memoryStream, encoding), ErrorReporter);
                 _isEvalIgnored = isEvalIgnored;
             }
             finally
