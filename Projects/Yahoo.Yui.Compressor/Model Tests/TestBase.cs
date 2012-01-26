@@ -8,15 +8,17 @@ namespace Yahoo.Yui.Compressor.Tests
     [TestClass]
     public class TestBase
     {
-        protected void CompareTwoFiles(string sourceFilePath, string minifiedDestinationPath,
-                                       CompressorType compressorType)
+        protected void CompareTwoFiles(string sourceFilePath, string minifiedDestinationPath, CompressorType compressorType)
         {
             CompareTwoFiles(sourceFilePath, minifiedDestinationPath, compressorType, ComparingTwoFileTypes.Content);
         }
 
-        protected void CompareTwoFiles(string sourceFilePath, string minifiedDestinationPath,
-                                       CompressorType compressorType,
-                                       ComparingTwoFileTypes comparingTwoFileTypes)
+        protected void CompareTwoFiles(string sourceFilePath, string minifiedDestinationPath, CompressorType compressorType, ComparingTwoFileTypes comparingTwoFileTypes)
+        {
+            CompareTwoFiles(sourceFilePath, minifiedDestinationPath, compressorType, comparingTwoFileTypes, CssCompressionType.StockYuiCompressor);
+        }
+
+        protected void CompareTwoFiles(string sourceFilePath, string minifiedDestinationPath, CompressorType compressorType, ComparingTwoFileTypes comparingTwoFileTypes, CssCompressionType compressionType)
         {
             if (string.IsNullOrEmpty(sourceFilePath))
             {
@@ -43,7 +45,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
             var result = compressorType == CompressorType.JavaScript
                              ? JavaScriptCompressor.Compress(sourceFileContext, true, true, false, false, -1)
-                             : CssCompressor.Compress(sourceFileContext, -1, CssCompressionType.StockYuiCompressor, true);
+                             : CssCompressor.Compress(sourceFileContext, -1, compressionType, true);
 
             // Assert.
             Assert.IsNotNull(minifiedDestinationContent);

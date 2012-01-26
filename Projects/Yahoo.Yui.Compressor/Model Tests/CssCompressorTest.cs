@@ -235,6 +235,15 @@ namespace Yahoo.Yui.Compressor.Tests
             CompareTwoFiles(@"Cascading Style Sheet Files\media-empty-class.css", @"Cascading Style Sheet Files\media-empty-class.css.min", CompressorType.CascadingStyleSheet);
         }
 
+        [TestMethod, Ignore]
+        [DeploymentItem(@"Cascading Style Sheet Files\media-empty-class.css", "Cascading Style Sheet Files")]
+        [DeploymentItem(@"Cascading Style Sheet Files\media-empty-class.css.min", "Cascading Style Sheet Files")]
+        public void MediaEmptyClassCssTest_With_MichaelAshRegexEnhancements()
+        {
+            // Currently does not produce the same results as the regular compressor - is this correct?
+            CompareTwoFiles(@"Cascading Style Sheet Files\media-empty-class.css", @"Cascading Style Sheet Files\media-empty-class.css.min", CompressorType.CascadingStyleSheet, ComparingTwoFileTypes.Content, CssCompressionType.MichaelAshRegexEnhancements);
+        }
+
         [TestMethod]
         [DeploymentItem(@"Cascading Style Sheet Files\media-multi.css", "Cascading Style Sheet Files")]
         [DeploymentItem(@"Cascading Style Sheet Files\media-multi.css.min", "Cascading Style Sheet Files")]
@@ -244,11 +253,27 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
+        [DeploymentItem(@"Cascading Style Sheet Files\media-multi.css", "Cascading Style Sheet Files")]
+        [DeploymentItem(@"Cascading Style Sheet Files\media-multi.css.min", "Cascading Style Sheet Files")]
+        public void MediaMultiCssTest_With_MichaelAshRegexEnhancements()
+        {
+            CompareTwoFiles(@"Cascading Style Sheet Files\media-multi.css", @"Cascading Style Sheet Files\media-multi.css.min", CompressorType.CascadingStyleSheet, ComparingTwoFileTypes.Content, CssCompressionType.MichaelAshRegexEnhancements);
+        }
+
+        [TestMethod]
         [DeploymentItem(@"Cascading Style Sheet Files\media-test.css", "Cascading Style Sheet Files")]
         [DeploymentItem(@"Cascading Style Sheet Files\media-test.css.min", "Cascading Style Sheet Files")]
         public void MediaTestCssTest()
         {
             CompareTwoFiles(@"Cascading Style Sheet Files\media-test.css", @"Cascading Style Sheet Files\media-test.css.min", CompressorType.CascadingStyleSheet);
+        }
+
+        [TestMethod]
+        [DeploymentItem(@"Cascading Style Sheet Files\media-test.css", "Cascading Style Sheet Files")]
+        [DeploymentItem(@"Cascading Style Sheet Files\media-test.css.min", "Cascading Style Sheet Files")]
+        public void MediaTestCssTest_With_MichaelAshRegexEnhancements()
+        {
+            CompareTwoFiles(@"Cascading Style Sheet Files\media-test.css", @"Cascading Style Sheet Files\media-test.css.min", CompressorType.CascadingStyleSheet, ComparingTwoFileTypes.Content, CssCompressionType.MichaelAshRegexEnhancements);
         }
 
         [TestMethod]

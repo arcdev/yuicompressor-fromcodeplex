@@ -21,6 +21,11 @@ namespace Yahoo.Yui.Compressor
             // BSD License http://developer.yahoo.net/yui/license.txt
             // New css tests and regexes by Michael Ash
 
+            if (string.IsNullOrEmpty(css))
+            {
+                throw new ArgumentNullException("css");
+            }
+
             CreateHashTable();
             MatchEvaluator rgbDelegate = RGBMatchHandler;
             MatchEvaluator shortColorNameDelegate = ShortColorNameMatchHandler;
@@ -108,6 +113,9 @@ namespace Yahoo.Yui.Compressor
             css = Regex.Replace(css, @"(?<=color\s*:\s*)\b(Black|Fuchsia|LightSlateGr[ae]y|Magenta|White|Yellow)\b",
                                 shortColorHexDelegate, RegexOptions.IgnoreCase);
 
+            // Make sure media queries have a space between them
+            css = Regex.Replace(css, @"\band\(", "and (", RegexOptions.IgnoreCase);
+
             // Remove empty rules.
             css = Regex.Replace(css, @"[^}]+{;}", "");
             //Remove semicolon of last property
@@ -142,7 +150,14 @@ namespace Yahoo.Yui.Compressor
                     }
                     else
                     {
-                        input = input.Remove(startIndex, endIndex + 2 - startIndex);
+                        if (input[startIndex + 2] != '!')
+                        {
+                            input = input.Remove(startIndex, endIndex + 2 - startIndex);
+                        }
+                        else
+                        {
+                            startIndex++;
+                        }
                     }
                 }
                 startIndex = input.IndexOf(@"/*", startIndex);
