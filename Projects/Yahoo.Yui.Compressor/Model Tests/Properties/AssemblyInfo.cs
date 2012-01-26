@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("YUI Compressor for .NET tests.")]
-[assembly: AssemblyCopyright("Copyright © 2008")]
+[assembly: AssemblyCopyright("Copyright © 2008 - 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -11,7 +11,7 @@ using System.Security;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("YUI Compressor (.NET 3.5 port) MsBuild Task")]
-[assembly: AssemblyCopyright("Copyright © 2008 - 2011")]
+[assembly: AssemblyCopyright("Copyright © 2008 - 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -344,7 +344,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
                             compressedContent = CssCompressor.Compress(originalContent,
                                                                        0,
                                                                        _cssCompressionType,
-                                                                       _preseveCssComments);
+                                                                       !_preseveCssComments);
                         }
                         else if (actionType == ActionType.JavaScript)
                         {
