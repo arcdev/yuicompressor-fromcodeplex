@@ -2,6 +2,7 @@
 {
     public enum CssCompressionType
     {
+        None,
         StockYuiCompressor,
         MichaelAshRegexEnhancements,
         Hybrid

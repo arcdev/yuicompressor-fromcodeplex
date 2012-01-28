@@ -15,6 +15,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
     public class CompressorTask : Task, ICompressorTask
     {
         private CssCompressionType _cssCompressionType;
+        private JavaScriptCompressionType _javaScriptCompressionType;
         private bool _deleteCssFiles;
         private bool _deleteJavaScriptFiles;
         private bool _disableOptimizations;
@@ -35,11 +36,11 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
         }
 
         public ITaskItem[] CssFiles { get; set; }
-        public ITaskItem[] JavaScriptFiles { get; set; }
-        
+        public ITaskItem[] JavaScriptFiles { get; set; }        
 
         #region ICompressorTask Members
 
+        public string JavaScriptCompressionType { get; set; }
         public string CssCompressionType { get; set; }
         public string DeleteCssFiles { get; set; }
         public string CssOutputFile { get; set; }
@@ -93,12 +94,15 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
 
             if (string.IsNullOrEmpty(CssCompressionType))
             {
-                LogMessage("No Compression type defined. Defaulting to 'YuiStockCompression'.");
+                LogMessage("No Css Compression type defined. Defaulting to 'YuiStockCompression'.");
                 CssCompressionType = "YUIStockCompression";
             }
 
             switch (CssCompressionType.ToLowerInvariant())
             {
+                case "none":
+                    _cssCompressionType = Compressor.CssCompressionType.None;
+                    break;
                 case "michaelashsregexenhancements":
                     _cssCompressionType = Compressor.CssCompressionType.MichaelAshRegexEnhancements;
                     break;
@@ -109,6 +113,25 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                     break;
                 default:
                     _cssCompressionType = Compressor.CssCompressionType.StockYuiCompressor;
+                    break;
+            }
+
+            if (string.IsNullOrEmpty(JavaScriptCompressionType))
+            {
+                LogMessage("No JavaScript Compression type defined. Defaulting to 'StockYuiCompressor'.");
+                JavaScriptCompressionType = Compressor.JavaScriptCompressionType.YuiStockCompression.ToString();
+            }
+
+            switch (JavaScriptCompressionType.ToLowerInvariant())
+            {
+                case "none":
+                    _javaScriptCompressionType = Compressor.JavaScriptCompressionType.None;
+                    break;
+                case "yuistockcompression":
+                    _javaScriptCompressionType = Compressor.JavaScriptCompressionType.YuiStockCompression;
+                    break;
+                default:
+                    Log.LogError("Unrecognised JavaScriptCompressionType: {0}", JavaScriptCompressionType);
                     break;
             }
 
@@ -266,8 +289,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
             }
         }
 
-        [SuppressMessage("Microsoft.Design",
-            "CA1031:DoNotCatchGeneralExceptionTypes")]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private StringBuilder CompressFiles(ActionType actionType)
         {
             string actionDescription;
@@ -278,7 +300,6 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
 
             const string yep = "Yep!";
             const string nope = "Nope :(";
-
 
             switch (actionType)
             {
@@ -365,7 +386,8 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                                                                               _lineBreakPosition,
                                                                               _encoding,
                                                                               _threadCulture,
-                                                                              _isEvalIgnored);
+                                                                              _isEvalIgnored,
+                                                                              _javaScriptCompressionType);
                         }
 
                         if (!string.IsNullOrEmpty(compressedContent))
@@ -375,6 +397,11 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                                 finalContent = new StringBuilder();
                             }
                             finalContent.Append(compressedContent);
+                            if ((actionType == ActionType.Css && _cssCompressionType == Compressor.CssCompressionType.None) ||
+                                (actionType == ActionType.JavaScript && _javaScriptCompressionType == Compressor.JavaScriptCompressionType.None))
+                            {
+                                finalContent.AppendLine();
+                            }
                         }
                     }
                     catch (Exception exception)
@@ -441,6 +468,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
 
             return finalContent;
         }
+
 
         [SuppressMessage("Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes")]

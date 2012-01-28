@@ -72,8 +72,14 @@
     <Compile Include="..\..\Model\CssCompressionType.cs">
       <Link>CssCompressionType.cs</Link>
     </Compile>
+    <Compile Include="..\..\Model\CssCompressor.cs">
+      <Link>CssCompressor.cs</Link>
+    </Compile>
     <Compile Include="..\..\Model\CustomErrorReporter.cs">
       <Link>CustomErrorReporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Model\JavaScriptCompressionType.cs">
+      <Link>JavaScriptCompressionType.cs</Link>
     </Compile>
     <Compile Include="..\..\Model\JavaScriptIdentifier.cs">
       <Link>JavaScriptIdentifier.cs</Link>
@@ -90,7 +96,6 @@
     <Compile Include="..\..\MsBuild Task\EmbeddedResourceTask.cs">
       <Link>MsBuild\EmbeddedResourceTask.cs</Link>
     </Compile>
-    <Compile Include="CssCompressor.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="JavaScriptCompressor.cs" />
     <Compile Include="MsBuild\ActionType.cs" />

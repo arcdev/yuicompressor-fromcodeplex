@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JavaScriptCompressionType.cs" />
     <Compile Include="CssCompressionType.cs" />
     <Compile Include="CssCompressor.cs" />
     <Compile Include="CustomErrorReporter.cs" />

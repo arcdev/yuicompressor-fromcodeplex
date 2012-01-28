@@ -12,6 +12,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
     public class CompressorTask : Task
     {
         private CssCompressionType _cssCompressionType;
+        private JavaScriptCompressionType _javaScriptCompressionType;
         private bool _deleteCssFiles;
         private bool _deleteJavaScriptFiles;
         private bool _disableOptimizations;
@@ -22,8 +23,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
         private LoggingType _loggingType;
         private bool _obfuscateJavaScript;
         private bool _preserveAllSemicolons;
-        private CultureInfo _threadCulture;
         private bool _preseveCssComments;
+        private CultureInfo _threadCulture;
 
         public CompressorTask()
         {
@@ -31,11 +32,16 @@ namespace Yahoo.Yui.Compressor.MsBuild
             CssFiles = new ITaskItem[0];
         }
 
-        public string CssCompressionType { get; set; }
         public ITaskItem[] CssFiles { get; set; }
+        public ITaskItem[] JavaScriptFiles { get; set; }
+        
+
+        #region ICompressorTask Members
+
+        public string JavaScriptCompressionType { get; set; }
+        public string CssCompressionType { get; set; }
         public string DeleteCssFiles { get; set; }
         public string CssOutputFile { get; set; }
-        public ITaskItem[] JavaScriptFiles { get; set; }
         public string ObfuscateJavaScript { get; set; }
         public string PreserveAllSemicolons { get; set; }
         public string DisableOptimizations { get; set; }
@@ -48,6 +54,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
         public string IsEvalIgnored { get; set; }
         public string DoNotErrorWhenNoFilesAreProvided { get; set; }
         public string PreserveCssComments { get; set; }
+
+        #endregion
 
         private static bool ParseSillyTrueFalseValue(string value)
         {
@@ -84,12 +92,15 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
             if (string.IsNullOrEmpty(CssCompressionType))
             {
-                LogMessage("No Compression type defined. Defaulting to 'YuiStockCompression'.");
+                LogMessage("No Css Compression type defined. Defaulting to 'YuiStockCompression'.");
                 CssCompressionType = "YUIStockCompression";
             }
 
             switch (CssCompressionType.ToLowerInvariant())
             {
+                case "none":
+                    _cssCompressionType = Compressor.CssCompressionType.None;
+                    break;
                 case "michaelashsregexenhancements":
                     _cssCompressionType = Compressor.CssCompressionType.MichaelAshRegexEnhancements;
                     break;
@@ -103,13 +114,32 @@ namespace Yahoo.Yui.Compressor.MsBuild
                     break;
             }
 
+            if (string.IsNullOrEmpty(JavaScriptCompressionType))
+            {
+                LogMessage("No JavaScript Compression type defined. Defaulting to 'YuiStockCompression'.");
+                JavaScriptCompressionType = Compressor.JavaScriptCompressionType.YuiStockCompression.ToString();
+            }
+
+            switch (JavaScriptCompressionType.ToLowerInvariant())
+            {
+                case "none":
+                    _javaScriptCompressionType = Compressor.JavaScriptCompressionType.None;
+                    break;
+                case  "yuistockcompressor":
+                    _javaScriptCompressionType = Compressor.JavaScriptCompressionType.YuiStockCompression;
+                    break;
+                default:
+                    Log.LogError("Unrecognised JavaScriptCompressionType: {0}", JavaScriptCompressionType);
+                    break;
+            }
+
             if (string.IsNullOrEmpty(LoggingType))
             {
                 Log.LogWarning("No logging argument defined. Defaulting to 'ALittleBit'.");
                 LoggingType = "ALittleBit";
             }
 
-            switch (LoggingType)
+            switch (LoggingType.ToLowerInvariant())
             {
                 case "none":
                     _loggingType = MsBuild.LoggingType.None;
@@ -341,9 +371,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
                         if (actionType == ActionType.Css)
                         {
-                            compressedContent = CssCompressor.Compress(originalContent,
-                                                                       0,
-                                                                       _cssCompressionType,
+                            compressedContent = CssCompressor.Compress(originalContent, 0, _cssCompressionType,
                                                                        !_preseveCssComments);
                         }
                         else if (actionType == ActionType.JavaScript)
@@ -357,7 +385,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
                                                                               _lineBreakPosition,
                                                                               _encoding,
                                                                               _threadCulture,
-                                                                              _isEvalIgnored);
+                                                                              _isEvalIgnored,
+                                                                              _javaScriptCompressionType);
                         }
 
                         if (!string.IsNullOrEmpty(compressedContent))
@@ -367,6 +396,11 @@ namespace Yahoo.Yui.Compressor.MsBuild
                                 finalContent = new StringBuilder();
                             }
                             finalContent.Append(compressedContent);
+                            if ((actionType == ActionType.Css && _cssCompressionType == Compressor.CssCompressionType.None) ||
+                                (actionType == ActionType.JavaScript && _javaScriptCompressionType == Compressor.JavaScriptCompressionType.None))
+                            {
+                                finalContent.AppendLine();
+                            }
                         }
                     }
                     catch (Exception exception)
@@ -435,8 +469,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
 
         [SuppressMessage("Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private bool SaveCompressedText(StringBuilder compressedText,
-                                        ActionType actionType)
+        private bool SaveCompressedText(StringBuilder compressedText, ActionType actionType)
         {
             // Note: compressedText CAN be null or empty, so no check.
 
@@ -486,14 +519,14 @@ namespace Yahoo.Yui.Compressor.MsBuild
             }
 
             if (CssFiles.Length > 0 &&
-                string.IsNullOrEmpty(CssOutputFile))
+                (string.IsNullOrEmpty(CssOutputFile)))
             {
                 Log.LogError("The css outfile is required if one or more css input files have been defined.");
                 return false;
             }
 
             if (JavaScriptFiles.Length > 0 &&
-                string.IsNullOrEmpty(JavaScriptOutputFile))
+                (string.IsNullOrEmpty(JavaScriptOutputFile)))
             {
                 Log.LogError(
                     "The javascript outfile is required if one or more javascript input files have been defined.");
@@ -532,6 +565,8 @@ namespace Yahoo.Yui.Compressor.MsBuild
             Log.LogMessage(string.Format(CultureInfo.InvariantCulture,
                                          "Total time to execute task: {0}",
                                          (DateTime.Now - startTime)));
+            Log.LogMessage("8< ---------------------------------  ( o Y o )  --------------------------------- >8");
+            Log.LogMessage(string.Empty); // This, in effect, is a new line.
 
             return true;
         }

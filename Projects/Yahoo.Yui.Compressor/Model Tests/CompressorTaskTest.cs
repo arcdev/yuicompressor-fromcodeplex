@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,6 +24,72 @@ namespace Yahoo.Yui.Compressor.Tests
 
                 // Assert
                 Assert.IsTrue(worked, "Did not Work");
+            }
+
+            [TestMethod]
+            public void When_The_JavaScriptCompressionType_Is_None_The_Input_Files_Are_Concatenated_Unchanged()
+            {
+                // Arange
+                var compressor = CreateCompressorTask();
+                compressor.JavaScriptCompressionType = "None";
+                compressor.JavaScriptFiles = new ITaskItem[]
+                                          {
+                                              new TaskItem(@"Javascript Files\float.js"),
+                                              new TaskItem(@"Javascript Files\_munge.js")
+                                          };
+                compressor.JavaScriptOutputFile = "noCompression.js";
+
+                // Act
+                compressor.Execute();
+
+                // Assert
+                var actual = File.ReadAllText("noCompression.js");
+                var sb = new StringBuilder();
+                foreach (var file in compressor.JavaScriptFiles)
+                {
+                    sb.AppendLine(File.ReadAllText(file.ItemSpec));
+                }
+                Assert.AreEqual(sb.ToString(), actual);
+            }
+
+            [TestMethod]
+            public void When_The_JavaScriptCompressionType_Is_Not_Specified_The_Input_Files_Are_Compressed()
+            {
+                // Arrange
+                var compressor = CreateCompressorTask();
+                compressor.JavaScriptFiles = new ITaskItem[]
+                                          {
+                                              new TaskItem(@"Javascript Files\float.js"),
+                                              new TaskItem(@"Javascript Files\_munge.js")
+                                          };
+                compressor.JavaScriptOutputFile = "compressed.js";
+
+                // Act
+                compressor.Execute();
+
+                // Assert
+                var actual = File.ReadAllText("compressed.js");
+                var sb = new StringBuilder();
+                foreach (var file in compressor.JavaScriptFiles)
+                {
+                    sb.AppendLine(File.ReadAllText(file.ItemSpec));
+                }
+                Assert.IsTrue(actual.Length < sb.Length);
+            }
+
+            [TestMethod]
+            public void An_Error_Is_Logged_If_The_JavascriptCompressionType_Is_Not_Recognised()
+            {
+                // Arrange
+                var compressor = CreateCompressorTask();
+                compressor.JavaScriptCompressionType = "invalid";
+
+                // Act
+                var success = compressor.Execute();
+
+                // Assert
+                Assert.IsFalse(success);
+                Assert.IsTrue(((BuildEngineStub)compressor.BuildEngine).Errors.Contains("Unrecognised JavaScriptCompressionType: invalid"));                
             }
 
             private static CompressorTask GetJavascriptCompressorFor(string fileName)
@@ -125,6 +192,57 @@ namespace Yahoo.Yui.Compressor.Tests
                 // Assert.
                 Assert.IsTrue(worked, "Task Didn't work");
                 Assert.IsTrue(compressedCss.Contains("/*! preserved comment */"), compressedCss);
+            }
+
+            [TestMethod]
+            public void When_The_CssCompressionType_Is_None_The_Input_Files_Are_Concatenated_Unchanged()
+            {
+                // Arrange
+                var compressor = CreateCompressorTask();
+                compressor.CssCompressionType = "None";
+                compressor.CssFiles = new ITaskItem[]
+                                          {
+                                              new TaskItem(@"Cascading Style Sheet Files\color.css"),
+                                              new TaskItem(@"Cascading Style Sheet Files\decimals.css")
+                                          };
+                compressor.CssOutputFile = "noCompression.css";
+
+                // Act
+                compressor.Execute();
+
+                // Assert
+                var actual = File.ReadAllText("noCompression.css");
+                var sb = new StringBuilder();
+                foreach (var file in compressor.CssFiles)
+                {
+                    sb.AppendLine(File.ReadAllText(file.ItemSpec));
+                }
+                Assert.AreEqual(sb.ToString(), actual);
+            }
+
+            [TestMethod]
+            public void When_The_CssCompressionType_Is_Not_Specified_The_Input_Files_Are_Compressed()
+            {
+                // Arrange
+                var compressor = CreateCompressorTask();
+                compressor.CssFiles = new ITaskItem[]
+                                          {
+                                              new TaskItem(@"Cascading Style Sheet Files\color.css"),
+                                              new TaskItem(@"Cascading Style Sheet Files\decimals.css")
+                                          };
+                compressor.CssOutputFile = "compressed.css";
+
+                // Act
+                compressor.Execute();
+
+                // assert
+                var actual = File.ReadAllText("compressed.css");
+                var sb = new StringBuilder();
+                foreach (var file in compressor.CssFiles)
+                {
+                    sb.AppendLine(File.ReadAllText(file.ItemSpec));
+                }
+                Assert.IsTrue(actual.Length < sb.Length);
             }
 
             private static CompressorTask GetCssCompressorFor(string fileName)

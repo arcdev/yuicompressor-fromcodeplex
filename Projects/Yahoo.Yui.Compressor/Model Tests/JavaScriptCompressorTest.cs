@@ -280,5 +280,87 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.AreEqual("var anObject={property:\"value\",propertyTwo:\"value2\"};alert(\"single quoted string \"+anObject.property+\" end string\");",
                 compressedJavascript);
         }
+
+        [TestMethod]
+        public void When_The_CompressionType_Is_None_The_Input_Is_Returned_Unchanged()
+        {
+            // Arrange
+            // Deliberately include loads of spaces and comments
+            const string source = "function   foo() {   return 'bar';   }  /*  Some Comment */";
+            JavaScriptCompressor compressor = new JavaScriptCompressor(source);
+            compressor.CompressionType = JavaScriptCompressionType.None;
+
+            // Act
+            var actual = compressor.Compress();
+
+            // Assert
+            Assert.AreEqual(source, actual);
+        }
+
+        [TestMethod]
+        public void The_Input_Will_Be_Compressed_By_Default()
+        {
+            // Arrange
+            // Deliberately include loads of spaces and comments
+            const string source = "function   foo() {   return 'bar';   }  /*  Some Comment */";
+            const string expected = @"function foo(){return""bar""};";
+            JavaScriptCompressor compressor = new JavaScriptCompressor(source);
+
+            // Act
+            var actual = compressor.Compress();
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [Description("Item 9856")]
+        public void Decimals_Will_Be_Reasonably_Accurate()
+        {
+            // There is a problem with ScriptConvert in the EcmaScript library, where doubles are losing accuracy
+            // Decimal would be better, but requires major re-engineering.
+            // As an interim measure, the accuracy has been improved a little.
+            // This test is just confirming some of the more accurate values
+            // See this thread for more: http://yuicompressor.codeplex.com/discussions/279118
+
+            // Arrange
+            var js = @"var serverResolutions = [ 
+                            156543.03390625,
+                            9783.939619140625, 
+                            611.4962261962891,
+                            0.07464553542435169
+                       ];";
+            JavaScriptCompressor compressor = new JavaScriptCompressor(js);
+
+            // Act
+            var actual = compressor.Compress();
+
+            // Assert
+            Assert.AreEqual("var serverResolutions=[156543.03390625,9783.939619140625,611.4962261962891,0.07464553542435169];", actual);
+        }
+
+        [TestMethod]
+        [Description("Item 9856")]
+        public void Decimals_Will_Not_Be_Entirely_Accurate_Until_We_Implement_A_Proper_Solution()
+        {
+            // There is a problem with ScriptConvert in the EcmaScript library, where doubles are losing accuracy
+            // Decimal would be better, but requires major re-engineering.
+            // As an interim measure, the accuracy has been improved a little.
+            // This test is just checking that some inaccuracies still exist & can be removed once we have a proper solution
+            // If this test fails, it means accuracy is now sorted!
+            // See this thread for more: http://yuicompressor.codeplex.com/discussions/279118
+
+
+            var js = @"var serverResolutions = [ 
+                            152.87405654907226,
+                            0.14929107084870338
+                       ];";
+            JavaScriptCompressor compressor = new JavaScriptCompressor(js);
+
+            var actual = compressor.Compress();
+
+            Assert.AreNotEqual("var serverResolutions=[152.87405654907226,0.14929107084870338];", actual);
+        }
+
     }
 }

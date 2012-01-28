@@ -355,5 +355,19 @@ namespace Yahoo.Yui.Compressor.Tests
         {
             CompareTwoFiles(@"Cascading Style Sheet Files\zeros.css", @"Cascading Style Sheet Files\zeros.css.min", CompressorType.CascadingStyleSheet);
         }
+
+        [TestMethod]
+        public void When_The_CompressionType_Is_None_The_Input_Is_Returned_Unchanged()
+        {
+            // Arrange
+            // Deliberately include loads of spaces and comments
+            const string source = "body      {  color : blue    }  table {   border    :   2 px;    }  /*  Some Comment */";
+            
+            // Act
+            var actual = CssCompressor.Compress(source, 0, CssCompressionType.None, false);
+
+            // Assert
+            Assert.AreEqual(source, actual);
+        }
     }
 }

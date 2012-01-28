@@ -17,24 +17,24 @@ namespace Yahoo.Yui.Compressor
 
         private const int BUILDING_SYMBOL_TREE = 1;
         private const int CHECKING_SYMBOL_TREE = 2;
+
         private static readonly object _synLock = new object();
-
-        private static readonly Regex SIMPLE_IDENTIFIER_NAME_PATTERN = new Regex("^[a-zA-Z_][a-zA-Z0-9_]*$",
-                                                                                 RegexOptions.Compiled);
-
+        private static readonly Regex SIMPLE_IDENTIFIER_NAME_PATTERN = new Regex("^[a-zA-Z_][a-zA-Z0-9_]*$", RegexOptions.Compiled);
         private static HashedSet<string> _builtin;
 
         private readonly ScriptOrFunctionScope _globalScope = new ScriptOrFunctionScope(-1, null);
         private readonly Hashtable _indexedScopes = new Hashtable();
+        private readonly bool _isEvalIgnored;
         private readonly ErrorReporter _logger;
         private readonly Stack _scopes = new Stack();
-        private readonly ArrayList _tokens;
+        private readonly bool _verbose;
+        private readonly string _javaScript;
+        private readonly Encoding _encoding;
+        private ArrayList _tokens;
         private int _braceNesting;
-        private bool _isEvalIgnored;
         private int _mode;
         private bool _munge;
         private int _offset;
-        private bool _verbose;
 
         #endregion
 
@@ -46,39 +46,26 @@ namespace Yahoo.Yui.Compressor
         private static Hashtable Literals { get; set; }
         private static HashedSet<string> Reserved { get; set; }
 
+        public JavaScriptCompressionType CompressionType { get; set; }
+ 
         public ErrorReporter ErrorReporter { get; private set; }
 
         #endregion
 
         #region Constructors
 
-        public JavaScriptCompressor(string javaScript)
-            : this(javaScript,
-                   true)
+        public JavaScriptCompressor(string javaScript) : this(javaScript, true)
         {
         }
 
-        public JavaScriptCompressor(string javaScript,
-                                    bool isVerboseLogging)
-            : this(javaScript,
-                   isVerboseLogging,
-                   Encoding.Default,
-                   null)
+        public JavaScriptCompressor(string javaScript, bool isVerboseLogging) : this(javaScript, isVerboseLogging, Encoding.Default, null)
         {
         }
 
-        public JavaScriptCompressor(string javaScript,
-                                    bool isVerboseLogging,
-                                    Encoding encoding,
-                                    CultureInfo threadCulture) : this(javaScript,
-                                                                      isVerboseLogging,
-                                                                      encoding,
-                                                                      threadCulture,
-                                                                      false,
-                                                                      null)
+        public JavaScriptCompressor(string javaScript, bool isVerboseLogging, Encoding encoding, CultureInfo threadCulture) : 
+                                    this(javaScript, isVerboseLogging, encoding, threadCulture, false, null)
         {
         }
-
 
         public JavaScriptCompressor(string javaScript,
                                     bool isVerboseLogging,
@@ -92,8 +79,10 @@ namespace Yahoo.Yui.Compressor
                 throw new ArgumentNullException("javaScript");
             }
 
+            CompressionType = JavaScriptCompressionType.YuiStockCompression; // Default
+
             CultureInfo currentCultureInfo = Thread.CurrentThread.CurrentCulture;
-            CultureInfo currentUiCulture = Thread.CurrentThread.CurrentCulture;
+            CultureInfo currentUiCulture = Thread.CurrentThread.CurrentUICulture;
             try
             {
                 // Change the current Thread Culture if the user has asked for something specific.
@@ -107,12 +96,11 @@ namespace Yahoo.Yui.Compressor
                 Initialise();
 
                 _verbose = isVerboseLogging;
-
-                var memoryStream = new MemoryStream(encoding.GetBytes(javaScript));
+                _javaScript = javaScript;
+                _encoding = encoding;
                 ErrorReporter = errorReporter ?? new CustomErrorReporter(isVerboseLogging);
                 _logger = ErrorReporter;
-                _tokens = Parse(new StreamReader(memoryStream, encoding), ErrorReporter);
-                _isEvalIgnored = isEvalIgnored;    
+                _isEvalIgnored = isEvalIgnored;
             }
             finally
             {
@@ -163,12 +151,12 @@ namespace Yahoo.Yui.Compressor
                     if (Ones == null)
                     {
                         onesList = new List<string>();
-                        for (char c = 'A'; c <= 'Z'; c++)
+                        for (char c = 'a'; c <= 'z'; c++)
                         {
                             onesList.Add(Convert.ToString(c, CultureInfo.InvariantCulture));
                         }
 
-                        for (char c = 'a'; c <= 'z'; c++)
+                        for (char c = 'A'; c <= 'Z'; c++)
                         {
                             onesList.Add(Convert.ToString(c, CultureInfo.InvariantCulture));
                         }
@@ -182,7 +170,6 @@ namespace Yahoo.Yui.Compressor
         private static void InitialiseTwosList()
         {
             List<string> twosList;
-
 
             if (Twos == null)
             {
@@ -234,7 +221,6 @@ namespace Yahoo.Yui.Compressor
         {
             List<string> threesList;
 
-
             if (Threes == null)
             {
                 lock (_synLock)
@@ -247,12 +233,12 @@ namespace Yahoo.Yui.Compressor
                         {
                             string two = Twos[i];
 
-                            for (char c = 'A'; c <= 'Z'; c++)
+                            for (char c = 'a'; c <= 'z'; c++)
                             {
                                 threesList.Add(two + Convert.ToString(c, CultureInfo.InvariantCulture));
                             }
 
-                            for (char c = 'a'; c <= 'z'; c++)
+                            for (char c = 'A'; c <= 'Z'; c++)
                             {
                                 threesList.Add(two + Convert.ToString(c, CultureInfo.InvariantCulture));
                             }
@@ -675,6 +661,7 @@ namespace Yahoo.Yui.Compressor
                     int singleQuoteCount = CountChar(tv, '\'');
                     int doubleQuoteCount = CountChar(tv, '"');
                     char quotechar = doubleQuoteCount <= singleQuoteCount ? '"' : '\'';
+
                     tv = quotechar + EscapeString(tv, quotechar) + quotechar;
 
                     // String concatenation transforms the old script scheme:
@@ -705,14 +692,13 @@ namespace Yahoo.Yui.Compressor
                 throw new ArgumentException("quotechar argument has to be a \" or a \\ character only.",
                                             "quotechar");
             }
-
             if (string.IsNullOrEmpty(s))
             {
                 return null;
             }
 
             var stringBuilder = new StringBuilder();
-            for (int i = 0, L = s.Length; i < L; i++)
+            for (int i = 0, length = s.Length; i < length; i++)
             {
                 int c = s[i];
                 if (c == quotechar)
@@ -760,7 +746,7 @@ namespace Yahoo.Yui.Compressor
                 {
                     token = (JavaScriptToken) tokens[i + 1];
                     tv = token.Value;
-                    tv = tv.Substring(1, tv.Length - 1);
+                    tv = tv.Substring(1, tv.Length - 2);
                     if (IsValidIdentifier(tv))
                     {
                         tokens[i] = new JavaScriptToken(Token.DOT, ".");
@@ -791,7 +777,7 @@ namespace Yahoo.Yui.Compressor
                 {
                     token = (JavaScriptToken) tokens[i - 1];
                     tv = token.Value;
-                    tv = tv.Substring(1, tv.Length - 1);
+                    tv = tv.Substring(1, tv.Length - 2);
                     if (IsValidIdentifier(tv))
                     {
                         tokens[i - 1] = new JavaScriptToken(Token.NAME, tv);
@@ -929,10 +915,12 @@ namespace Yahoo.Yui.Compressor
         private void ParseFunctionDeclaration()
         {
             string symbol;
-
             ScriptOrFunctionScope functionScope;
             JavaScriptIdentifier identifier;
+
+
             ScriptOrFunctionScope currentScope = GetCurrentScope();
+
             JavaScriptToken token = ConsumeToken();
 
             if (token.TokenType == Token.NAME)
@@ -1018,7 +1006,9 @@ namespace Yahoo.Yui.Compressor
                 string hints = token.Value;
 
                 // Remove the leading and trailing quotes...
-                hints = hints.Substring(1, hints.Length - 1).Trim();
+                // NOTE: -2 because -1 == the length of the hints BUT we need to start from slot #1, not #0.
+                //       Then -2 because we need to ignore the last slot (which is a " )
+                hints = hints.Substring(1, hints.Length - 2).Trim();
 
                 foreach (string hint in hints.Split(','))
                 {
@@ -1117,7 +1107,6 @@ namespace Yahoo.Yui.Compressor
             // Parse functions if any...
 
             string symbol;
-            JavaScriptToken token;
             JavaScriptIdentifier identifier;
 
             int expressionBraceNesting = _braceNesting;
@@ -1127,7 +1116,7 @@ namespace Yahoo.Yui.Compressor
 
             while (_offset < length)
             {
-                token = ConsumeToken();
+                JavaScriptToken token = ConsumeToken();
                 ScriptOrFunctionScope currentScope = GetCurrentScope();
 
                 switch (token.TokenType)
@@ -1219,7 +1208,15 @@ namespace Yahoo.Yui.Compressor
                                         // We don't need to declare longer symbols since they won't cause
                                         // any conflict with other munged symbols.
                                         _globalScope.DeclareIdentifier(symbol);
-                                        Warn("Found an undeclared symbol: " + symbol, true);
+
+                                        // I removed the warning since was only being done when
+                                        // for identifiers 3 chars or less, and was just causing
+                                        // noise for people who happen to rely on an externally
+                                        // declared variable that happen to be that short.  We either
+                                        // should always warn or never warn -- the fact that we
+                                        // declare the short symbols in the global space doesn't
+                                        // change anything.
+                                        //Warn("Found an undeclared symbol: " + symbol, true);
                                     }
                                 }
                                 else
@@ -1397,7 +1394,7 @@ namespace Yahoo.Yui.Compressor
                                         // We don't need to declare longer symbols since they won't cause
                                         // any conflict with other munged symbols.
                                         _globalScope.DeclareIdentifier(symbol);
-                                        Warn("Found an undeclared symbol: " + symbol, true);
+                                        //Warn("Found an undeclared symbol: " + symbol, true);
                                     }
                                 }
                                 else
@@ -1691,6 +1688,7 @@ namespace Yahoo.Yui.Compressor
                     case Token.BREAK:
                     case Token.CONTINUE:
                         result.Append((string) Literals[token.TokenType]);
+
                         if (_offset < length &&
                             GetToken(0).TokenType != Token.SEMI)
                         {
@@ -1794,8 +1792,7 @@ namespace Yahoo.Yui.Compressor
 
         public static string Compress(string javaScript)
         {
-            return Compress(javaScript,
-                            true);
+            return Compress(javaScript, true);
         }
 
         public static string Compress(string javaScript,
@@ -1856,6 +1853,29 @@ namespace Yahoo.Yui.Compressor
                                       CultureInfo threadCulture,
                                       bool isEvalIgnored)
         {
+            return Compress(javaScript, 
+                            isVerboseLogging,
+                            isObfuscateJavascript,
+                            preserveAllSemicolons,
+                            disableOptimizations,
+                            lineBreakPosition,
+                            encoding,
+                            threadCulture,
+                            isEvalIgnored,
+                            JavaScriptCompressionType.YuiStockCompression);
+        }
+
+        public static string Compress(string javaScript,
+                                      bool isVerboseLogging,
+                                      bool isObfuscateJavascript,
+                                      bool preserveAllSemicolons,
+                                      bool disableOptimizations,
+                                      int lineBreakPosition,
+                                      Encoding encoding,
+                                      CultureInfo threadCulture,
+                                      bool isEvalIgnored,
+                                      JavaScriptCompressionType compressionType)
+        {
             if (string.IsNullOrEmpty(javaScript))
             {
                 throw new ArgumentNullException("javaScript");
@@ -1867,6 +1887,8 @@ namespace Yahoo.Yui.Compressor
                                                                 threadCulture,
                                                                 isEvalIgnored,
                                                                 null);
+            javaScriptCompressor.CompressionType = compressionType;
+
             return javaScriptCompressor.Compress(isObfuscateJavascript,
                                                  preserveAllSemicolons,
                                                  disableOptimizations,
@@ -1886,10 +1908,16 @@ namespace Yahoo.Yui.Compressor
                                bool disableOptimizations,
                                int lineBreakPosition)
         {
+            if (CompressionType == JavaScriptCompressionType.None)
+            {
+                return _javaScript;
+            }
             _munge = isObfuscateJavascript;
 
-            ProcessStringLiterals(_tokens,
-                                  !disableOptimizations);
+            var memoryStream = new MemoryStream(_encoding.GetBytes(_javaScript));
+            _tokens = Parse(new StreamReader(memoryStream, _encoding), ErrorReporter);
+
+            ProcessStringLiterals(_tokens, !disableOptimizations);
 
             if (!disableOptimizations)
             {

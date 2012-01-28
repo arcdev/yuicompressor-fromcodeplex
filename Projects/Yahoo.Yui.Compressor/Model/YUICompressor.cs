@@ -72,7 +72,7 @@ namespace Yahoo.Yui.Compressor
 
                     // Maybe the string contains a comment-like substring?
                     // one, maybe more? put'em back then.
-                    if (token.IndexOf("___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_") >= 0)
+                    if (token.IndexOf("___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         max = comments.Count;
                         for (int i = 0; i < max; i += 1)
@@ -130,7 +130,7 @@ namespace Yahoo.Yui.Compressor
                 // e.g. html >/**/ body
                 if (token.Length == 0)
                 {
-                    startIndex = css.IndexOf(placeholder);
+                    startIndex = css.IndexOf(placeholder, StringComparison.OrdinalIgnoreCase);
                     if (startIndex > 2)
                     {
                         if (css[startIndex - 3] == '>')
@@ -229,13 +229,13 @@ namespace Yahoo.Yui.Compressor
             pattern = new Regex("rgb\\s*\\(\\s*([0-9,\\s]+)\\s*\\)");
             match = pattern.Match(css);
             index = 0;
-            int value;
             while (match.Success)
             {
                 string[] rgbcolors = match.Groups[1].Value.Split(',');
                 var hexcolor = new StringBuilder("#");
                 foreach (string rgbColour in rgbcolors)
                 {
+                    int value;
                     if (!Int32.TryParse(rgbColour, out value))
                     {
                         value = 0;

@@ -6,16 +6,27 @@ namespace Yahoo.Yui.Compressor
     {
         public static string Compress(string css)
         {
-            return Compress(css, 0, CssCompressionType.StockYuiCompressor, true);
+            return Compress(css, CssCompressionType.StockYuiCompressor);
         }
 
+        public static string Compress(string css, CssCompressionType cssCompressionType)
+        {
+            return Compress(css, 0, cssCompressionType);
+        }
+
+        public static string Compress(string css, int columnWidth, CssCompressionType cssCompressionType)
+        {
+            return Compress(css, columnWidth, cssCompressionType, true);
+        }
         public static string Compress(string css, int columnWidth, CssCompressionType cssCompressionType, bool removeComments)
         {
-            string compressedCss = null;
-
+            string compressedCss;
 
             switch (cssCompressionType)
             {
+                case CssCompressionType.None:
+                    compressedCss = css;
+                    break;
                 case CssCompressionType.StockYuiCompressor:
                     compressedCss = YUICompressor.Compress(css, columnWidth, removeComments);
                     break;
@@ -31,10 +42,8 @@ namespace Yahoo.Yui.Compressor
                                         : michaelAshsRegexEnhancementsCompressedCss;
                     break;
                 default:
-                    throw new InvalidOperationException(
-                        "Unhandled CssCompressionType found when trying to determine which compression method to use.");
+                    throw new InvalidOperationException("Unhandled CssCompressionType \"" + cssCompressionType + "\" found when trying to determine which compression method to use.");
             }
-
             return compressedCss;
         }
     }

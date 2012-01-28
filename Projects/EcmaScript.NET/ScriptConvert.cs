@@ -645,7 +645,8 @@ namespace EcmaScript.NET
             else if (Double.IsNegativeInfinity (d))
                 return "-Infinity";
             else {
-                string ret = d.ToString ("g");
+                // BugFix: Item 9856 - g16 yields better results than "g".  Not perfect, but better
+                string ret = d.ToString ("g16");
                 // TODO: This is plain wrong, but as close as we can get
                 // without converting DtoA to C#.
                 return ret;
