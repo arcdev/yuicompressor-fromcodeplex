@@ -362,5 +362,76 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.AreNotEqual("var serverResolutions=[152.87405654907226,0.14929107084870338];", actual);
         }
 
+        [TestMethod]
+        public void Errors_Will_Include_Line_Numbers()
+        {
+            // Arrange
+            var js = @"var terminated = 'some string';
+                       var unterminated = 'some other;";
+            JavaScriptCompressor compressor = new JavaScriptCompressor(js);   
+
+            // Act
+            try
+            {
+                compressor.Compress();
+                Assert.Fail("Succeeded");
+            }
+            catch (InvalidOperationException iox)
+            {
+                // Assert
+                Assert.IsTrue(iox.Message.Contains("Line: 2"));
+            }
+        }
+
+        [TestMethod]
+        public void Warnings_Will_Include_Line_Numbers_Where_Available()
+        {
+            // Arrange
+            const string js = @"function (foo, foo) }";
+            var compressor = new JavaScriptCompressor(js);
+
+            // Act
+            compressor.Compress();
+
+            // Assert
+            var reporter = (CustomErrorReporter)compressor.ErrorReporter;
+            Assert.AreNotEqual(0, reporter.ErrorMessages.Count, "No Messages");
+
+            foreach (var errorMessage in reporter.ErrorMessages)
+            {
+                if (errorMessage.Contains("[WARNING] Duplicate parameter name \"foo\""))
+                {
+                    Assert.IsTrue(errorMessage.Contains("Line: 1"), "\"Line: 1\" not found in: " + errorMessage);
+                    return;
+                }
+            }
+            Assert.Fail("Message not found");
+        }
+
+        [TestMethod]
+        public void Warnings_Will_Not_Include_Line_Numbers_Where_Not_Available()
+        {
+            // Arrange
+            const string js = @"var foo = 'bar';
+                                var foo = 'bar';";
+            var compressor = new JavaScriptCompressor(js);
+
+            // Act
+            compressor.Compress();
+
+            // Assert
+            var reporter = (CustomErrorReporter) compressor.ErrorReporter;
+            Assert.AreNotEqual(0, reporter.ErrorMessages.Count, "No Messages");
+            
+            foreach (var errorMessage in reporter.ErrorMessages)
+            {
+                if (errorMessage.Contains("The variable foo has already been declared in the same scope"))
+                {
+                    Assert.IsFalse(errorMessage.Contains("Line:"), "\"Line:\" found in: "+ errorMessage);
+                    return;
+                }
+            }
+            Assert.Fail("Message not found");
+        }
     }
 }

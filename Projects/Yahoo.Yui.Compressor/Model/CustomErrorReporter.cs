@@ -23,15 +23,21 @@ namespace Yahoo.Yui.Compressor
         {
             if (_isVerboseLogging)
             {
-                string text = "[WARNING] " + message;
+                string text;
+                if (line != -1)
+                {
+                    text = string.Format("[WARNING] {0} ******** Source: {1}. Line: {2}. LineSource: {3}. LineOffset: {4}",
+                                  message,
+                                  sourceName,
+                                  line,
+                                  lineSource,
+                                  lineOffset);
+                }
+                else
+                {
+                    text = string.Format("[WARNING] {0}", message);
+                }
                 Console.WriteLine(text);
-                //ErrorMessages.Add(
-                //    string.Format("[WARNING] {0} ******** Source: {1}. Line: {2}. LineSource: {3}. LineOffset: {4}",
-                //                  message,
-                //                  sourceName,
-                //                  line,
-                //                  lineSource,
-                //                  lineOffset));
                 ErrorMessages.Add(text);
             }
         }
@@ -42,14 +48,22 @@ namespace Yahoo.Yui.Compressor
             string lineSource, 
             int lineOffset)
         {
-            //throw new InvalidOperationException(
-            //    string.Format("[ERROR] {0} ******** Source: {1}. Line: {2}. LineSource: {3}. LineOffset: {4}",
-            //                  message,
-            //                  sourceName,
-            //                  line,
-            //                  lineSource,
-            //                  lineOffset));
-            throw new InvalidOperationException("[ERROR] " + message);
+            InvalidOperationException exception;
+            if (line != -1)
+            {
+                exception = new InvalidOperationException(string.Format("[ERROR] {0} ******** Source: {1}. Line: {2}. LineSource: {3}. LineOffset: {4}",
+                              message,
+                              sourceName,
+                              line,
+                              lineSource,
+                              lineOffset));
+            }
+            else
+            {
+                 exception = new InvalidOperationException("[ERROR] " + message);
+            }
+            exception.Source = lineSource;
+            throw exception;
         }
 
         public virtual EcmaScriptRuntimeException RuntimeError(string message,
@@ -58,14 +72,22 @@ namespace Yahoo.Yui.Compressor
             string lineSource, 
             int lineOffset)
         {
-            //throw new InvalidOperationException(
-            //    string.Format("[ERROR] {0} ******** Source: {1}. Line: {2}. LineSource: {3}. LineOffset: {4}",
-            //                  message,
-            //                  sourceName,
-            //                  line,
-            //                  lineSource,
-            //                  lineOffset));
-            throw new InvalidOperationException("[ERROR] EcmaScriptRuntimeException :: " + message);
+            InvalidOperationException exception;
+            if (line != -1)
+            {
+                exception = new InvalidOperationException(string.Format("[ERROR] {0} ******** Source: {1}. Line: {2}. LineSource: {3}. LineOffset: {4}",
+                              message,
+                              sourceName,
+                              line,
+                              lineSource,
+                              lineOffset));
+            }
+            else
+            {
+                exception =  new InvalidOperationException("[ERROR] EcmaScriptRuntimeException :: " + message);
+            }
+            exception.Source = lineSource ?? "EcmaScriptRuntime";
+            throw exception;
         }
     }
 }

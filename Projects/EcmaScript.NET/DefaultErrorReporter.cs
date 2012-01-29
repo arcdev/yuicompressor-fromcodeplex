@@ -44,7 +44,7 @@ namespace EcmaScript.NET
                 chainedReporter.Warning (message, sourceURI, line, lineText, lineOffset);
             }
             else {
-                Console.Error.WriteLine ("strict warnung: " + message);
+                Console.Error.WriteLine ("strict warning: " + message);
             }
         }
 
