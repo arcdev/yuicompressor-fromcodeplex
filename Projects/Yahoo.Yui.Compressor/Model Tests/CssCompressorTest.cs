@@ -369,5 +369,30 @@ namespace Yahoo.Yui.Compressor.Tests
             // Assert
             Assert.AreEqual(source, actual);
         }
+
+        [TestMethod]
+        [Description("Raised in issue 9529")]
+        public void A_Background_Retains_The_Space_Between_The_Colour_And_The_Data_Ur()
+        {
+            const string source = @"
+                ui-widget-shadow { 
+                    margin: -5px 0 0 -5px; 
+                    padding: 5px; 
+                    background: #000000 url(""data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABkCAYAAAD0ZHJ6AAAAeUlEQVRoge3OMQHAIBAAsQf/nlsJDDfAkCjImplvHrZvB04EK8FKsBKsBCvBSrASrAQrwUqwEqwEK8FKsBKsBCvBSrASrAQrwUqwEqwEK8FKsBKsBCvBSrASrAQrwUqwEqwEK8FKsBKsBCvBSrASrAQrwUqwEqwEqx92LQHHRpDUNwAAAABJRU5ErkJggg=="") 50% 50% repeat-x; 
+                    opacity: .20;
+                    filter:Alpha(Opacity=20);
+                    -moz-border-radius: 5px; 
+                    -khtml-border-radius: 5px;
+                    -webkit-border-radius: 5px; 
+                    border-radius: 5px; 
+                 }";
+            const string expected = @"ui-widget-shadow{margin:-5px 0 0 -5px;padding:5px;background:#000 url(""data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABkCAYAAAD0ZHJ6AAAAeUlEQVRoge3OMQHAIBAAsQf/nlsJDDfAkCjImplvHrZvB04EK8FKsBKsBCvBSrASrAQrwUqwEqwEK8FKsBKsBCvBSrASrAQrwUqwEqwEK8FKsBKsBCvBSrASrAQrwUqwEqwEK8FKsBKsBCvBSrASrAQrwUqwEqwEqx92LQHHRpDUNwAAAABJRU5ErkJggg=="") 50% 50% repeat-x;opacity:.20;filter:Alpha(Opacity=20);-moz-border-radius:5px;-khtml-border-radius:5px;-webkit-border-radius:5px;border-radius:5px}";
+            
+            // Act
+            var actual = CssCompressor.Compress(source);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
