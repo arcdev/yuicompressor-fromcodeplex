@@ -80,11 +80,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsBuild Example", "MsBuild 
 		Solution Items\MsBuild Example\StyleSheetSample4.css = Solution Items\MsBuild Example\StyleSheetSample4.css
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web Deployment Project Example", "Web Deployment Project Example", "{5F3C3ACA-787D-454F-A6CA-8AACB75B56D9}"
-	ProjectSection(SolutionItems) = preProject
-		Solution Items\Web Deployment Project Example\Sample WebSite and WDP.zip = Solution Items\Web Deployment Project Example\Sample WebSite and WDP.zip
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2.4.1", "v2.4.1", "{0F58ACB2-6E77-42A1-8806-FB07D70A4D5C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "com.yahoo.platform.yui.compressor", "com.yahoo.platform.yui.compressor", "{3C7817AD-0D09-4E42-9AFC-63EB13410FC0}"
@@ -241,7 +236,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D063AA82-CD35-40A7-BA2D-B26C4E291C59} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
 		{3A36C8E2-F5AD-4BB8-B0B0-4268F7AA11B0} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
-		{5F3C3ACA-787D-454F-A6CA-8AACB75B56D9} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
 		{55383C77-E8F0-4300-8828-79A50033FF7A} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
 		{AFDF50F0-286B-4490-9EBD-007561864738} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{D263F886-F883-45C6-B79D-2136E0CE2195} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
