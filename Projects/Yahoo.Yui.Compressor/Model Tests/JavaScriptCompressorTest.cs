@@ -387,19 +387,19 @@ namespace Yahoo.Yui.Compressor.Tests
         public void Warnings_Will_Include_Line_Numbers_Where_Available()
         {
             // Arrange
-            const string js = @"function (foo, foo) }";
+            const string js = @"function foo(bar, bar) {}";
             var compressor = new JavaScriptCompressor(js);
 
             // Act
             compressor.Compress();
 
             // Assert
-            var reporter = (CustomErrorReporter)compressor.ErrorReporter;
+            var reporter = (CustomErrorReporter) compressor.ErrorReporter;
             Assert.AreNotEqual(0, reporter.ErrorMessages.Count, "No Messages");
 
             foreach (var errorMessage in reporter.ErrorMessages)
             {
-                if (errorMessage.Contains("[WARNING] Duplicate parameter name \"foo\""))
+                if (errorMessage.Contains("[WARNING] Duplicate parameter name \"bar\""))
                 {
                     Assert.IsTrue(errorMessage.Contains("Line: 1"), "\"Line: 1\" not found in: " + errorMessage);
                     return;
