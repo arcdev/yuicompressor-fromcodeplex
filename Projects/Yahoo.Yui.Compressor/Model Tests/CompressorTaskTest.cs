@@ -27,6 +27,8 @@ namespace Yahoo.Yui.Compressor.Tests
             }
 
             [TestMethod]
+            [DeploymentItem(@"Javascript Files\float.js", "Javascript Files")]
+            [DeploymentItem(@"Javascript Files\_munge.js", "Javascript Files")]
             public void When_The_JavaScriptCompressionType_Is_None_The_Input_Files_Are_Concatenated_Unchanged()
             {
                 // Arange
@@ -53,6 +55,8 @@ namespace Yahoo.Yui.Compressor.Tests
             }
 
             [TestMethod]
+            [DeploymentItem(@"Javascript Files\float.js", "Javascript Files")]
+            [DeploymentItem(@"Javascript Files\_munge.js", "Javascript Files")]
             public void When_The_JavaScriptCompressionType_Is_Not_Specified_The_Input_Files_Are_Compressed()
             {
                 // Arrange
