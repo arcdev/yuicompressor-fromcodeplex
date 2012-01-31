@@ -41,18 +41,14 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Javascript Files\SampleJavaScript3.js", "Javascript Files")]
-        public void CompressSampleJavaScript3ReturnsCompressedJavascript()
+        public void A_New_Line_Appended_In_The_Source_Is_Retained_In_The_Output()
         {
             // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\SampleJavaScript3.js");
+            const string source = @"fred += '\n'; ";
+            const string expected = @"fred+=""\n"";";
 
-            // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript);
-
-            // Assert.
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
-            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
@@ -124,16 +120,23 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Javascript Files\SampleJavaScript6.js", "Javascript Files")]
         public void CompressRegExWithUnicodeTest()
         {
             // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\SampleJavaScript6.js");
-
+            const string source = @"// Helper function used by the dimensions and offset modules
+                                    function num(elem, prop) {
+                                       return elem[0] && parseInt(jQuery.curCSS(elem[0], prop, true), 10) || 0;
+                                   } 
+                            
+                                   var chars = jQuery.browser.safari && parseInt(jQuery.browser.version) < 417 ? 
+                                               ""(?:[\\w*_-]|\\\\.)"" : ""(?:[\\w\u0128-\uFFFF*_-]|\\\\.)"",
+	                               quickChild = new RegExp(""^>\\s*("" + chars + ""+)""),
+	                               quickID = new RegExp(""^("" + chars + ""+)(#)("" + chars + ""+)""),
+	                               quickClass = new RegExp(""^([#.]?)("" + chars + ""*)"");";
+            
             // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript, true, true, false, false, -1);
-            string compressedJavascriptNoObfuscation = JavaScriptCompressor.Compress(javascript, true, false, false,
-                                                                                     false, -1);
+            string compressedJavascript = JavaScriptCompressor.Compress(source, true, true, false, false, -1);
+            string compressedJavascriptNoObfuscation = JavaScriptCompressor.Compress(source, true, false, false, false, -1);
 
             // Assert.
             Assert.IsFalse(compressedJavascript.Contains(@"}get var"));
@@ -172,7 +175,6 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.IsTrue(javascript.Length > compressedJavascript.Length);
         }
 
-        [TestMethod]
         [DeploymentItem(@"Javascript Files\SampleJavaScript-ignoreEval.js", "Javascript Files")]
         public void CompressJavascriptIgnoreEvalReturnsCompressedJavascript()
         {
@@ -240,20 +242,62 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Javascript Files\_munge.js", "Javascript Files")]
-        [DeploymentItem(@"Javascript Files\_munge.js.min", "Javascript Files")]
-        public void MungeJsTest()
+        public void The_Output_Is_Obfuscated_When_IsObfuscateJavascript_Is_True()
         {
-            CompareTwoFiles(@"Javascript Files\_munge.js", @"Javascript Files\_munge.js.min", CompressorType.JavaScript);
+            // Arrange
+            const string source =
+                @"(function() {
+                    var w = window;
+                    w.hello = function(a, abc) {
+                    ""a:nomunge"";
+                    w.alert(""Hello, "" + a);
+                };
+            })();";
+
+            const string expected = @"(function(){var a=window;a.hello=function(a,b){a.alert(""Hello, ""+a)}})();";
+
+            // Act
+            var actual = JavaScriptCompressor.Compress(source, true, true, false, false, -1);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Javascript Files\_string_combo.js", "Javascript Files")]
-        [DeploymentItem(@"Javascript Files\_string_combo.js.min", "Javascript Files")]
-        public void StringComboJsTest()
+        public void The_Output_Is_Not_Obfuscated_When_IsObfuscateJavascript_Is_False()
         {
-            CompareTwoFiles(@"Javascript Files\_string_combo.js", @"Javascript Files\_string_combo.js.min",
-                            CompressorType.JavaScript);
+            // Arrange
+            const string source =
+                @"(function() {
+                    var w = window;
+                    w.hello = function(a, abc) {
+                    ""a:nomunge"";
+                    w.alert(""Hello, "" + a);
+                };
+            })();";
+
+            const string expected = @"(function(){var w=window;w.hello=function(a,abc){w.alert(""Hello, ""+a)}})();";
+
+            // Act
+            var actual = JavaScriptCompressor.Compress(source, true, false, false, false, -1);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void Concatenated_Strings_Are_Combined()
+        {
+            // Arrange
+            const string source = @"function test(){
+                                        var a = ""a"" +
+                                        ""b"" +
+                                        ""c"";
+                                    }";
+            const string expected = @"function test(){var a=""abc""};";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
@@ -261,7 +305,7 @@ namespace Yahoo.Yui.Compressor.Tests
         [DeploymentItem(@"Javascript Files\_syntax_error.js.min", "Javascript Files")]
         public void SyntaxErrorJsTest()
         {
-            // Because the Java code uses a Hashtable to determine what variables names can be obfuscated, we can't do an exact file comapre. But we can
+            // Because the Java code uses a Hashtable to determine what variables names can be obfuscated, we can't do an exact file compare. But we can
             // do a file LENGTH compare .. which might be a bit closer to fair Assert test.
             CompareTwoFiles(@"Javascript Files\_syntax_error.js", @"Javascript Files\_syntax_error.js.min",
                             CompressorType.JavaScript, ComparingTwoFileTypes.FileLength);
@@ -432,6 +476,15 @@ namespace Yahoo.Yui.Compressor.Tests
                 }
             }
             Assert.Fail("Message not found");
+        }
+
+        private void CompressAndCompare(string source, string expected)
+        {
+            // Act
+            var actual = JavaScriptCompressor.Compress(source, false, false, false, false, -1);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
     }
 }

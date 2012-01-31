@@ -27,8 +27,8 @@ namespace Yahoo.Yui.Compressor.Tests
             }
 
             [TestMethod]
-            [DeploymentItem(@"Javascript Files\float.js", "Javascript Files")]
-            [DeploymentItem(@"Javascript Files\_munge.js", "Javascript Files")]
+            [DeploymentItem(@"Javascript Files\SampleJavaScript1.js", "Javascript Files")]
+            [DeploymentItem(@"Javascript Files\SampleJavaScript2.js", "Javascript Files")]
             public void When_The_JavaScriptCompressionType_Is_None_The_Input_Files_Are_Concatenated_Unchanged()
             {
                 // Arange
@@ -36,8 +36,8 @@ namespace Yahoo.Yui.Compressor.Tests
                 compressor.JavaScriptCompressionType = "None";
                 compressor.JavaScriptFiles = new ITaskItem[]
                                           {
-                                              new TaskItem(@"Javascript Files\float.js"),
-                                              new TaskItem(@"Javascript Files\_munge.js")
+                                              new TaskItem(@"Javascript Files\SampleJavaScript1.js"),
+                                              new TaskItem(@"Javascript Files\SampleJavaScript2.js")
                                           };
                 compressor.JavaScriptOutputFile = "noCompression.js";
 
@@ -55,16 +55,16 @@ namespace Yahoo.Yui.Compressor.Tests
             }
 
             [TestMethod]
-            [DeploymentItem(@"Javascript Files\float.js", "Javascript Files")]
-            [DeploymentItem(@"Javascript Files\_munge.js", "Javascript Files")]
+            [DeploymentItem(@"Javascript Files\SampleJavaScript1.js", "Javascript Files")]
+            [DeploymentItem(@"Javascript Files\SampleJavaScript2.js", "Javascript Files")]
             public void When_The_JavaScriptCompressionType_Is_Not_Specified_The_Input_Files_Are_Compressed()
             {
                 // Arrange
                 var compressor = CreateCompressorTask();
                 compressor.JavaScriptFiles = new ITaskItem[]
                                           {
-                                              new TaskItem(@"Javascript Files\float.js"),
-                                              new TaskItem(@"Javascript Files\_munge.js")
+                                              new TaskItem(@"Javascript Files\SampleJavaScript1.js"),
+                                              new TaskItem(@"Javascript Files\SampleJavaScript2.js")
                                           };
                 compressor.JavaScriptOutputFile = "compressed.js";
 
