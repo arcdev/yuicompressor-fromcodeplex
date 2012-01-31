@@ -79,9 +79,6 @@
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
-    <Content Include="Cascading Style Sheet Files\background-position.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Cascading Style Sheet Files\border-none.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -240,9 +237,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Content Include="Cascading Style Sheet Files\background-position.css.min">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Cascading Style Sheet Files\border-none.css.min">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

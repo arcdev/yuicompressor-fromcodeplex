@@ -108,13 +108,19 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\background-position.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\background-position.css.min", "Cascading Style Sheet Files")]
         public void BackgroundPositionTest()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\background-position.css", @"Cascading Style Sheet Files\background-position.css.min", CompressorType.CascadingStyleSheet);
-        }
+            // Arrange
+            const string source = @"a {background-position: 0 0 0 0;}
+                                    b {BACKGROUND-POSITION: 0 0;}";
+            const string expected = @"a{background-position:0 0}b{background-position:0 0}";
 
+            // Act
+            var actual = CssCompressor.Compress(source, -1, CssCompressionType.StockYuiCompressor, true);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
         [TestMethod]
         [DeploymentItem(@"Cascading Style Sheet Files\border-none.css", "Cascading Style Sheet Files")]
         [DeploymentItem(@"Cascading Style Sheet Files\border-none.css.min", "Cascading Style Sheet Files")]
