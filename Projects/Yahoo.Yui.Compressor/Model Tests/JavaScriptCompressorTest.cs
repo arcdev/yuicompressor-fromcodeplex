@@ -130,9 +130,9 @@ namespace Yahoo.Yui.Compressor.Tests
                             
                                    var chars = jQuery.browser.safari && parseInt(jQuery.browser.version) < 417 ? 
                                                ""(?:[\\w*_-]|\\\\.)"" : ""(?:[\\w\u0128-\uFFFF*_-]|\\\\.)"",
-	                               quickChild = new RegExp(""^>\\s*("" + chars + ""+)""),
-	                               quickID = new RegExp(""^("" + chars + ""+)(#)("" + chars + ""+)""),
-	                               quickClass = new RegExp(""^([#.]?)("" + chars + ""*)"");";
+                                   quickChild = new RegExp(""^>\\s*("" + chars + ""+)""),
+                                   quickID = new RegExp(""^("" + chars + ""+)(#)("" + chars + ""+)""),
+                                   quickClass = new RegExp(""^([#.]?)("" + chars + ""*)"");";
             
             // Act.
             string compressedJavascript = JavaScriptCompressor.Compress(source, true, true, false, false, -1);
@@ -161,20 +161,29 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Javascript Files\SampleJavaScript-CP46679.js", "Javascript Files")]
-        public void CompressJavascriptCodePlex46679ReturnsCompressedJavascript()
+        [Description("http://yuicompressor.codeplex.com/discussions/46679")]
+        public void Compressing_An_ExtJs_Definition_Works_As_Expected()
         {
-            // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\SampleJavaScript-CP46679.js");
+            // Arrange
+            const string source = @"controls.SearchCombo = Ext.extend(Ext.form.ComboBox, {
+                                        forceSelection: true,
+                                        loadingText: 'Searching...',
+                                        minChars: 3,
+                                        mode: 'remote',
+                                        msgTarget: 'side',
+                                        queryDelay: 300,
+                                        queryParam: 'q',
+                                        selectOnFocus: true,
+                                        typeAhead: false
+                                    }); ";
 
-            // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript, false, true, false, false, -1);
+            const string expected = @"controls.SearchCombo=Ext.extend(Ext.form.ComboBox,{forceSelection:true,loadingText:""Searching..."",minChars:3,mode:""remote"",msgTarget:""side"",queryDelay:300,queryParam:""q"",selectOnFocus:true,typeAhead:false});";
 
-            // Assert.
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
-            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
+        [TestMethod]
         [DeploymentItem(@"Javascript Files\SampleJavaScript-ignoreEval.js", "Javascript Files")]
         public void CompressJavascriptIgnoreEvalReturnsCompressedJavascript()
         {
@@ -239,6 +248,61 @@ namespace Yahoo.Yui.Compressor.Tests
             // Assert.
             Assert.AreEqual(currentThreadCulture, Thread.CurrentThread.CurrentCulture);
             Assert.AreEqual(currentThreadUiCulture, Thread.CurrentThread.CurrentUICulture);
+        }
+
+        [TestMethod]
+        [Description("http://yuicompressor.codeplex.com/discussions/243522")]
+        public void If_CultureInfo_Is_Supplied_Then_The_Output_Respects_It_Irrespective_Of_The_Current_Thread_Culture()
+        {
+            // Arrange
+            var currentThreadCulture = Thread.CurrentThread.CurrentCulture;
+            var currentThreadUiCulture = Thread.CurrentThread.CurrentUICulture;
+            const string source = "var stuff = {foo:0.9, faa:3};";
+            const string  expected = "var stuff={foo:0.9,faa:3};";
+
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("it-IT");
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("it-IT");
+
+                // Act
+                var actual = JavaScriptCompressor.Compress(source, false, false, false, false, 200, Encoding.UTF8, CultureInfo.InvariantCulture);
+
+                // Assert.
+                Assert.AreEqual(expected, actual);
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = currentThreadCulture;
+                Thread.CurrentThread.CurrentUICulture = currentThreadUiCulture;
+            }
+        }
+
+        [TestMethod]
+        public void If_CultureInfo_Is_Not_Supplied_Then_The_Output_Respects_The_Current_Thread_Culture()
+        {
+            // Arrange
+            var currentThreadCulture = Thread.CurrentThread.CurrentCulture;
+            var currentThreadUiCulture = Thread.CurrentThread.CurrentUICulture;
+            const string source = "var stuff = {foo:0.9, faa:3};";
+            const string expected = "var stuff={foo:0,9,faa:3};";
+
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("it-IT");
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("it-IT");
+
+                // Act
+                var actual = JavaScriptCompressor.Compress(source, false, false, false, false, 200);
+
+                // Assert.
+                Assert.AreEqual(expected, actual);
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = currentThreadCulture;
+                Thread.CurrentThread.CurrentUICulture = currentThreadUiCulture;
+            }
         }
 
         [TestMethod]
@@ -331,8 +395,7 @@ namespace Yahoo.Yui.Compressor.Tests
             // Arrange
             // Deliberately include loads of spaces and comments
             const string source = "function   foo() {   return 'bar';   }  /*  Some Comment */";
-            JavaScriptCompressor compressor = new JavaScriptCompressor(source);
-            compressor.CompressionType = JavaScriptCompressionType.None;
+            var compressor = new JavaScriptCompressor(source) { CompressionType = JavaScriptCompressionType.None };
 
             // Act
             var actual = compressor.Compress();
@@ -348,39 +411,31 @@ namespace Yahoo.Yui.Compressor.Tests
             // Deliberately include loads of spaces and comments
             const string source = "function   foo() {   return 'bar';   }  /*  Some Comment */";
             const string expected = @"function foo(){return""bar""};";
-            JavaScriptCompressor compressor = new JavaScriptCompressor(source);
 
-            // Act
-            var actual = compressor.Compress();
-
-            // Assert
-            Assert.AreEqual(expected, actual);
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [Description("Item 9856")]
+        [Description("Item 9856 / http://yuicompressor.codeplex.com/discussions/279118")]
         public void Decimals_Will_Be_Reasonably_Accurate()
         {
             // There is a problem with ScriptConvert in the EcmaScript library, where doubles are losing accuracy
             // Decimal would be better, but requires major re-engineering.
             // As an interim measure, the accuracy has been improved a little.
             // This test is just confirming some of the more accurate values
-            // See this thread for more: http://yuicompressor.codeplex.com/discussions/279118
 
             // Arrange
-            var js = @"var serverResolutions = [ 
-                            156543.03390625,
-                            9783.939619140625, 
-                            611.4962261962891,
-                            0.07464553542435169
-                       ];";
-            JavaScriptCompressor compressor = new JavaScriptCompressor(js);
+            const string source = @"var serverResolutions = [ 
+                                        156543.03390625,
+                                        9783.939619140625, 
+                                        611.4962261962891,
+                                        0.07464553542435169
+                                   ];";
+            const string expected = @"var serverResolutions=[156543.03390625,9783.939619140625,611.4962261962891,0.07464553542435169];";
 
             // Act
-            var actual = compressor.Compress();
-
-            // Assert
-            Assert.AreEqual("var serverResolutions=[156543.03390625,9783.939619140625,611.4962261962891,0.07464553542435169];", actual);
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
@@ -394,15 +449,17 @@ namespace Yahoo.Yui.Compressor.Tests
             // If this test fails, it means accuracy is now sorted!
             // See this thread for more: http://yuicompressor.codeplex.com/discussions/279118
 
-
-            var js = @"var serverResolutions = [ 
-                            152.87405654907226,
-                            0.14929107084870338
-                       ];";
-            JavaScriptCompressor compressor = new JavaScriptCompressor(js);
-
+            // Arrange
+            const string source = @"var serverResolutions = [ 
+                                      152.87405654907226,
+                                      0.14929107084870338
+                                  ];";
+            var compressor = new JavaScriptCompressor(source);
+            
+            // Act
             var actual = compressor.Compress();
 
+            // Assert
             Assert.AreNotEqual("var serverResolutions=[152.87405654907226,0.14929107084870338];", actual);
         }
 
@@ -410,9 +467,9 @@ namespace Yahoo.Yui.Compressor.Tests
         public void Errors_Will_Include_Line_Numbers()
         {
             // Arrange
-            var js = @"var terminated = 'some string';
-                       var unterminated = 'some other;";
-            JavaScriptCompressor compressor = new JavaScriptCompressor(js);   
+            const string source = @"var terminated = 'some string';
+                                    var unterminated = 'some other;";
+            var compressor = new JavaScriptCompressor(source);   
 
             // Act
             try
@@ -431,8 +488,8 @@ namespace Yahoo.Yui.Compressor.Tests
         public void Warnings_Will_Include_Line_Numbers_Where_Available()
         {
             // Arrange
-            const string js = @"function foo(bar, bar) {}";
-            var compressor = new JavaScriptCompressor(js);
+            const string source = @"function foo(bar, bar) {}";
+            var compressor = new JavaScriptCompressor(source);
 
             // Act
             compressor.Compress();
@@ -456,9 +513,9 @@ namespace Yahoo.Yui.Compressor.Tests
         public void Warnings_Will_Not_Include_Line_Numbers_Where_Not_Available()
         {
             // Arrange
-            const string js = @"var foo = 'bar';
-                                var foo = 'bar';";
-            var compressor = new JavaScriptCompressor(js);
+            const string source = @"var foo = 'bar';
+                                    var foo = 'bar';";
+            var compressor = new JavaScriptCompressor(source);
 
             // Act
             compressor.Compress();

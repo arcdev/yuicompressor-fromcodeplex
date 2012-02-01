@@ -50,17 +50,15 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\SampleStylesheet2.css", "Cascading Style Sheet Files")]
-        public void CompressCssWithNoFileContentButFileExistsReturnsAnEmptyResult()
+        public void A_Stylesheet_With_Empty_Content_Only_Returns_An_Empty_Result()
         {
             // Arrange.
-            string css = File.ReadAllText(@"Cascading Style Sheet Files\SampleStylesheet2.css");
+            string source = @"body
+                              {
+                              }";
 
-            // Act.
-            string compressedCss = CssCompressor.Compress(css);
-
-            // Assert.
-            Assert.IsTrue(string.IsNullOrEmpty(compressedCss));
+            // Act & Assert
+            CompressAndCompare(source, string.Empty);
         }
 
         [TestMethod]
@@ -94,17 +92,24 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\SampleStylesheet-MissingClosingCommentSymbol-CP3723.css", "Cascading Style Sheet Files")]
-        public void CompressBadCssCP3723ReturnsCompressedCss()
+        [Description("PK to look at")]
+        public void Compressing_Css_With_No_Closing_Comment_Symbol_Returns_Something()
         {
+            // What is CP3723?  Test was originally called CompressBadCssCP3723ReturnsCompressedCss
+
             // Arrange.
-            string css = File.ReadAllText(@"Cascading Style Sheet Files\SampleStylesheet-MissingClosingCommentSymbol-CP3723.css");
+            string source = @".moreactions_applyfilter_reset
+                            {
+                            text-align: right;
+                            }
 
-            // Act.
-            string compressedCss = CssCompressor.Compress(css);
+                            /* end of moreactions_filter";
+            string expected = @".moreactions_applyfilter_reset{text-align:right}/*___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_0___";
 
-            // Assert.
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedCss));
+            // Act & Assert
+            CompressAndCompare(source, expected);
+            // Original Assert was just that *something* was returned (ie result length > 0
+            // I have set the expected result to be what is actually returned currently - is this correct?
         }
 
         [TestMethod]
@@ -121,20 +126,54 @@ namespace Yahoo.Yui.Compressor.Tests
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\border-none.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\border-none.css.min", "Cascading Style Sheet Files")]
-        public void BorderNoneCssTest()
+        public void Background_None_Will_Be_Replaced_With_Background_0()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\border-none.css", @"Cascading Style Sheet Files\border-none.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"a {
+                                        border: none;
+                                    }
+                                    s {border-top: none;}";
+            const string expected = @"a{border:0}s{border-top:0}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\box-model-hack.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\box-model-hack.css.min", "Cascading Style Sheet Files")]
-        public void BoxModelHackCssTest()
+        public void Border_None_Will_Be_Replaced_With_Border_0()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\box-model-hack.css", @"Cascading Style Sheet Files\box-model-hack.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"a {
+                                        BACKGROUND: none;
+                                    }
+                                    b {BACKGROUND:none}";
+            const string expected = @"a{background:0}b{background:0}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
+        }
+
+        [TestMethod]
+        public void Box_Model_Hack_Css_Is_Compressed_Correctly()
+        {
+            // Box Model Hack: http://tantek.com/CSS/Examples/boxmodelhack.html
+
+            // Arrange
+            const string source = @"#elem { 
+                                         width: 100px; 
+                                         voice-family: ""\""}\""""; 
+                                         voice-family:inherit;
+                                         width: 200px;
+                                        }
+                                        html>body #elem {
+                                         width: 200px;
+                                        }";
+            const string expected = @"#elem{width:100px;voice-family:""\""}\"""";voice-family:inherit;width:200px}html>body #elem{width:200px}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected); 
         }
 
         [TestMethod]
@@ -178,19 +217,47 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\color.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\color.css.min", "Cascading Style Sheet Files")]
-        public void ColorCssTest()
+        public void Color_Styles_Have_Rgb_Values_Replaced_With_Hex_Values()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\color.css", @"Cascading Style Sheet Files\color.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @".color {
+                                      me: rgb(123, 123, 123);
+                                      background: none repeat scroll 0 0 rgb(255, 0,0);
+                                      alpha: rgba(1, 2, 3, 4);
+                                    }";
+            const string expected = @".color{me:#7b7b7b;background:none repeat scroll 0 0 #f00;alpha:rgba(1,2,3,4)}";
+            
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\comment.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\comment.css.min", "Cascading Style Sheet Files")]
-        public void CommentCssTest()
+        public void Color_Styles_Have_Unquoted_Hex_Values_Compressed_To_Shorter_Equivalents()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\comment.css", @"Cascading Style Sheet Files\comment.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @".color {
+                                      impressed: #ffeedd;
+                                      filter: chroma(color=""#FFFFFF"");
+                                    }";
+            const string expected = @".color{impressed:#fed;filter:chroma(color=""#FFFFFF"")}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
+        }
+
+        [TestMethod]
+        [Description("Hack for IE7")]
+        public void Empty_Comments_After_A_Child_Selector_Are_Preserved()
+        {
+            // Arrange
+            const string source = @"html >/**/ body p {
+                                        color: blue; 
+                                    }
+                                    ";
+            const string expected = @"html>/**/body p{color:blue}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
@@ -202,19 +269,38 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\decimals.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\decimals.css.min", "Cascading Style Sheet Files")]
-        public void DecimalsCssTest()
+        public void Decimal_Values_Are_Preserved_With_Leading_Zeroes_Removed()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\decimals.css", @"Cascading Style Sheet Files\decimals.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"::selection { 
+                                      margin: 0.6px 0.333pt 1.2em 8.8cm;
+                                   }";
+            const string expected = @"::selection{margin:.6px .333pt 1.2em 8.8cm}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\dollar-header.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\dollar-header.css.min", "Cascading Style Sheet Files")]
-        public void DollarHeaderCssTest()
+        [Description("PK to Look at")]
+        public void A_Comment_With_Dollar_Header_Is_Preserved_But_Only_It_Seemes_Because_The_Preserve_Comment_Exclaimation_Exists()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\dollar-header.css", @"Cascading Style Sheet Files\dollar-header.css.min", CompressorType.CascadingStyleSheet);
+            // What is the significant of the $Header bit?
+
+            // Arrange
+            const string source = @"/*!
+                                    $Header: /temp/dirname/filename.css 3 2/02/08 3:37p JSmith $
+                                    */
+
+                                    foo {
+                                        bar: baz
+                                    }";
+            const string expected = @"/*!
+                                    $Header: /temp/dirname/filename.css 3 2/02/08 3:37p JSmith $
+                                    */foo{bar:baz}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
@@ -323,43 +409,136 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\special-comments.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\special-comments.css.min", "Cascading Style Sheet Files")]
-        public void SpecialCommentsCssTest()
-        {
-            CompareTwoFiles(@"Cascading Style Sheet Files\special-comments.css", @"Cascading Style Sheet Files\special-comments.css.min", CompressorType.CascadingStyleSheet);
-        }
-
-        [TestMethod]
         [DeploymentItem(@"Cascading Style Sheet Files\star-underscore-hacks.css", "Cascading Style Sheet Files")]
         [DeploymentItem(@"Cascading Style Sheet Files\star-underscore-hacks.css.min", "Cascading Style Sheet Files")]
-        public void StarUnderscoreHacksCssTest()
+        public void Star_And_Underscore_Hacks_Are_Preserved()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\star-underscore-hacks.css", @"Cascading Style Sheet Files\star-underscore-hacks.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"#elementarr {
+                                      width: 1px;
+                                      *width: 3pt;
+                                      _width: 2em;
+                                    }";
+            const string expected = @"#elementarr{width:1px;*width:3pt;_width:2em}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\string-in-comment.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\string-in-comment.css.min", "Cascading Style Sheet Files")]
-        public void StringInCommentCssTest()
+        [Description("PK to Look at")]
+        public void Some_Commments_Are_Preserved_Empty_But_Im_Not_Sure_If_This_Is_Correct_Or_Not()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\string-in-comment.css", @"Cascading Style Sheet Files\string-in-comment.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"/* te "" st */
+                                    a{a:1}
+                                    /* quite "" quote ' \' \"" */
+                                    /* ie mac \*/
+                                    c {c : 3}
+                                    /* end hiding */";
+            const string expected = @"a{a:1}/*\*/c{c:3}/**/";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);            
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\webkit-transform.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\webkit-transform.css.min", "Cascading Style Sheet Files")]
-        public void WebkitTransformCssTest()
+        [Description("PK to look at")]
+        public void Comments_Marked_To_Be_Preserved_Are_Retained_In_The_Output()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\webkit-transform.css", @"Cascading Style Sheet Files\webkit-transform.css.min", CompressorType.CascadingStyleSheet);
+            // Not sure wy there is all the extra stuff ie mac, end hiding etc & why the end hiding /**/
+            // are preserved but not the words "end hiding"?  Wouldn't expect either to be preserved....
+
+            // Arrange
+            const string source = @"/* te "" st */
+                                    a{a:1}
+                                    /*!""preserve"" me*/
+                                    /* quite "" quote ' \' \"" */
+                                    /* ie mac \*/
+                                    c {c : 3}
+                                    /* end hiding */";
+            const string expected = @"a{a:1}/*!""preserve"" me*//*\*/c{c:3}/**/";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\zeros.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\zeros.css.min", "Cascading Style Sheet Files")]
-        public void ZerosCssTest()
+        [Description("PK to look at")]
+        public void Comments_Marked_To_Be_Preserved_Are_Retained_In_The_Output2()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\zeros.css", @"Cascading Style Sheet Files\zeros.css.min", CompressorType.CascadingStyleSheet);
+            // From what was originally "special-comments.css"
+            // Does this test add anything that the test above (which also checks preserved comments) doesn't do?
+            // It is clearer re: preserved comments.
+
+            // Arrange
+            const string source = @"/*!************88****
+                                     Preserving comments
+                                        as they are
+                                     ********************
+                                     Keep the initial !
+                                     *******************/
+                                    #yo {
+                                        ma: ""ma"";
+                                    }
+                                    /*!
+                                    I said
+                                    pre-
+                                    serve! */";
+
+            const string expected = @"/*!************88****
+                                     Preserving comments
+                                        as they are
+                                     ********************
+                                     Keep the initial !
+                                     *******************/#yo{ma:""ma""}/*!
+                                    I said
+                                    pre-
+                                    serve! */";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
+        }
+
+        [TestMethod]
+        public void Comments_In_A_Content_Value_Are_Retained_In_The_Output()
+        {
+            // Arrange
+            const string source = @"a{content: ""/* comment in content*/""}";
+            const string expected = @"a{content:""/* comment in content*/""}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
+        }
+
+        [TestMethod]
+        public void Webkit_And_Moz_Transform_Origins_Have_Single_0_Replaced_With_Two_0s()
+        {
+            // Arrange
+            const string source = @"a {-webkit-transform-origin: 0;}
+                                    b {-webkit-transform-origin: 0 0;}
+                                    c {-MOZ-TRANSFORM-ORIGIN: 0 }
+                                    d {-MOZ-TRANSFORM-ORIGIN: 0 0;}";
+            const string expected = @"a{-webkit-transform-origin:0 0}b{-webkit-transform-origin:0 0}c{-moz-transform-origin:0 0}d{-moz-transform-origin:0 0}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
+        }
+
+        [TestMethod]
+        public void Zeroes_Have_The_Measurement_Type_Removed()
+        {
+            // Arrange
+            const string source = @"a { 
+                                      margin: 0px 0pt 0em 0%;
+                                      _padding-top: 0ex;
+                                      background-position: 0 0;
+                                      padding: 0in 0cm 0mm 0pc
+                                    }";
+            const string expected = @"a{margin:0;_padding-top:0;background-position:0 0;padding:0}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
@@ -396,6 +575,15 @@ namespace Yahoo.Yui.Compressor.Tests
             
             // Act
             var actual = CssCompressor.Compress(source);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        private void CompressAndCompare(string source, string expected)
+        {
+            // Act
+            var actual = CssCompressor.Compress(source, -1, CssCompressionType.StockYuiCompressor, true);
 
             // Assert
             Assert.AreEqual(expected, actual);

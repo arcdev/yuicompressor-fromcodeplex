@@ -199,6 +199,7 @@ namespace Yahoo.Yui.Compressor.Tests
             }
 
             [TestMethod]
+            [DeploymentItem(@"Cascading Style Sheet Files\SampleStylesheet1.css", "Cascading Style Sheet Files")]
             public void When_The_CssCompressionType_Is_None_The_Input_Files_Are_Concatenated_Unchanged()
             {
                 // Arrange
@@ -206,8 +207,8 @@ namespace Yahoo.Yui.Compressor.Tests
                 compressor.CssCompressionType = "None";
                 compressor.CssFiles = new ITaskItem[]
                                           {
-                                              new TaskItem(@"Cascading Style Sheet Files\color.css"),
-                                              new TaskItem(@"Cascading Style Sheet Files\decimals.css")
+                                              new TaskItem(@"Cascading Style Sheet Files\SampleStylesheet1.css"),
+                                              new TaskItem(@"Cascading Style Sheet Files\SampleStylesheet1.css")
                                           };
                 compressor.CssOutputFile = "noCompression.css";
 
@@ -225,14 +226,15 @@ namespace Yahoo.Yui.Compressor.Tests
             }
 
             [TestMethod]
+            [DeploymentItem(@"Cascading Style Sheet Files\SampleStylesheet1.css", "Cascading Style Sheet Files")]
             public void When_The_CssCompressionType_Is_Not_Specified_The_Input_Files_Are_Compressed()
             {
                 // Arrange
                 var compressor = CreateCompressorTask();
                 compressor.CssFiles = new ITaskItem[]
                                           {
-                                              new TaskItem(@"Cascading Style Sheet Files\color.css"),
-                                              new TaskItem(@"Cascading Style Sheet Files\decimals.css")
+                                              new TaskItem(@"Cascading Style Sheet Files\SampleStylesheet1.css"),
+                                              new TaskItem(@"Cascading Style Sheet Files\SampleStylesheet1.css")
                                           };
                 compressor.CssOutputFile = "compressed.css";
 
