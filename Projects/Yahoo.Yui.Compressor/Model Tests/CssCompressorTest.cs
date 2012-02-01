@@ -24,14 +24,9 @@ namespace Yahoo.Yui.Compressor.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CompressCssWitANullFileNameThrowsAnException()
+        public void An_Exception_Is_Thrown_If_The_Incoming_Css_Is_Null()
         {
-            // Arrange.
-
-            // Act.
             CssCompressor.Compress(null);
-
-            // Assert.
         }
 
         [TestMethod]
@@ -53,9 +48,9 @@ namespace Yahoo.Yui.Compressor.Tests
         public void A_Stylesheet_With_Empty_Content_Only_Returns_An_Empty_Result()
         {
             // Arrange.
-            string source = @"body
-                              {
-                              }";
+            const string source = @"body
+                                      {
+                                      }";
 
             // Act & Assert
             CompressAndCompare(source, string.Empty);
@@ -98,13 +93,13 @@ namespace Yahoo.Yui.Compressor.Tests
             // What is CP3723?  Test was originally called CompressBadCssCP3723ReturnsCompressedCss
 
             // Arrange.
-            string source = @".moreactions_applyfilter_reset
-                            {
-                            text-align: right;
-                            }
+            const string source = @".moreactions_applyfilter_reset
+                                    {
+                                    text-align: right;
+                                    }
 
                             /* end of moreactions_filter";
-            string expected = @".moreactions_applyfilter_reset{text-align:right}/*___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_0___";
+            const string expected = @".moreactions_applyfilter_reset{text-align:right}/*___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_0___";
 
             // Act & Assert
             CompressAndCompare(source, expected);
@@ -113,18 +108,15 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        public void BackgroundPositionTest()
+        public void Background_Position_Should_Have_Spurious_0s_Removed()
         {
             // Arrange
             const string source = @"a {background-position: 0 0 0 0;}
                                     b {BACKGROUND-POSITION: 0 0;}";
             const string expected = @"a{background-position:0 0}b{background-position:0 0}";
 
-            // Act
-            var actual = CssCompressor.Compress(source, -1, CssCompressionType.StockYuiCompressor, true);
-
-            // Assert
-            Assert.AreEqual(expected, actual);
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
@@ -179,41 +171,108 @@ namespace Yahoo.Yui.Compressor.Tests
         [TestMethod]
         [DeploymentItem(@"Cascading Style Sheet Files\Bug2527974.css", "Cascading Style Sheet Files")]
         [DeploymentItem(@"Cascading Style Sheet Files\Bug2527974.css.min", "Cascading Style Sheet Files")]
-        public void Bug2527974CssTest()
+        public void Bug_2527974_Should_Be_Fixed()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\Bug2527974.css", @"Cascading Style Sheet Files\Bug2527974.css.min", CompressorType.CascadingStyleSheet);
+            // What is the bug being fixed???
+            // Arrange
+            const string source = @"/*	this file contains no css, it exists purely to put the revision number into the 
+                                        combined css before uploading it to SiteManager. The exclaimation at the start
+                                        of the comment informs yuicompressor not to strip the comment out */
+ 
+                                    /*! $LastChangedRevision: 81 $ $LastChangedDate: 2009-05-27 17:41:02 +0100 (Wed, 27 May 2009) $ */
+ 
+                                    body {
+                                        yo: cats;
+                                    }
+                                    ul[id$=foo] label:hover {yo: yo;}";
+            const string expected = @"/*! $LastChangedRevision: 81 $ $LastChangedDate: 2009-05-27 17:41:02 +0100 (Wed, 27 May 2009) $ */body{yo:cats}ul[id$=foo] label:hover{yo:yo}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\bug2527991.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\bug2527991.css.min", "Cascading Style Sheet Files")]
-        public void Bug2527991CssTest()
+        [Description("PK to look at")]
+        public void Bug_2527991_Should_Be_Fixed()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\bug2527991.css", @"Cascading Style Sheet Files\bug2527991.css.min", CompressorType.CascadingStyleSheet);
+            // What is the bug being fixed???
+            // Arrange
+            const string source = @"@media screen and/*!YUI-Compresser */(-webkit-min-device-pixel-ratio:0) {
+                                      a{
+                                        b: 1;
+                                      }
+                                    }
+
+
+                                    @media screen and/*! */ /*! */(-webkit-min-device-pixel-ratio:0) {
+                                      a{
+                                        b: 1;
+                                      }
+                                    }
+
+
+                                    @media -webkit-min-device-pixel-ratio:0 {
+                                      a{
+                                        b: 1;
+                                      }
+                                    }";
+            const string expected = @"@media screen and/*!YUI-Compresser */(-webkit-min-device-pixel-ratio:0){a{b:1}}@media screen and/*! *//*! */(-webkit-min-device-pixel-ratio:0){a{b:1}}@media -webkit-min-device-pixel-ratio:0{a{b:1}}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
+        [Description("Bug 2527998")]
         [DeploymentItem(@"Cascading Style Sheet Files\bug2527998.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\bug2527998.css.min", "Cascading Style Sheet Files")]
-        public void Bug2527998CssTest()
+        public void An_Empty_Body_Should_Be_Removed_But_A_Preserved_Comment_Should_Remain()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\bug2527998.css", @"Cascading Style Sheet Files\bug2527998.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"/*! special */
+                                    body {
+
+                                    }
+                                    ";
+            const string expected = @"/*! special */";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
+        [Description("Bug 2528034")]
         [DeploymentItem(@"Cascading Style Sheet Files\bug2528034.css", "Cascading Style Sheet Files")]
         [DeploymentItem(@"Cascading Style Sheet Files\bug2528034.css.min", "Cascading Style Sheet Files")]
-        public void Bug2528034CssTest()
+        public void An_Empty_First_Child_Should_Be_Removed()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\bug2528034.css", @"Cascading Style Sheet Files\bug2528034.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"a[href$=""/test/""] span:first-child { b:1; }
+                                    a[href$=""/test/""] span:first-child { }";
+            const string expected = @"a[href$=""/test/""] span:first-child{b:1}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\charset-media.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\charset-media.css.min", "Cascading Style Sheet Files")]
-        public void CharsetMediaCssTest()
+        [Description("PK to look at")]
+        public void Charset_And_Media_Are_Compressed_As_Expected()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\charset-media.css", @"Cascading Style Sheet Files\charset-media.css.min", CompressorType.CascadingStyleSheet);
+            // Not sure why we hace this test - what does 2495387 refer to?
+            // Arrange
+            const string source = @"/* re: 2495387 */
+                                    @charset 'utf-8';
+                                    @media all {
+                                    body {
+                                    }
+                                    body {
+                                    background-color: gold;
+                                    }
+                                    }";
+            const string expected = @"@charset 'utf-8';@media all{body{background-color:gold}}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
@@ -261,11 +320,28 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\concat-charset.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\concat-charset.css.min", "Cascading Style Sheet Files")]
-        public void ConcatCharsetCssTest()
+        public void The_Output_Should_Retain_Only_The_First_Charset_If_The_Source_Contains_Multiple_Charsets()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\concat-charset.css", @"Cascading Style Sheet Files\concat-charset.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"/* This is invalid CSS, but frequently happens as a result of concatenation. */
+                                    @charset ""utf-8"";
+                                    #foo {
+                                        border-width:1px;
+                                    }
+                                    /*
+                                    Note that this is erroneous!
+                                    The actual CSS file can only have a single charset.
+                                    However, this is the job of the author/application.
+                                    The compressor should not get involved.
+                                    */
+                                    @charset ""another one"";
+                                    #bar {
+                                        border-width:10px;
+                                    }";
+            const string expected = @"@charset ""utf-8"";#foo{border-width:1px}#bar{border-width:10px}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
@@ -286,6 +362,7 @@ namespace Yahoo.Yui.Compressor.Tests
         public void A_Comment_With_Dollar_Header_Is_Preserved_But_Only_It_Seemes_Because_The_Preserve_Comment_Exclaimation_Exists()
         {
             // What is the significant of the $Header bit?
+            // Removing the '!' makes the comment not be preserved anymore - so what are we trying to achieve?
 
             // Arrange
             const string source = @"/*!
@@ -304,108 +381,264 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\font-face.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\font-face.css.min", "Cascading Style Sheet Files")]
-        public void FontFaceCssTest()
+        public void FontFace_Elements_Are_Compressed_As_Expected()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\font-face.css", @"Cascading Style Sheet Files\font-face.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"@font-face {
+                                      font-family: 'gzipper';
+                                      src: url(yanone.eot);
+                                      src: local('gzipper'), 
+                                              url(yanone.ttf) format('truetype');
+                                    }
+                                    ";
+            const string expected = @"@font-face{font-family:'gzipper';src:url(yanone.eot);src:local('gzipper'),url(yanone.ttf) format('truetype')}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\ie5mac.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\ie5mac.css.min", "Cascading Style Sheet Files")]
-        public void Ie5MacCssTest()
+        [Description("http://www.sam-i-am.com/work/sandbox/css/mac_ie5_hack.html")]
+        public void The_Ie5_Mac_Commented_Backslash_Hack_Should_Be_Compressed_As_Expected_To_Retain_The_Hack()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\ie5mac.css", @"Cascading Style Sheet Files\ie5mac.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"/* Ignore the next rule in IE mac \*/
+                                    .selector {
+                                       color: khaki;
+                                    }
+                                    /* Stop ignoring in IE mac */";
+            // ie, the bachslah -------\ here is retained, and the closing comment braces to stop ignoring
+            const string expected = @"/*\*/.selector{color:khaki}/**/"; 
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-empty-class.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-empty-class.css.min", "Cascading Style Sheet Files")]
-        public void MediaEmptyClassCssTest()
+        public void Empty_Elements_Should_Be_Removed()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\media-empty-class.css", @"Cascading Style Sheet Files\media-empty-class.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @".empty {}
+                                    alsoEmpty { ;}
+                                    .notEmpty { 
+                                        color: purple;
+                                    }";
+            const string expected = @".notEmpty{color:purple}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
+        }
+
+
+        [TestMethod]
+        public void Empty_Media_Elements_Should_Be_Removed()
+        {
+            // Arrange
+            const string source = @"@media print {
+                                        .noprint { display: none; }
+                                    }
+
+                                    @media screen {
+                                        /* this empty rule should be removed, not simply minified.*/
+                                        .emptymedia {}
+                                        .printonly { display: none; }
+                                    }";
+            const string expected = @"@media print{.noprint{display:none}}@media screen{.printonly{display:none}}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod, Ignore]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-empty-class.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-empty-class.css.min", "Cascading Style Sheet Files")]
-        public void MediaEmptyClassCssTest_With_MichaelAshRegexEnhancements()
+        [Description("PK to look at")]
+        public void Empty_Media_Elements_Should_Be_Removed_With_MichaelAshRegexEnhancements()
         {
+            // Arrange
+            const string source = @"@media print {
+                                        .noprint { display: none; }
+                                    }
+
+                                    @media screen {
+                                        /* this empty rule should be removed, not simply minified.*/
+                                        .emptymedia {}
+                                        .printonly { display: none; }
+                                    }";
+            const string expected = @"@media print{.noprint{display:none}}@media screen{.printonly{display:none}}";
+
+            // Act
+            var actual = CssCompressor.Compress(source, -1, CssCompressionType.MichaelAshRegexEnhancements, true);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
             // Currently does not produce the same results as the regular compressor - is this correct?
-            CompareTwoFiles(@"Cascading Style Sheet Files\media-empty-class.css", @"Cascading Style Sheet Files\media-empty-class.css.min", CompressorType.CascadingStyleSheet, ComparingTwoFileTypes.Content, CssCompressionType.MichaelAshRegexEnhancements);
+            // It returns:
+            // @media print{.noprint{display:none}}.printonly{display:none}}
+            // ie, it has removed the @media screen bit
+        }
+
+
+        [TestMethod]
+        public void Media_Elements_Retain_The_Space_After_An_And()
+        {
+            // Arrange
+            // This space --------------------------\ should be retained
+            const string source = @"@media screen and (-webkit-min-device-pixel-ratio:0) {
+                                      some-css : here
+                                    }";
+            const string expected = @"@media screen and (-webkit-min-device-pixel-ratio:0){some-css:here}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-multi.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-multi.css.min", "Cascading Style Sheet Files")]
-        public void MediaMultiCssTest()
+        public void Media_Elements_Retain_The_Space_After_An_And_With_MichaelAshRegexEnhancements()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\media-multi.css", @"Cascading Style Sheet Files\media-multi.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            // This space --------------------------\ should be retained
+            const string source = @"@media screen and (-webkit-min-device-pixel-ratio:0) {
+                                      some-css : here
+                                    }";
+            const string expected = @"@media screen and (-webkit-min-device-pixel-ratio:0){some-css:here}";
+
+            // Act
+            var actual = CssCompressor.Compress(source, -1, CssCompressionType.MichaelAshRegexEnhancements, true);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-multi.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-multi.css.min", "Cascading Style Sheet Files")]
-        public void MediaMultiCssTest_With_MichaelAshRegexEnhancements()
+        public void Multiple_Media_Elements_Retain_Spaces_After_An_And()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\media-multi.css", @"Cascading Style Sheet Files\media-multi.css.min", CompressorType.CascadingStyleSheet, ComparingTwoFileTypes.Content, CssCompressionType.MichaelAshRegexEnhancements);
+            // Arrange
+            // These spaces ---------------------------\ ----------------------------\ -------------------------------------\ should be retained
+            const string source = @"@media only all and (max-width:50em), only all and (max-device-width:800px), only all and (max-width:780px) {
+                                      some-css : here
+                                    }
+                                    ";
+            const string expected = @"@media only all and (max-width:50em),only all and (max-device-width:800px),only all and (max-width:780px){some-css:here}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-test.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-test.css.min", "Cascading Style Sheet Files")]
-        public void MediaTestCssTest()
+        public void Multiple_Media_Elements_Retain_Spaces_After_An_And_With_MichaelAshRegexEnhancements()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\media-test.css", @"Cascading Style Sheet Files\media-test.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            // These spaces ---------------------------\ ----------------------------\ -------------------------------------\ should be retained
+            const string source = @"@media only all and (max-width:50em), only all and (max-device-width:800px), only all and (max-width:780px) {
+                                      some-css : here
+                                    }
+                                    ";
+            const string expected = @"@media only all and (max-width:50em),only all and (max-device-width:800px),only all and (max-width:780px){some-css:here}";
+
+            // Act & Assert
+            // Act
+            var actual = CssCompressor.Compress(source, -1, CssCompressionType.MichaelAshRegexEnhancements, true);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-test.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\media-test.css.min", "Cascading Style Sheet Files")]
-        public void MediaTestCssTest_With_MichaelAshRegexEnhancements()
+        public void Opacity_Filters_Are_Compressed_As_Expected()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\media-test.css", @"Cascading Style Sheet Files\media-test.css.min", CompressorType.CascadingStyleSheet, ComparingTwoFileTypes.Content, CssCompressionType.MichaelAshRegexEnhancements);
+            // Arrange
+            const string source = @"/*  example from https://developer.mozilla.org/en/CSS/opacity */
+                                    pre {                               /* make the box translucent (80% opaque) */
+                                       border: solid red;
+                                       opacity: 0.8;                    /* Firefox, Safari(WebKit), Opera */
+                                       -ms-filter: ""progid:DXImageTransform.Microsoft.Alpha(Opacity=80)""; /* IE 8 */
+                                       filter: PROGID:DXImageTransform.Microsoft.Alpha(Opacity=80);       /* IE 4-7 */
+                                       zoom: 1;       /* set ""zoom"", ""width"" or ""height"" to trigger ""hasLayout"" in IE 7 and lower */ 
+                                    }
+
+                                    /** and again */
+                                    code {
+                                       -ms-filter: ""PROGID:DXImageTransform.Microsoft.Alpha(Opacity=80)""; /* IE 8 */
+                                       filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);       /* IE 4-7 */
+                                    }";
+            const string expected = @"pre{border:solid red;opacity:.8;-ms-filter:""alpha(opacity=80)"";filter:alpha(opacity=80);zoom:1}code{-ms-filter:""alpha(opacity=80)"";filter:alpha(opacity=80)}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\opacity-filter.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\opacity-filter.css.min", "Cascading Style Sheet Files")]
-        public void OpacityFilterCssTest()
+        public void String_Values_Should_Retain_New_Line_Characters()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\opacity-filter.css", @"Cascading Style Sheet Files\opacity-filter.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"#sel-o {
+                                      content: ""on\""ce upon \
+                                    a time"";
+                                      content: 'once upon \
+                                    a ti\'me';
+                                    }";
+            const string expected = @"#sel-o{content:""on\""ce upon \
+                                    a time"";content:'once upon \
+                                    a ti\'me'}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\preserve-new-line.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\preserve-new-line.css.min", "Cascading Style Sheet Files")]
-        public void PreserveNewLineCssTest()
+        public void String_Values_Should_Be_Preserved_Exactly()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\preserve-new-line.css", @"Cascading Style Sheet Files\preserve-new-line.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"/* preserving strings */
+                                    .sele {
+                                        content: ""\""keep  \""    me"";
+                                        something: '\\\' .     . ';
+                                        else: 'empty{}';
+                                        content: ""/* test */""; /* <---- this is not a comment, should be be kept */
+                                    }";
+            const string expected = @".sele{content:""\""keep  \""    me"";something:'\\\' .     . ';else:'empty{}';content:""/* test */""}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\preserve-strings.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\preserve-strings.css.min", "Cascading Style Sheet Files")]
-        public void PreserveStringsCssTest()
+        public void Pseudo_First_Letter_Element_Should_Be_Compressed_As_Expected()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\preserve-strings.css", @"Cascading Style Sheet Files\preserve-strings.css.min", CompressorType.CascadingStyleSheet);
+            // Arrange
+            const string source = @"/* 
+                                    because of IE6 first-letter and first-line
+                                    must be followed by a space
+                                    http://reference.sitepoint.com/css/pseudoelement-firstletter
+                                    Thanks: P.Sorokin comment at http://www.phpied.com/cssmin-js/ 
+                                    */
+                                    p:first-letter{
+                                        buh: hum;
+                                    }
+                                    p:first-line{
+                                        baa: 1;
+                                    }
+
+                                    p:first-line,a,p:first-letter,b{
+                                        color: red;
+                                    }";
+            const string expected = @"p:first-letter {buh:hum}p:first-line {baa:1}p:first-line ,a,p:first-letter ,b{color:red}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\pseudo-first.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\pseudo-first.css.min", "Cascading Style Sheet Files")]
-        public void PseudoFirstCssTest()
+        public void Pseudo_Css_Elements_Should_Be_Compressed_And_Have_Suprious_Semi_Colons_Removed()
         {
-            CompareTwoFiles(@"Cascading Style Sheet Files\pseudo-first.css", @"Cascading Style Sheet Files\pseudo-first.css.min", CompressorType.CascadingStyleSheet);
-        }
+            // Arrange
+            const string source = @"p :link { 
+                                      ba:zinga;;;
+                                      foo: bar;;;
+                                    }";
+            const string expected = @"p :link{ba:zinga;foo:bar}";
 
-        [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\pseudo.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\pseudo.css.min", "Cascading Style Sheet Files")]
-        public void PseudoCssTest()
-        {
-            CompareTwoFiles(@"Cascading Style Sheet Files\pseudo.css", @"Cascading Style Sheet Files\pseudo.css.min", CompressorType.CascadingStyleSheet);
+            // Act & Assert
+            CompressAndCompare(source, expected);
         }
 
         [TestMethod]

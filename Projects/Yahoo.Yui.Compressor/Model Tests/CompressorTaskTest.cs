@@ -126,7 +126,7 @@ namespace Yahoo.Yui.Compressor.Tests
             }
 
             [TestMethod]
-            [Description("Big: Item 9527 Fix")]
+            [Description("Bug: Item 9527 Fix")]
             [DeploymentItem(@"Cascading Style Sheet Files\bug9527.css", "Cascading Style Sheet Files")]
             public void PreserveCssComments_True_Preserves_Comments()
             {
@@ -145,7 +145,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
             [TestMethod]
             [DeploymentItem(@"Cascading Style Sheet Files\bug9527.css", "Cascading Style Sheet Files")]
-            [Description("Big: Item 9527 Fix")]
+            [Description("Bug: Item 9527 Fix")]
             public void PreserveCssComments_False_Removes_Comments()
             {
                 // Arrange.

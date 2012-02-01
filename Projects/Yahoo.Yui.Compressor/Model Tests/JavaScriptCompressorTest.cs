@@ -135,8 +135,8 @@ namespace Yahoo.Yui.Compressor.Tests
                                    quickClass = new RegExp(""^([#.]?)("" + chars + ""*)"");";
             
             // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(source, true, true, false, false, -1);
-            string compressedJavascriptNoObfuscation = JavaScriptCompressor.Compress(source, true, false, false, false, -1);
+            var compressedJavascript = JavaScriptCompressor.Compress(source, true, true, false, false, -1);
+            var compressedJavascriptNoObfuscation = JavaScriptCompressor.Compress(source, true, false, false, false, -1);
 
             // Assert.
             Assert.IsFalse(compressedJavascript.Contains(@"}get var"));
@@ -218,36 +218,40 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Javascript Files\SampleJavaScript-ignoreEval.js", "Javascript Files")]
-        public void CompressFull_DontChangeThreadCulture()
+        public void If_CultureInfo_Is_Supplied_Then_The_Original_Thread_Culture_Is_Restored_After_Compression()
         {
-            // Arrange.
+            // Arrange
+            // Save existing culture
             var currentThreadCulture = Thread.CurrentThread.CurrentCulture;
             var currentThreadUiCulture = Thread.CurrentThread.CurrentUICulture;
-            string javascript = File.ReadAllText(@"Javascript Files\SampleJavaScript-ignoreEval.js");
 
+            var expectedCulture = CultureInfo.CreateSpecificCulture("fr-FR");
             try
             {
-                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("fr-FR");
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("fr-FR");
+                // Change the culture to something specific
+                Thread.CurrentThread.CurrentCulture = expectedCulture;
+                Thread.CurrentThread.CurrentUICulture = expectedCulture;
 
-                // Act.
-                JavaScriptCompressor.Compress(javascript, false, true, false, false, -1, Encoding.Default, null, false);
+                // Act
+                // Pass in some other culture
+                JavaScriptCompressor.Compress("var stuff = {foo:0.9, faa:3};", false, true, false, false, -1, Encoding.Default, CultureInfo.CreateSpecificCulture("it-IT"), false);
 
-                // Assert.
-                Assert.AreEqual(Thread.CurrentThread.CurrentCulture, CultureInfo.CreateSpecificCulture("fr-FR"));
-                Assert.AreEqual(Thread.CurrentThread.CurrentUICulture, CultureInfo.CreateSpecificCulture("fr-FR"));
+                // Assert
+                // Check the culture is thee sam
+                Assert.AreEqual(Thread.CurrentThread.CurrentCulture, expectedCulture, "Test CurrentCulture");
+                Assert.AreEqual(Thread.CurrentThread.CurrentUICulture, expectedCulture, "Test CurrentUICulture");
             }
             finally
             {
+                // Restore original culture coming into the tests
                 Thread.CurrentThread.CurrentCulture = currentThreadCulture;
                 Thread.CurrentThread.CurrentUICulture = currentThreadUiCulture;
+                
+                // heck the culture is now restored
+                Assert.AreEqual(currentThreadCulture, Thread.CurrentThread.CurrentCulture, "Original CurrentCulture");
+                Assert.AreEqual(currentThreadUiCulture, Thread.CurrentThread.CurrentUICulture, "Original CurrentUICulture");
             }
 
-            // More Asserts.
-            // Assert.
-            Assert.AreEqual(currentThreadCulture, Thread.CurrentThread.CurrentCulture);
-            Assert.AreEqual(currentThreadUiCulture, Thread.CurrentThread.CurrentUICulture);
         }
 
         [TestMethod]
@@ -376,7 +380,7 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        public void Bug8092JavascriptTest()
+        public void Bug8092_Should_Be_Fixed()
         {
             // Arrange.
             string javascript = string.Format("var anObject = {{{0}property: \"value\",{0}propertyTwo: \"value2\"{0}}};{0}{0}alert('single quoted string ' + anObject.property + ' end string');{0}// Outputs: single quoted string value end string", Environment.NewLine);
