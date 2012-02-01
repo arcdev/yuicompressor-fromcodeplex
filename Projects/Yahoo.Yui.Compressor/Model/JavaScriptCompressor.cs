@@ -14,6 +14,10 @@ namespace Yahoo.Yui.Compressor
     {
         #region Fields
 
+        private readonly CultureInfo _originalCultureInfo;
+        private readonly CultureInfo _originalUiCulture;
+        private readonly CultureInfo _tempCultureInfo;
+
         private const int BUILDING_SYMBOL_TREE = 1;
         private const int CHECKING_SYMBOL_TREE = 2;
 
@@ -80,35 +84,25 @@ namespace Yahoo.Yui.Compressor
 
             CompressionType = JavaScriptCompressionType.YuiStockCompression; // Default
 
-            CultureInfo currentCultureInfo = Thread.CurrentThread.CurrentCulture;
-            CultureInfo currentUiCulture = Thread.CurrentThread.CurrentUICulture;
-            try
-            {
-                // Change the current Thread Culture if the user has asked for something specific.
-                // Reference: http://www.codeplex.com/YUICompressor/WorkItem/View.aspx?WorkItemId=3219
-                if (threadCulture != null)
-                {
-                    Thread.CurrentThread.CurrentCulture = threadCulture;
-                    Thread.CurrentThread.CurrentUICulture = threadCulture;
-                }
+            // Remember the current thread culture.
+            _originalCultureInfo = Thread.CurrentThread.CurrentCulture;
+            _originalUiCulture= Thread.CurrentThread.CurrentUICulture;
 
-                Initialise();
-
-                _verbose = isVerboseLogging;
-                _javaScript = javaScript;
-                _encoding = encoding;
-                ErrorReporter = errorReporter ?? new CustomErrorReporter(isVerboseLogging);
-                _logger = ErrorReporter;
-                _isEvalIgnored = isEvalIgnored;
-            }
-            finally
+            // Change the current Thread Culture if the user has asked for something specific.
+            // Reference: http://www.codeplex.com/YUICompressor/WorkItem/View.aspx?WorkItemId=3219
+            if (threadCulture != null)
             {
-                if (threadCulture != null)
-                {
-                    Thread.CurrentThread.CurrentCulture = currentCultureInfo;
-                    Thread.CurrentThread.CurrentUICulture = currentUiCulture;
-                }
+                _tempCultureInfo = threadCulture;
             }
+
+            Initialise();
+
+            _verbose = isVerboseLogging;
+            _javaScript = javaScript;
+            _encoding = encoding;
+            ErrorReporter = errorReporter ?? new CustomErrorReporter(isVerboseLogging);
+            _logger = ErrorReporter;
+            _isEvalIgnored = isEvalIgnored;            
         }
 
         #endregion
@@ -1902,6 +1896,13 @@ namespace Yahoo.Yui.Compressor
             }
             _munge = isObfuscateJavascript;
 
+            // Change the Thread Culture, if required.
+            if (_tempCultureInfo != null)
+            {
+                Thread.CurrentThread.CurrentCulture = _tempCultureInfo;
+                Thread.CurrentThread.CurrentUICulture = _tempCultureInfo;
+            }
+
             var memoryStream = new MemoryStream(_encoding.GetBytes(_javaScript));
             _tokens = Parse(new StreamReader(memoryStream, _encoding), ErrorReporter);
 
@@ -1915,9 +1916,16 @@ namespace Yahoo.Yui.Compressor
 
             BuildSymbolTree();
             MungeSymboltree();
-            StringBuilder stringBuilder = PrintSymbolTree(lineBreakPosition, preserveAllSemicolons);
+            var result = PrintSymbolTree(lineBreakPosition, preserveAllSemicolons).ToString();
 
-            return stringBuilder.ToString();
+            // Reset the Thread Culture, if required.
+            if (_tempCultureInfo != null)
+            {
+                Thread.CurrentThread.CurrentCulture = _originalCultureInfo;
+                Thread.CurrentThread.CurrentUICulture = _originalUiCulture;
+            }
+
+            return result;
         }
 
         #endregion
