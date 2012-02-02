@@ -49,7 +49,7 @@ namespace Yahoo.Yui.Compressor.Tests
                 var sb = new StringBuilder();
                 foreach (var file in compressor.JavaScriptFiles)
                 {
-                    sb.AppendLine(File.ReadAllText(file.ItemSpec));
+                    sb.Append(File.ReadAllText(file.ItemSpec));
                 }
                 Assert.That(actual, Is.EqualTo(sb.ToString()));
             }
@@ -74,7 +74,35 @@ namespace Yahoo.Yui.Compressor.Tests
                 var sb = new StringBuilder();
                 foreach (var file in compressor.JavaScriptFiles)
                 {
-                    sb.AppendLine(File.ReadAllText(file.ItemSpec));
+                    sb.Append(File.ReadAllText(file.ItemSpec));
+                }
+                Assert.That(actual.Length, Is.LessThan(sb.Length));
+            }
+
+            [Test]
+            public void When_The_Compressions_Type_Is_Overridden_On_An_Individual_Item_It_Takes_Precedence_Over_The_Task_Compression_Type()
+            {
+                // Arrange
+                var compressor = CreateCompressorTask();
+                compressor.JavaScriptCompressionType = JavaScriptCompressionType.None.ToString();
+
+                compressor.JavaScriptFiles = new ITaskItem[]
+                                          {
+                                              new TaskItem(@"Javascript Files\SampleJavaScript1.js"),
+                                              new TaskItem(@"Javascript Files\SampleJavaScript2.js")
+                                          };
+                compressor.JavaScriptFiles[0].SetMetadata("CompressionType", JavaScriptCompressionType.YuiStockCompression.ToString());
+                compressor.JavaScriptOutputFile = "semicompressed.js";
+
+                // Act
+                compressor.Execute();
+
+                // Assert
+                var actual = File.ReadAllText("semicompressed.js");
+                var sb = new StringBuilder();
+                foreach (var file in compressor.JavaScriptFiles)
+                {
+                    sb.Append(File.ReadAllText(file.ItemSpec));
                 }
                 Assert.That(actual.Length, Is.LessThan(sb.Length));
             }
@@ -213,7 +241,7 @@ namespace Yahoo.Yui.Compressor.Tests
                 var sb = new StringBuilder();
                 foreach (var file in compressor.CssFiles)
                 {
-                    sb.AppendLine(File.ReadAllText(file.ItemSpec));
+                    sb.Append(File.ReadAllText(file.ItemSpec));
                 }
                 Assert.That(actual, Is.EqualTo(sb.ToString()));
             }
@@ -239,6 +267,34 @@ namespace Yahoo.Yui.Compressor.Tests
                 foreach (var file in compressor.CssFiles)
                 {
                     sb.AppendLine(File.ReadAllText(file.ItemSpec));
+                }
+                Assert.That(actual.Length, Is.LessThan(sb.Length));
+            }
+
+            [Test]
+            public void When_The_Compressions_Type_Is_Overridden_On_An_Individual_Item_It_Takes_Precedence_Over_The_Task_Compression_Type()
+            {
+                // Arrange
+                var compressor = CreateCompressorTask();
+                compressor.CssCompressionType = CssCompressionType.None.ToString();
+
+                compressor.CssFiles = new ITaskItem[]
+                                        {
+                                            new TaskItem(@"Cascading Style Sheet Files\SampleStylesheet1.css"),
+                                            new TaskItem(@"Cascading Style Sheet Files\SampleStylesheet1.css")
+                                        };
+                compressor.CssFiles[0].SetMetadata("CompressionType", CssCompressionType.StockYuiCompressor.ToString());
+                compressor.CssOutputFile = "semicompressed.css";
+
+                // Act
+                compressor.Execute();
+
+                // Assert
+                var actual = File.ReadAllText("semicompressed.css");
+                var sb = new StringBuilder();
+                foreach (var file in compressor.CssFiles)
+                {
+                    sb.Append(File.ReadAllText(file.ItemSpec));
                 }
                 Assert.That(actual.Length, Is.LessThan(sb.Length));
             }

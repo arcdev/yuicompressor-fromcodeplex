@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -98,23 +96,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                 CssCompressionType = "YUIStockCompression";
             }
 
-            switch (CssCompressionType.ToLowerInvariant())
-            {
-                case "none":
-                    _cssCompressionType = Compressor.CssCompressionType.None;
-                    break;
-                case "michaelashsregexenhancements":
-                    _cssCompressionType = Compressor.CssCompressionType.MichaelAshRegexEnhancements;
-                    break;
-                case "havemycakeandeatit":
-                case "bestofbothworlds":
-                case "hybrid":
-                    _cssCompressionType = Compressor.CssCompressionType.Hybrid;
-                    break;
-                default:
-                    _cssCompressionType = Compressor.CssCompressionType.StockYuiCompressor;
-                    break;
-            }
+            _cssCompressionType = GetCssCompressionTypeFrom(CssCompressionType);
 
             if (string.IsNullOrEmpty(JavaScriptCompressionType))
             {
@@ -122,18 +104,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                 JavaScriptCompressionType = Compressor.JavaScriptCompressionType.YuiStockCompression.ToString();
             }
 
-            switch (JavaScriptCompressionType.ToLowerInvariant())
-            {
-                case "none":
-                    _javaScriptCompressionType = Compressor.JavaScriptCompressionType.None;
-                    break;
-                case "yuistockcompression":
-                    _javaScriptCompressionType = Compressor.JavaScriptCompressionType.YuiStockCompression;
-                    break;
-                default:
-                    Log.LogError("Unrecognised JavaScriptCompressionType: {0}", JavaScriptCompressionType);
-                    break;
-            }
+            _javaScriptCompressionType = GetJavaScriptCompressionTypeFrom(JavaScriptCompressionType);
 
             if (string.IsNullOrEmpty(LoggingType))
             {
@@ -276,6 +247,38 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
             #endregion
         }
 
+        private CssCompressionType GetCssCompressionTypeFrom(string cssCompressionType)
+        {
+            switch (cssCompressionType.ToLowerInvariant())
+            {
+                case "none":
+                    return Compressor.CssCompressionType.None;
+                case "michaelashsregexenhancements":
+                    return Compressor.CssCompressionType.MichaelAshRegexEnhancements;
+                case "havemycakeandeatit":
+                case "bestofbothworlds":
+                case "hybrid":
+                    return Compressor.CssCompressionType.Hybrid;
+                default:
+                    return Compressor.CssCompressionType.StockYuiCompressor;
+            }
+        }
+
+
+        private JavaScriptCompressionType GetJavaScriptCompressionTypeFrom(string javaScriptCompressionType)
+        {
+            switch (javaScriptCompressionType.ToLowerInvariant())
+            {
+                case "none":
+                    return Compressor.JavaScriptCompressionType.None;
+                case "yuistockcompression":
+                    return Compressor.JavaScriptCompressionType.YuiStockCompression;
+                default:
+                    Log.LogError("Unrecognised JavaScriptCompressionType: {0}", JavaScriptCompressionType);
+                    return Compressor.JavaScriptCompressionType.None;
+            }
+        }
+
         private void LogMessage(string message,
                                 bool isIndented = false)
         {
@@ -293,7 +296,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
         private StringBuilder CompressFiles(ActionType actionType)
         {
             string actionDescription;
-            IList<string> fileList = null;
+            ITaskItem[] fileList = null;
             int totalOriginalContentLength = 0;
             string compressedContent = null;
             StringBuilder finalContent = null;
@@ -321,7 +324,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
             // Get the list of files to compress.
             if (actionType == ActionType.Css)
             {
-                fileList = CssFiles.Select(f => f.ItemSpec).ToList();
+                fileList = CssFiles;
             }
             else if (actionType == ActionType.JavaScript)
             {
@@ -337,34 +340,31 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                 LogMessage(string.Format(CultureInfo.InvariantCulture, "    ** Thread Culture: {0}",
                                          _threadCulture == null ? "Not defined" : _threadCulture.DisplayName));
 
-                fileList = JavaScriptFiles.Select(f => f.ItemSpec).ToList();
+                fileList = JavaScriptFiles;
             }
 
             if (fileList != null)
             {
                 LogMessage(string.Format(CultureInfo.InvariantCulture,
                                          "# {0} {1} file{2} requested.",
-                                         fileList.Count,
+                                         fileList.Length,
                                          actionDescription,
-                                         fileList.Count.ToPluralString()));
-
-                foreach (string file in fileList)
-                {
-                    LogMessage("=> " + file,
-                               true);
-                }
+                                         fileList.Length.ToPluralString()));
 
                 // Now compress each file.
-                foreach (string file in fileList)
+                foreach (ITaskItem file in fileList)
                 {
+                    string message = "=> " + file.ItemSpec;
+
                     // Load up the file.
                     try
                     {
-                        string originalContent = File.ReadAllText(file);
+                        string originalContent = File.ReadAllText(file.ItemSpec);
                         totalOriginalContentLength += originalContent.Length;
 
                         if (string.IsNullOrEmpty(originalContent))
                         {
+                            LogMessage(message, true);
                             Log.LogError(string.Format(CultureInfo.InvariantCulture,
                                                        "There is no data in the file [{0}]. Please check that this is the file you want to compress. Lolz :)",
                                                        file));
@@ -372,11 +372,34 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
 
                         if (actionType == ActionType.Css)
                         {
-                            compressedContent = CssCompressor.Compress(originalContent, 0, _cssCompressionType,
+                            CssCompressionType compressionType = _cssCompressionType;
+                            string overrideType = file.GetMetadata("CompressionType");
+                            if (!string.IsNullOrEmpty(overrideType))
+                            {
+                                compressionType = GetCssCompressionTypeFrom(overrideType);
+                                if (compressionType != _cssCompressionType)
+                                {
+                                    message += string.Format(" (CompressionType override: {0})", compressionType.ToString());
+                                }
+                            }
+                            LogMessage(message, true);
+                            compressedContent = CssCompressor.Compress(originalContent, 0, compressionType,
                                                                        !_preseveCssComments);
                         }
                         else if (actionType == ActionType.JavaScript)
                         {
+                            JavaScriptCompressionType compressionType = _javaScriptCompressionType;
+                            string overrideType = file.GetMetadata("CompressionType");
+                            if (!string.IsNullOrEmpty(overrideType))
+                            {
+                                compressionType = GetJavaScriptCompressionTypeFrom(overrideType);
+                                if (compressionType != _javaScriptCompressionType)
+                                {
+                                    message += string.Format(" (CompressionType override: {0})",
+                                                             compressionType.ToString());
+                                }
+                            }
+                            LogMessage(message, true);
                             compressedContent = JavaScriptCompressor.Compress(originalContent,
                                                                               _loggingType ==
                                                                               MsBuildTask.LoggingType.HardcoreBringItOn,
@@ -387,7 +410,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                                                                               _encoding,
                                                                               _threadCulture,
                                                                               _isEvalIgnored,
-                                                                              _javaScriptCompressionType);
+                                                                              compressionType);
                         }
 
                         if (!string.IsNullOrEmpty(compressedContent))
@@ -397,11 +420,6 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                                 finalContent = new StringBuilder();
                             }
                             finalContent.Append(compressedContent);
-                            if ((actionType == ActionType.Css && _cssCompressionType == Compressor.CssCompressionType.None) ||
-                                (actionType == ActionType.JavaScript && _javaScriptCompressionType == Compressor.JavaScriptCompressionType.None))
-                            {
-                                finalContent.AppendLine();
-                            }
                         }
                     }
                     catch (Exception exception)
@@ -423,7 +441,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                             (actionType == ActionType.JavaScript &&
                              _deleteJavaScriptFiles))
                         {
-                            File.Delete(file);
+                            File.Delete(file.ItemSpec);
                         }
                     }
                     catch (Exception exception)
@@ -438,8 +456,8 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
 
                 LogMessage(string.Format(CultureInfo.InvariantCulture,
                                          "Finished compressing all {0} file{1}.",
-                                         fileList.Count,
-                                         fileList.Count.ToPluralString()),
+                                         fileList.Length,
+                                         fileList.Length.ToPluralString()),
                            true);
 
                 int finalContentLength = finalContent == null ? 0 : finalContent.ToString().Length;
