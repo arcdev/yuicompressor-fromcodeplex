@@ -2,7 +2,7 @@
 using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Yahoo.Yui.Compressor.MsBuildTask;
 
 namespace Yahoo.Yui.Compressor.Tests
@@ -11,10 +11,10 @@ namespace Yahoo.Yui.Compressor.Tests
 
     public abstract class CompressorTaskTest
     {
-        [TestClass]
+        [TestFixture]
         public class When_Compressing_Javascript_Files : CompressorTaskTest
         {
-            [TestMethod]
+            [Test]
             public void True_Is_Returned_When_DoNotErrorWhenNoFilesAreProvided_Is_True_And_No_Javascript_Files_Are_Provided()
             {
                 // Arrange
@@ -25,12 +25,10 @@ namespace Yahoo.Yui.Compressor.Tests
                 var worked = compressorTask.Execute();
 
                 // Assert
-                Assert.IsTrue(worked, "Did not Work");
+                Assert.That(worked, Is.True, "Did not Work");
             }
 
-            [TestMethod]
-            [DeploymentItem(@"Javascript Files\SampleJavaScript1.js", "Javascript Files")]
-            [DeploymentItem(@"Javascript Files\SampleJavaScript2.js", "Javascript Files")]
+            [Test]
             public void When_The_JavaScriptCompressionType_Is_None_The_Input_Files_Are_Concatenated_Unchanged()
             {
                 // Arange
@@ -53,12 +51,10 @@ namespace Yahoo.Yui.Compressor.Tests
                 {
                     sb.AppendLine(File.ReadAllText(file.ItemSpec));
                 }
-                Assert.AreEqual(sb.ToString(), actual);
+                Assert.That(actual, Is.EqualTo(sb.ToString()));
             }
 
-            [TestMethod]
-            [DeploymentItem(@"Javascript Files\SampleJavaScript1.js", "Javascript Files")]
-            [DeploymentItem(@"Javascript Files\SampleJavaScript2.js", "Javascript Files")]
+            [Test]
             public void When_The_JavaScriptCompressionType_Is_Not_Specified_The_Input_Files_Are_Compressed()
             {
                 // Arrange
@@ -80,10 +76,10 @@ namespace Yahoo.Yui.Compressor.Tests
                 {
                     sb.AppendLine(File.ReadAllText(file.ItemSpec));
                 }
-                Assert.IsTrue(actual.Length < sb.Length);
+                Assert.That(actual.Length, Is.LessThan(sb.Length));
             }
 
-            [TestMethod]
+            [Test]
             public void An_Error_Is_Logged_If_The_JavascriptCompressionType_Is_Not_Recognised()
             {
                 // Arrange
@@ -94,8 +90,8 @@ namespace Yahoo.Yui.Compressor.Tests
                 var success = compressor.Execute();
 
                 // Assert
-                Assert.IsFalse(success);
-                Assert.IsTrue(((BuildEngineStub)compressor.BuildEngine).Errors.Contains("Unrecognised JavaScriptCompressionType: invalid"));                
+                Assert.That(success, Is.False, "Worked");
+                Assert.That(((BuildEngineStub)compressor.BuildEngine).Errors.Contains("Unrecognised JavaScriptCompressionType: invalid"));
             }
 
             private static CompressorTask GetJavascriptCompressorFor(string fileName)
@@ -110,10 +106,10 @@ namespace Yahoo.Yui.Compressor.Tests
             }
         }
 
-        [TestClass]
+        [TestFixture]
         public class When_Compressing_Css_Files : CompressorTaskTest
         {
-            [TestMethod]
+            [Test]
             public void True_Is_Returned_When_DoNotErrorWhenNoFilesAreProvided_Is_True_And_No_Css_Files_Are_Provided()
             {
                 // Arrange
@@ -124,12 +120,11 @@ namespace Yahoo.Yui.Compressor.Tests
                 var worked = compressorTask.Execute();
 
                 // Assert
-                Assert.IsTrue(worked, "Did not Work");
+                Assert.That(worked, Is.True, "Did not Work");
             }
 
-            [TestMethod]
-            [Description("Bug: Item 9527 Fix")]
-            [DeploymentItem(@"Cascading Style Sheet Files\bug9527.css", "Cascading Style Sheet Files")]
+            [Test]
+            [Description("http://yuicompressor.codeplex.com/workitem/9527")]
             public void PreserveCssComments_True_Preserves_Comments()
             {
                 // Arrange.
@@ -141,13 +136,12 @@ namespace Yahoo.Yui.Compressor.Tests
                 var compressedCss = File.ReadAllText(compressorTask.CssOutputFile);
 
                 // Assert.
-                Assert.IsTrue(worked, "Task Didn't work");
-                Assert.IsTrue(compressedCss.Contains("/* comment */"), compressedCss);
+                Assert.That(worked, Is.True, "Task Didn't work");
+                Assert.That(compressedCss, Is.StringContaining("/* comment */"), compressedCss);
             }
 
-            [TestMethod]
-            [DeploymentItem(@"Cascading Style Sheet Files\bug9527.css", "Cascading Style Sheet Files")]
-            [Description("Bug: Item 9527 Fix")]
+            [Test]
+            [Description("http://yuicompressor.codeplex.com/workitem/9527")]
             public void PreserveCssComments_False_Removes_Comments()
             {
                 // Arrange.
@@ -159,15 +153,14 @@ namespace Yahoo.Yui.Compressor.Tests
                 var compressedCss = File.ReadAllText(compressorTask.CssOutputFile);
 
                 // Assert.
-                Assert.IsTrue(worked, "Task Didn't work");
-                Assert.IsFalse(compressedCss.Contains("/* comment */"), compressedCss);
+                Assert.That(worked, Is.True, "Task Didn't work");
+                Assert.That(compressedCss, Is.Not.StringContaining("/* comment */"), compressedCss);
             }
 
             /// <summary>
             /// There is a specific IE7 hack to preserve these, so just test it works ;)
             /// </summary>
-            [TestMethod]
-            [DeploymentItem(@"Cascading Style Sheet Files\bug9527.css", "Cascading Style Sheet Files")]
+            [Test]
             public void PreserveCssComments_False_Does_Not_Remove_Empty_Comments_After_Child_Selectors()
             {
                 // Arrange.
@@ -179,12 +172,11 @@ namespace Yahoo.Yui.Compressor.Tests
                 var compressedCss = File.ReadAllText(compressorTask.CssOutputFile);
 
                 // Assert.
-                Assert.IsTrue(worked, "Task Didn't work");
-                Assert.IsTrue(compressedCss.Contains("/**/"), compressedCss);
+                Assert.That(worked, Is.True, "Task Didn't work");
+                Assert.That(compressedCss, Is.StringContaining("/**/"), compressedCss);
             }
 
-            [TestMethod]
-            [DeploymentItem(@"Cascading Style Sheet Files\bug9527.css", "Cascading Style Sheet Files")]
+            [Test]
             public void PreserveCssComments_False_Does_Not_Remove_Comments_Which_Should_Be_Preserved()
             {
                 // Arrange.
@@ -196,12 +188,11 @@ namespace Yahoo.Yui.Compressor.Tests
                 var compressedCss = File.ReadAllText(compressorTask.CssOutputFile);
 
                 // Assert.
-                Assert.IsTrue(worked, "Task Didn't work");
-                Assert.IsTrue(compressedCss.Contains("/*! preserved comment */"), compressedCss);
+                Assert.That(worked, Is.True, "Task Didn't work");
+                Assert.That(compressedCss, Is.StringContaining("/*! preserved comment */"), compressedCss);
             }
 
-            [TestMethod]
-            [DeploymentItem(@"Cascading Style Sheet Files\SampleStylesheet1.css", "Cascading Style Sheet Files")]
+            [Test]
             public void When_The_CssCompressionType_Is_None_The_Input_Files_Are_Concatenated_Unchanged()
             {
                 // Arrange
@@ -224,11 +215,10 @@ namespace Yahoo.Yui.Compressor.Tests
                 {
                     sb.AppendLine(File.ReadAllText(file.ItemSpec));
                 }
-                Assert.AreEqual(sb.ToString(), actual);
+                Assert.That(actual, Is.EqualTo(sb.ToString()));
             }
 
-            [TestMethod]
-            [DeploymentItem(@"Cascading Style Sheet Files\SampleStylesheet1.css", "Cascading Style Sheet Files")]
+            [Test]
             public void When_The_CssCompressionType_Is_Not_Specified_The_Input_Files_Are_Compressed()
             {
                 // Arrange
@@ -250,7 +240,7 @@ namespace Yahoo.Yui.Compressor.Tests
                 {
                     sb.AppendLine(File.ReadAllText(file.ItemSpec));
                 }
-                Assert.IsTrue(actual.Length < sb.Length);
+                Assert.That(actual.Length, Is.LessThan(sb.Length));
             }
 
             private static CompressorTask GetCssCompressorFor(string fileName)

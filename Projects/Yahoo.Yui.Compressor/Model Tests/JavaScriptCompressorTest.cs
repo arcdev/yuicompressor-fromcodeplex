@@ -3,46 +3,44 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Yahoo.Yui.Compressor.Tests
 {
     // ReSharper disable InconsistentNaming
 
-    [TestClass]
-    public class JavaScriptCompressorTest : TestBase
+    [TestFixture]
+    public class JavaScriptCompressorTest 
     {
-        [TestMethod]
-        [DeploymentItem(@"Javascript Files\SampleJavaScript1.js", "Javascript Files")]
+        [Test]
         public void CompressSampleJavaScript1ReturnsCompressedJavascript()
         {
             // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\SampleJavaScript1.js");
+            var source = File.ReadAllText(@"Javascript Files\SampleJavaScript1.js");
 
             // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript);
+            var actual = JavaScriptCompressor.Compress(source);
 
             // Assert.
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
-            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
+            Assert.That(source.Length, Is.GreaterThan(actual.Length), "Not Greater");
         }
 
-        [TestMethod]
-        [DeploymentItem(@"Javascript Files\SampleJavaScript2.js", "Javascript Files")]
+        [Test]
         public void CompressSampleJavaScript2ReturnsCompressedJavascript()
         {
             // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\SampleJavaScript2.js");
+            var source = File.ReadAllText(@"Javascript Files\SampleJavaScript2.js");
 
             // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript);
+            var actual = JavaScriptCompressor.Compress(source);
 
             // Assert.
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
-            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
+            Assert.That(source.Length, Is.GreaterThan(actual.Length), "Not Greater");
         }
 
-        [TestMethod]
+        [Test]
         public void A_New_Line_Appended_In_The_Source_Is_Retained_In_The_Output()
         {
             // Arrange.
@@ -53,75 +51,72 @@ namespace Yahoo.Yui.Compressor.Tests
             CompressAndCompare(source, expected);
         }
 
-        [TestMethod]
-        [DeploymentItem(@"Javascript Files\jquery-1.2.6-vsdoc.js", "Javascript Files")]
+        [Test]
         public void CompressJQuery126VSDocReturnsCompressedJavascript()
         {
             // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\jquery-1.2.6-vsdoc.js");
+            var source = File.ReadAllText(@"Javascript Files\jquery-1.2.6-vsdoc.js");
 
             // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript);
+            var actual = JavaScriptCompressor.Compress(source);
 
             // Assert.
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
-            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
-            Assert.AreEqual(61591, compressedJavascript.Length);
+            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
+            Assert.That(source.Length, Is.GreaterThan(actual.Length), "Not Greater");
+            Assert.That(actual.Length, Is.EqualTo(61591), "Exact Length");
         }
 
-        [TestMethod]
-        [DeploymentItem(@"Javascript Files\jquery-1.3.1.js", "Javascript Files")]
+        [Test]
         public void CompressJQuery131JavascriptReturnsCompressedJavascript()
         {
             // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\jquery-1.3.1.js");
+            var source = File.ReadAllText(@"Javascript Files\jquery-1.3.1.js");
 
             // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript);
+            var actual = JavaScriptCompressor.Compress(source);
 
             // Assert.
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
-            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
+            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
+            Assert.That(source.Length, Is.GreaterThan(actual.Length), "Not Greater");
         }
 
-        [TestMethod]
-        [DeploymentItem(@"Javascript Files\SampleJavaScript4.js", "Javascript Files")]
+        [Test]
         public void CompressWithObfuscationTest()
         {
             // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\SampleJavaScript4.js");
+            var source = File.ReadAllText(@"Javascript Files\SampleJavaScript4.js");
 
             // Act.
-            string compressedNotObfuscatedJavascript = JavaScriptCompressor.Compress(javascript, true, false, false,
+            var actualCompressedNotObfuscatedJavascript = JavaScriptCompressor.Compress(source, true, false, false,
                                                                                      false, -1);
-            string compressedObfuscatedJavascript = JavaScriptCompressor.Compress(javascript, true, true, false, false,
+            var actualCompressedObfuscatedJavascript = JavaScriptCompressor.Compress(source, true, true, false, false,
                                                                                   -1);
 
             // Assert.
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedNotObfuscatedJavascript));
-            Assert.IsTrue(javascript.Length > compressedNotObfuscatedJavascript.Length);
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedObfuscatedJavascript));
-            Assert.IsTrue(javascript.Length > compressedObfuscatedJavascript.Length);
+            Assert.That(actualCompressedNotObfuscatedJavascript, Is.Not.Null.Or.Empty, "Not Obfuscated Null or Empty");
+            Assert.That(source.Length, Is.GreaterThan(actualCompressedNotObfuscatedJavascript.Length), "Not Obfuscated Not Greater");
+            Assert.That(actualCompressedObfuscatedJavascript, Is.Not.Null.Or.Empty, "Obfuscated Null or Empty");
+            Assert.That(source.Length, Is.GreaterThan(actualCompressedObfuscatedJavascript.Length), "Obfuscated Not Greater");
 
             // Is the obfuscated smaller?
-            Assert.IsTrue(compressedObfuscatedJavascript.Length < compressedNotObfuscatedJavascript.Length);
+            Assert.That(actualCompressedObfuscatedJavascript.Length, Is.LessThan(actualCompressedNotObfuscatedJavascript.Length), "Obfuscated not smaller than Not Obfuscated");
         }
 
-        [TestMethod]
-        [DeploymentItem(@"Javascript Files\SampleJavaScript5.js", "Javascript Files")]
+        [Test]
         public void CompressNestedIdentifiersTest()
         {
             // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\SampleJavaScript5.js");
+            var source = File.ReadAllText(@"Javascript Files\SampleJavaScript5.js");
 
             // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript, true, true, false, false, -1);
+            var actual = JavaScriptCompressor.Compress(source, true, true, false, false, -1);
 
             // Assert.
-            Assert.IsTrue(compressedJavascript.Length < javascript.Length);
+            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
+            Assert.That(source.Length, Is.GreaterThan(actual.Length), "Not Greater");
         }
 
-        [TestMethod]
+        [Test]
         public void CompressRegExWithUnicodeTest()
         {
             // Arrange.
@@ -141,28 +136,27 @@ namespace Yahoo.Yui.Compressor.Tests
             var compressedJavascriptNoObfuscation = JavaScriptCompressor.Compress(source, true, false, false, false, -1);
 
             // Assert.
-            Assert.IsFalse(compressedJavascript.Contains(@"}get var"));
-            Assert.IsTrue(compressedJavascript.Contains(@"\w\u0128"));
-            Assert.IsTrue(compressedJavascriptNoObfuscation.Contains(@"\w\u0128"));
+            Assert.That(compressedJavascript, Is.Not.StringContaining(@"}get var"));
+            Assert.That(compressedJavascript, Is.StringContaining(@"\w\u0128"));
+            Assert.That(compressedJavascriptNoObfuscation, Is.StringContaining(@"\w\u0128"));
         }
 
-        [TestMethod]
-        [DeploymentItem(@"Javascript Files\jquery-1.3.1.js", "Javascript Files")]
+        [Test]
         public void CompressJQuery131WithNoMungeReturnsCompressedJavascript()
         {
             // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\jquery-1.3.1.js");
+            var source = File.ReadAllText(@"Javascript Files\jquery-1.3.1.js");
 
             // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript, false, false, false, false, -1);
+            var actual = JavaScriptCompressor.Compress(source, false, false, false, false, -1);
 
             // Assert.
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
-            Assert.IsTrue(javascript.Length > compressedJavascript.Length);
-            Assert.AreEqual(71146, compressedJavascript.Length);
+            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
+            Assert.That(source.Length, Is.GreaterThan(actual.Length), "Not Greater");
+            Assert.That(actual.Length, Is.EqualTo(71146), "Exact Length");
         }
 
-        [TestMethod]
+        [Test]
         [Description("http://yuicompressor.codeplex.com/discussions/46679")]
         public void Compressing_An_ExtJs_Definition_Works_As_Expected()
         {
@@ -185,47 +179,43 @@ namespace Yahoo.Yui.Compressor.Tests
             CompressAndCompare(source, expected);
         }
 
-        [TestMethod]
-        [DeploymentItem(@"Javascript Files\SampleJavaScript-ignoreEval.js", "Javascript Files")]
+        [Test]
         public void CompressJavascriptIgnoreEvalReturnsCompressedJavascript()
         {
             // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\SampleJavaScript-ignoreEval.js");
+            var source = File.ReadAllText(@"Javascript Files\SampleJavaScript-ignoreEval.js");
 
             // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript, false, true, false, false, -1,
+            var actual = JavaScriptCompressor.Compress(source, false, true, false, false, -1,
                                                                         Encoding.Default, null, true);
 
             // Assert.
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
-            Assert.IsFalse(compressedJavascript.Contains("number"),
-                           "Turning on ignoreEval should compress functions that call eval");
+            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
+            Assert.That(actual, Is.Not.StringContaining("number"), "Turning on ignoreEval should compress functions that call eval");
         }
 
-        [TestMethod]
-        [DeploymentItem(@"Javascript Files\SampleJavaScript-ignoreEval.js", "Javascript Files")]
+        [Test]
         public void CompressJavascriptRespectEval()
         {
             // Arrange.
-            string javascript = File.ReadAllText(@"Javascript Files\SampleJavaScript-ignoreEval.js");
+            var source = File.ReadAllText(@"Javascript Files\SampleJavaScript-ignoreEval.js");
 
             // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript, false, true, false, false, -1,
+            var actual = JavaScriptCompressor.Compress(source, false, true, false, false, -1,
                                                                         Encoding.Default, null, false);
 
             // Assert.
-            Assert.IsTrue(!string.IsNullOrEmpty(compressedJavascript));
-            Assert.IsTrue(compressedJavascript.Contains("number"),
-                          "Functions that call eval should not be compressed when ignoreEval is false");
+            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
+            Assert.That(actual, Is.StringContaining("number"), "Functions that call eval should not be compressed when ignoreEval is false");
         }
 
-        [TestMethod]
+        [Test]
         public void If_CultureInfo_Is_Supplied_Then_The_Original_Thread_Culture_Is_Restored_After_Compression()
         {
             // Arrange
             // Save existing culture
-            var currentThreadCulture = Thread.CurrentThread.CurrentCulture;
-            var currentThreadUiCulture = Thread.CurrentThread.CurrentUICulture;
+            var originalThreadCulture = Thread.CurrentThread.CurrentCulture;
+            var originalThreadUICulture = Thread.CurrentThread.CurrentUICulture;
 
             var expectedCulture = CultureInfo.CreateSpecificCulture("fr-FR");
             try
@@ -240,31 +230,31 @@ namespace Yahoo.Yui.Compressor.Tests
 
                 // Assert
                 // Check the culture is thee sam
-                Assert.AreEqual(Thread.CurrentThread.CurrentCulture, expectedCulture, "Test CurrentCulture");
-                Assert.AreEqual(Thread.CurrentThread.CurrentUICulture, expectedCulture, "Test CurrentUICulture");
+                Assert.That(Thread.CurrentThread.CurrentCulture, Is.EqualTo(expectedCulture), "Test CurrentCulture");
+                Assert.That(Thread.CurrentThread.CurrentUICulture, Is.EqualTo(expectedCulture), "Test CurrentUICulture");
             }
             finally
             {
                 // Restore original culture coming into the tests
-                Thread.CurrentThread.CurrentCulture = currentThreadCulture;
-                Thread.CurrentThread.CurrentUICulture = currentThreadUiCulture;
+                Thread.CurrentThread.CurrentCulture = originalThreadCulture;
+                Thread.CurrentThread.CurrentUICulture = originalThreadUICulture;
                 
                 // heck the culture is now restored
-                Assert.AreEqual(currentThreadCulture, Thread.CurrentThread.CurrentCulture, "Original CurrentCulture");
-                Assert.AreEqual(currentThreadUiCulture, Thread.CurrentThread.CurrentUICulture, "Original CurrentUICulture");
+                Assert.That(Thread.CurrentThread.CurrentCulture, Is.EqualTo(originalThreadCulture) , "Original CurrentCulture");
+                Assert.That(Thread.CurrentThread.CurrentUICulture, Is.EqualTo(originalThreadUICulture), "Original CurrentUICulture");
             }
 
         }
 
-        [TestMethod]
+        [Test]
         [Description("http://yuicompressor.codeplex.com/discussions/243522")]
         public void If_CultureInfo_Is_Supplied_Then_The_Output_Respects_It_Irrespective_Of_The_Current_Thread_Culture()
         {
             // Arrange
-            var currentThreadCulture = Thread.CurrentThread.CurrentCulture;
-            var currentThreadUiCulture = Thread.CurrentThread.CurrentUICulture;
+            var originalThreadCulture = Thread.CurrentThread.CurrentCulture;
+            var originalThreadUICulture = Thread.CurrentThread.CurrentUICulture;
             const string source = "var stuff = {foo:0.9, faa:3};";
-            const string  expected = "var stuff={foo:0.9,faa:3};";
+            const string expected = "var stuff={foo:0.9,faa:3};";
 
             try
             {
@@ -275,21 +265,21 @@ namespace Yahoo.Yui.Compressor.Tests
                 var actual = JavaScriptCompressor.Compress(source, false, false, false, false, 200, Encoding.UTF8, CultureInfo.InvariantCulture);
 
                 // Assert.
-                Assert.AreEqual(expected, actual);
+                Assert.That(actual, Is.EqualTo(expected));
             }
             finally
             {
-                Thread.CurrentThread.CurrentCulture = currentThreadCulture;
-                Thread.CurrentThread.CurrentUICulture = currentThreadUiCulture;
+                Thread.CurrentThread.CurrentCulture = originalThreadCulture;
+                Thread.CurrentThread.CurrentUICulture = originalThreadUICulture;
             }
         }
 
-        [TestMethod]
+        [Test]
         public void If_CultureInfo_Is_Not_Supplied_Then_The_Output_Respects_The_Current_Thread_Culture()
         {
             // Arrange
-            var currentThreadCulture = Thread.CurrentThread.CurrentCulture;
-            var currentThreadUiCulture = Thread.CurrentThread.CurrentUICulture;
+            var originalThreadCulture = Thread.CurrentThread.CurrentCulture;
+            var originalThreadUICulture = Thread.CurrentThread.CurrentUICulture;
             const string source = "var stuff = {foo:0.9, faa:3};";
             const string expected = "var stuff={foo:0,9,faa:3};";
 
@@ -302,16 +292,16 @@ namespace Yahoo.Yui.Compressor.Tests
                 var actual = JavaScriptCompressor.Compress(source, false, false, false, false, 200);
 
                 // Assert.
-                Assert.AreEqual(expected, actual);
+                Assert.That(actual, Is.EqualTo(expected));
             }
             finally
             {
-                Thread.CurrentThread.CurrentCulture = currentThreadCulture;
-                Thread.CurrentThread.CurrentUICulture = currentThreadUiCulture;
+                Thread.CurrentThread.CurrentCulture = originalThreadCulture;
+                Thread.CurrentThread.CurrentUICulture = originalThreadUICulture;
             }
         }
 
-        [TestMethod]
+        [Test]
         public void The_Output_Is_Obfuscated_When_IsObfuscateJavascript_Is_True()
         {
             // Arrange
@@ -330,10 +320,10 @@ namespace Yahoo.Yui.Compressor.Tests
             var actual = JavaScriptCompressor.Compress(source, true, true, false, false, -1);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
-        [TestMethod]
+        [Test]
         public void The_Output_Is_Not_Obfuscated_When_IsObfuscateJavascript_Is_False()
         {
             // Arrange
@@ -352,10 +342,10 @@ namespace Yahoo.Yui.Compressor.Tests
             var actual = JavaScriptCompressor.Compress(source, true, false, false, false, -1);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
-        [TestMethod]
+        [Test]
         public void Concatenated_Strings_Are_Combined()
         {
             // Arrange
@@ -370,32 +360,39 @@ namespace Yahoo.Yui.Compressor.Tests
             CompressAndCompare(source, expected);
         }
 
-        [TestMethod]
-        [DeploymentItem(@"Javascript Files\_syntax_error.js", "Javascript Files")]
-        [DeploymentItem(@"Javascript Files\_syntax_error.js.min", "Javascript Files")]
+        [Test]
         public void SyntaxErrorJsTest()
         {
+            // Arrange
+            var source = File.ReadAllText(@"Javascript Files\_syntax_error.js", Encoding.UTF8);
+            var expected = File.ReadAllText(@"Javascript Files\_syntax_error.js.min");
+
+            // Act
+            var actual = JavaScriptCompressor.Compress(source);
+
+            // Assert
+            Assert.That(actual, Is.Not.Null.Or.Empty, "Null Or Empty");
             // Because the Java code uses a Hashtable to determine what variables names can be obfuscated, we can't do an exact file compare. But we can
             // do a file LENGTH compare .. which might be a bit closer to fair Assert test.
-            CompareTwoFiles(@"Javascript Files\_syntax_error.js", @"Javascript Files\_syntax_error.js.min",
-                            CompressorType.JavaScript, ComparingTwoFileTypes.FileLength);
+            Assert.That(actual.Length, Is.EqualTo(expected.Length), "Length mismatch");
         }
 
-        [TestMethod]
+        [Test]
         [Description("http://yuicompressor.codeplex.com/workitem/8092")]
         public void Bug8092_Should_Be_Fixed()
         {
-            // Arrange.
-            string javascript = string.Format("var anObject = {{{0}property: \"value\",{0}propertyTwo: \"value2\"{0}}};{0}{0}alert('single quoted string ' + anObject.property + ' end string');{0}// Outputs: single quoted string value end string", Environment.NewLine);
+            // Arrange
+            var source = string.Format("var anObject = {{{0}property: \"value\",{0}propertyTwo: \"value2\"{0}}};{0}{0}alert('single quoted string ' + anObject.property + ' end string');{0}// Outputs: single quoted string value end string", Environment.NewLine);
+            const string expected = "var anObject={property:\"value\",propertyTwo:\"value2\"};alert(\"single quoted string \"+anObject.property+\" end string\");";
 
-            // Act.
-            string compressedJavascript = JavaScriptCompressor.Compress(javascript);
+            // Act
+            var actual = JavaScriptCompressor.Compress(source);
 
-            // Assert.
-            Assert.AreEqual("var anObject={property:\"value\",propertyTwo:\"value2\"};alert(\"single quoted string \"+anObject.property+\" end string\");", compressedJavascript);
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
-        [TestMethod]
+        [Test]
         public void When_The_CompressionType_Is_None_The_Input_Is_Returned_Unchanged()
         {
             // Arrange
@@ -407,10 +404,10 @@ namespace Yahoo.Yui.Compressor.Tests
             var actual = compressor.Compress();
 
             // Assert
-            Assert.AreEqual(source, actual);
+            Assert.That(actual, Is.EqualTo(source));
         }
 
-        [TestMethod]
+        [Test]
         public void The_Input_Will_Be_Compressed_By_Default()
         {
             // Arrange
@@ -422,7 +419,7 @@ namespace Yahoo.Yui.Compressor.Tests
             CompressAndCompare(source, expected);
         }
 
-        [TestMethod]
+        [Test]
         [Description("http://yuicompressor.codeplex.com/workitem/9856")]
         public void Decimals_Will_Be_Reasonably_Accurate()
         {
@@ -445,7 +442,7 @@ namespace Yahoo.Yui.Compressor.Tests
             CompressAndCompare(source, expected);
         }
 
-        [TestMethod]
+        [Test]
         [Description("http://yuicompressor.codeplex.com/workitem/9856")]
         public void Decimals_Will_Not_Be_Entirely_Accurate_Until_We_Implement_A_Proper_Solution()
         {
@@ -467,10 +464,10 @@ namespace Yahoo.Yui.Compressor.Tests
             var actual = compressor.Compress();
 
             // Assert
-            Assert.AreNotEqual("var serverResolutions=[152.87405654907226,0.14929107084870338];", actual);
+            Assert.That(actual, Is.Not.EqualTo("var serverResolutions=[152.87405654907226,0.14929107084870338];"));
         }
 
-        [TestMethod]
+        [Test]
         public void Errors_Will_Include_Line_Numbers()
         {
             // Arrange
@@ -487,11 +484,11 @@ namespace Yahoo.Yui.Compressor.Tests
             catch (InvalidOperationException iox)
             {
                 // Assert
-                Assert.IsTrue(iox.Message.Contains("Line: 2"));
+                Assert.That(iox.Message, Is.StringContaining("Line: 2"));
             }
         }
 
-        [TestMethod]
+        [Test]
         public void Warnings_Will_Include_Line_Numbers_Where_Available()
         {
             // Arrange
@@ -503,20 +500,20 @@ namespace Yahoo.Yui.Compressor.Tests
 
             // Assert
             var reporter = (CustomErrorReporter) compressor.ErrorReporter;
-            Assert.AreNotEqual(0, reporter.ErrorMessages.Count, "No Messages");
+            Assert.That(reporter.ErrorMessages.Count, Is.Not.EqualTo(0), "No Messages");
 
             foreach (var errorMessage in reporter.ErrorMessages)
             {
                 if (errorMessage.Contains("[WARNING] Duplicate parameter name \"bar\""))
                 {
-                    Assert.IsTrue(errorMessage.Contains("Line: 1"), "\"Line: 1\" not found in: " + errorMessage);
+                    Assert.That(errorMessage, Is.StringContaining("Line: 1"), "\"Line: 1\" not found in: " + errorMessage);
                     return;
                 }
             }
             Assert.Fail("Message not found");
         }
 
-        [TestMethod]
+        [Test]
         public void Warnings_Will_Not_Include_Line_Numbers_Where_Not_Available()
         {
             // Arrange
@@ -529,13 +526,13 @@ namespace Yahoo.Yui.Compressor.Tests
 
             // Assert
             var reporter = (CustomErrorReporter) compressor.ErrorReporter;
-            Assert.AreNotEqual(0, reporter.ErrorMessages.Count, "No Messages");
+            Assert.That(reporter.ErrorMessages.Count, Is.Not.EqualTo(0), "No Messages");
             
             foreach (var errorMessage in reporter.ErrorMessages)
             {
                 if (errorMessage.Contains("The variable foo has already been declared in the same scope"))
                 {
-                    Assert.IsFalse(errorMessage.Contains("Line:"), "\"Line:\" found in: "+ errorMessage);
+                    Assert.That(errorMessage, Is.Not.StringContaining("Line:"), "\"Line:\" found in: "+ errorMessage);
                     return;
                 }
             }
@@ -548,7 +545,7 @@ namespace Yahoo.Yui.Compressor.Tests
             var actual = JavaScriptCompressor.Compress(source, false, false, false, false, -1);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 
