@@ -4,6 +4,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Yahoo.Yui.Compressor.Tests
 {
+    // ReSharper disable InconsistentNaming
+
     [TestClass]
     public class CssCompressorTest : TestBase
     {
@@ -87,11 +89,9 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [Description("PK to look at")]
+        [Description("PK to look at :: Bug 3727 - http://yuicompressor.codeplex.com/workitem/3723")]
         public void Compressing_Css_With_No_Closing_Comment_Symbol_Returns_Something()
         {
-            // What is CP3723?  Test was originally called CompressBadCssCP3723ReturnsCompressedCss
-
             // Arrange.
             const string source = @".moreactions_applyfilter_reset
                                     {
@@ -103,8 +103,14 @@ namespace Yahoo.Yui.Compressor.Tests
 
             // Act & Assert
             CompressAndCompare(source, expected);
+            
+            // FR Question:
             // Original Assert was just that *something* was returned (ie result length > 0
             // I have set the expected result to be what is actually returned currently - is this correct?
+
+            // PK Answer: 
+            // I don't think it really matters. The bug raised just stated that it was crashing when
+            // no closing comment symbol was provided. But having an exact match Assert is safer.
         }
 
         [TestMethod]
@@ -195,7 +201,9 @@ namespace Yahoo.Yui.Compressor.Tests
         [Description("PK to look at")]
         public void Bug_2527991_Should_Be_Fixed()
         {
-            // What is the bug being fixed???
+            // FR Question: What is the bug being fixed???
+            // PK Answer: this - https://github.com/yui/yuicompressor/blob/d36d4470ff786aadc2e70a36e689882d0bce4cc0/tests/bug2527991.css
+
             // Arrange
             const string source = @"@media screen and/*!YUI-Compresser */(-webkit-min-device-pixel-ratio:0) {
                                       a{
@@ -258,7 +266,9 @@ namespace Yahoo.Yui.Compressor.Tests
         [Description("PK to look at")]
         public void Charset_And_Media_Are_Compressed_As_Expected()
         {
-            // Not sure why we hace this test - what does 2495387 refer to?
+            // FR Question: Not sure why we hace this test - what does 2495387 refer to?
+            // PK Answer: https://github.com/search?type=Code&language=&q=2495387+repo%3Ayui%2Fyuicompressor&repo=&langOverride=&x=0&y=0&start_value=1
+            //            which links to: https://github.com/yui/yuicompressor/blob/98310d3cd799ab6f243689c7611503ac234ad2db/tests/charset-media.css
             // Arrange
             const string source = @"/* re: 2495387 */
                                     @charset 'utf-8';
@@ -822,4 +832,6 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.AreEqual(expected, actual);
         }
     }
+
+    // ReSharper restore InconsistentNaming
 }

@@ -7,6 +7,8 @@ using Yahoo.Yui.Compressor.MsBuildTask;
 
 namespace Yahoo.Yui.Compressor.Tests
 {
+    // ReSharper disable InconsistentNaming
+
     public abstract class CompressorTaskTest
     {
         [TestClass]
@@ -278,4 +280,6 @@ namespace Yahoo.Yui.Compressor.Tests
                        };
         }
     }
+
+    // ReSharper restore InconsistentNaming
 }

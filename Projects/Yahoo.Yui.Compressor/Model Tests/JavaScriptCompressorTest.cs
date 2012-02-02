@@ -7,6 +7,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Yahoo.Yui.Compressor.Tests
 {
+    // ReSharper disable InconsistentNaming
+
     [TestClass]
     public class JavaScriptCompressorTest : TestBase
     {
@@ -548,4 +550,6 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.AreEqual(expected, actual);
         }
     }
+
+    // ReSharper restore InconsistentNaming
 }
