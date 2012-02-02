@@ -382,6 +382,7 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
+        [Description("http://yuicompressor.codeplex.com/workitem/8092")]
         public void Bug8092_Should_Be_Fixed()
         {
             // Arrange.
@@ -391,8 +392,7 @@ namespace Yahoo.Yui.Compressor.Tests
             string compressedJavascript = JavaScriptCompressor.Compress(javascript);
 
             // Assert.
-            Assert.AreEqual("var anObject={property:\"value\",propertyTwo:\"value2\"};alert(\"single quoted string \"+anObject.property+\" end string\");",
-                compressedJavascript);
+            Assert.AreEqual("var anObject={property:\"value\",propertyTwo:\"value2\"};alert(\"single quoted string \"+anObject.property+\" end string\");", compressedJavascript);
         }
 
         [TestMethod]
@@ -423,9 +423,10 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [Description("Item 9856 / http://yuicompressor.codeplex.com/discussions/279118")]
+        [Description("http://yuicompressor.codeplex.com/workitem/9856")]
         public void Decimals_Will_Be_Reasonably_Accurate()
         {
+            // Also see http://yuicompressor.codeplex.com/discussions/279118
             // There is a problem with ScriptConvert in the EcmaScript library, where doubles are losing accuracy
             // Decimal would be better, but requires major re-engineering.
             // As an interim measure, the accuracy has been improved a little.
@@ -445,15 +446,15 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [Description("Item 9856")]
+        [Description("http://yuicompressor.codeplex.com/workitem/9856")]
         public void Decimals_Will_Not_Be_Entirely_Accurate_Until_We_Implement_A_Proper_Solution()
         {
+            // Also see http://yuicompressor.codeplex.com/discussions/279118
             // There is a problem with ScriptConvert in the EcmaScript library, where doubles are losing accuracy
             // Decimal would be better, but requires major re-engineering.
             // As an interim measure, the accuracy has been improved a little.
             // This test is just checking that some inaccuracies still exist & can be removed once we have a proper solution
             // If this test fails, it means accuracy is now sorted!
-            // See this thread for more: http://yuicompressor.codeplex.com/discussions/279118
 
             // Arrange
             const string source = @"var serverResolutions = [ 

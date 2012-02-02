@@ -143,7 +143,20 @@ namespace Yahoo.Yui.Compressor
                 }
 
                 // In all other cases kill the comment.
-                css = css.Replace("/*" + placeholder + "*/", string.Empty);
+                // Is this a closed comment?
+                if (css.Contains("/*" + placeholder + "*/"))
+                {
+                    css = css.Replace("/*" + placeholder + "*/", string.Empty);
+                }
+                else
+                {
+                    // Nope - is it an unclosed comment?
+                    if (css.Contains("/*" + placeholder))
+                    {
+                        // TODO: Add a Warning to the log (once we have a log!)
+                        css = css.Replace("/*" + placeholder, string.Empty);
+                    }
+                }
             }
 
             // Normalize all whitespace strings to single spaces. Easier to work with that way.

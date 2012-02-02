@@ -89,31 +89,6 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [Description("PK to look at :: Bug 3727 - http://yuicompressor.codeplex.com/workitem/3723")]
-        public void Compressing_Css_With_No_Closing_Comment_Symbol_Returns_Something()
-        {
-            // Arrange.
-            const string source = @".moreactions_applyfilter_reset
-                                    {
-                                    text-align: right;
-                                    }
-
-                            /* end of moreactions_filter";
-            const string expected = @".moreactions_applyfilter_reset{text-align:right}/*___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_0___";
-
-            // Act & Assert
-            CompressAndCompare(source, expected);
-            
-            // FR Question:
-            // Original Assert was just that *something* was returned (ie result length > 0
-            // I have set the expected result to be what is actually returned currently - is this correct?
-
-            // PK Answer: 
-            // I don't think it really matters. The bug raised just stated that it was crashing when
-            // no closing comment symbol was provided. But having an exact match Assert is safer.
-        }
-
-        [TestMethod]
         public void Background_Position_Should_Have_Spurious_0s_Removed()
         {
             // Arrange
@@ -175,8 +150,6 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\Bug2527974.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\Bug2527974.css.min", "Cascading Style Sheet Files")]
         public void Bug_2527974_Should_Be_Fixed()
         {
             // What is the bug being fixed???
@@ -198,12 +171,9 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [Description("PK to look at")]
-        public void Bug_2527991_Should_Be_Fixed()
+        [Description("https://github.com/yui/yuicompressor/blob/d36d4470ff786aadc2e70a36e689882d0bce4cc0/tests/bug2527991.css")]
+        public void Yahoo_YUICompressor_Bug_2527991_Should_Be_Fixed()
         {
-            // FR Question: What is the bug being fixed???
-            // PK Answer: this - https://github.com/yui/yuicompressor/blob/d36d4470ff786aadc2e70a36e689882d0bce4cc0/tests/bug2527991.css
-
             // Arrange
             const string source = @"@media screen and/*!YUI-Compresser */(-webkit-min-device-pixel-ratio:0) {
                                       a{
@@ -232,7 +202,6 @@ namespace Yahoo.Yui.Compressor.Tests
 
         [TestMethod]
         [Description("Bug 2527998")]
-        [DeploymentItem(@"Cascading Style Sheet Files\bug2527998.css", "Cascading Style Sheet Files")]
         public void An_Empty_Body_Should_Be_Removed_But_A_Preserved_Comment_Should_Remain()
         {
             // Arrange
@@ -249,8 +218,6 @@ namespace Yahoo.Yui.Compressor.Tests
 
         [TestMethod]
         [Description("Bug 2528034")]
-        [DeploymentItem(@"Cascading Style Sheet Files\bug2528034.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\bug2528034.css.min", "Cascading Style Sheet Files")]
         public void An_Empty_First_Child_Should_Be_Removed()
         {
             // Arrange
@@ -263,12 +230,9 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [Description("PK to look at")]
-        public void Charset_And_Media_Are_Compressed_As_Expected()
+        [Description("https://github.com/yui/yuicompressor/blob/98310d3cd799ab6f243689c7611503ac234ad2db/tests/charset-media.css")]
+        public void Yahoo_YUICompressor_Bug_2495387_Should_Be_Fixed()
         {
-            // FR Question: Not sure why we hace this test - what does 2495387 refer to?
-            // PK Answer: https://github.com/search?type=Code&language=&q=2495387+repo%3Ayui%2Fyuicompressor&repo=&langOverride=&x=0&y=0&start_value=1
-            //            which links to: https://github.com/yui/yuicompressor/blob/98310d3cd799ab6f243689c7611503ac234ad2db/tests/charset-media.css
             // Arrange
             const string source = @"/* re: 2495387 */
                                     @charset 'utf-8';
@@ -315,8 +279,8 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [Description("Hack for IE7")]
-        public void Empty_Comments_After_A_Child_Selector_Are_Preserved()
+        [Description("http://en.wikipedia.org/wiki/CSS_filter#Child_selector_hack")]
+        public void Empty_Comments_After_A_Child_Selector_Are_Preserved_As_Hack_For_IE7()
         {
             // Arrange
             const string source = @"html >/**/ body p {
@@ -371,6 +335,7 @@ namespace Yahoo.Yui.Compressor.Tests
         [Description("PK to Look at")]
         public void A_Comment_With_Dollar_Header_Is_Preserved_But_Only_It_Seemes_Because_The_Preserve_Comment_Exclaimation_Exists()
         {
+            // Originally called DollarHeaderCssTest, using dollar-header.css and dollar-header.css.min
             // What is the significant of the $Header bit?
             // Removing the '!' makes the comment not be preserved anymore - so what are we trying to achieve?
 
@@ -409,7 +374,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
         [TestMethod]
         [Description("http://www.sam-i-am.com/work/sandbox/css/mac_ie5_hack.html")]
-        public void The_Ie5_Mac_Commented_Backslash_Hack_Should_Be_Compressed_As_Expected_To_Retain_The_Hack()
+        public void Commented_Backslash_Should_Be_Compressed_As_Expected_As_Ie5_Mac_Hack()
         {
             // Arrange
             const string source = @"/* Ignore the next rule in IE mac \*/
@@ -463,6 +428,12 @@ namespace Yahoo.Yui.Compressor.Tests
         [Description("PK to look at")]
         public void Empty_Media_Elements_Should_Be_Removed_With_MichaelAshRegexEnhancements()
         {
+            // Currently does not produce the same results as the regular compressor - is this correct?
+            // It returns:
+            // @media print{.noprint{display:none}}.printonly{display:none}}
+            // ie, it has removed the @media screen bit
+            // but then, if we're gonna ditch MichaelAsh, maybe we don't care.....
+            // or should the stock compressor do this also?
             // Arrange
             const string source = @"@media print {
                                         .noprint { display: none; }
@@ -480,10 +451,6 @@ namespace Yahoo.Yui.Compressor.Tests
 
             // Assert
             Assert.AreEqual(expected, actual);
-            // Currently does not produce the same results as the regular compressor - is this correct?
-            // It returns:
-            // @media print{.noprint{display:none}}.printonly{display:none}}
-            // ie, it has removed the @media screen bit
         }
 
 
@@ -652,8 +619,6 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [DeploymentItem(@"Cascading Style Sheet Files\star-underscore-hacks.css", "Cascading Style Sheet Files")]
-        [DeploymentItem(@"Cascading Style Sheet Files\star-underscore-hacks.css.min", "Cascading Style Sheet Files")]
         public void Star_And_Underscore_Hacks_Are_Preserved()
         {
             // Arrange
@@ -669,9 +634,47 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
+        public void Comments_Should_Be_Removed()
+        {
+            // Arrange.
+            const string source = @".moreactions_applyfilter_reset
+                                    {
+                                        /* First Comment */
+                                        text-align: right;
+                                    }
+                                    /* Second Comment */";
+            const string expected = @".moreactions_applyfilter_reset{text-align:right}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
+        }
+
+        [TestMethod]
+        [Description("http://yuicompressor.codeplex.com/workitem/3723")]
+        public void Commments_With_No_Closing_Symbol_Are_Removed()
+        {
+            // Arrange.
+            const string source = @".moreactions_applyfilter_reset
+                                    {
+                                    text-align: right;
+                                    }
+
+                                    /* end of moreactions_filter
+                                    All of this and the below will be removed because it is deemed part of the unclosed comment
+                                    .OtherClass {           
+                                        color: purple
+                                    }";
+            const string expected = @".moreactions_applyfilter_reset{text-align:right}";
+
+            // Act & Assert
+            CompressAndCompare(source, expected);
+        }
+
+        [TestMethod]
         [Description("PK to Look at")]
         public void Some_Commments_Are_Preserved_Empty_But_Im_Not_Sure_If_This_Is_Correct_Or_Not()
         {
+            // Was called StringInCommentCssTest, using string-in-comment.css and string-in-comment.css.min
             // Arrange
             const string source = @"/* te "" st */
                                     a{a:1}
@@ -689,8 +692,11 @@ namespace Yahoo.Yui.Compressor.Tests
         [Description("PK to look at")]
         public void Comments_Marked_To_Be_Preserved_Are_Retained_In_The_Output()
         {
-            // Not sure wy there is all the extra stuff ie mac, end hiding etc & why the end hiding /**/
-            // are preserved but not the words "end hiding"?  Wouldn't expect either to be preserved....
+            // Also was called StringInCommentCssTest, using string-in-comment.css and string-in-comment.css.min
+            // Seemed like it was testing two things - see the comment about the next test also - I think we only need one of these
+            // and Comments_Marked_To_Be_Preserved_Are_Retained_In_The_Output2 woulg be my bet...BUT
+            // not sure wy there is all the extra stuff ie mac, end hiding etc & why the end hiding /**/
+            // are preserved but not the words "end hiding"?  Wouldn't expect either to be preserved....  Do we need another test?
 
             // Arrange
             const string source = @"/* te "" st */
@@ -710,9 +716,10 @@ namespace Yahoo.Yui.Compressor.Tests
         [Description("PK to look at")]
         public void Comments_Marked_To_Be_Preserved_Are_Retained_In_The_Output2()
         {
-            // From what was originally "special-comments.css"
+            // From what was originally called SpecialCommentsCssTest, using "special-comments.css" and "special-comments.css.min"
             // Does this test add anything that the test above (which also checks preserved comments) doesn't do?
-            // It is clearer re: preserved comments.
+            // It is clearer re: !preserved comments, so I would keep this for preserved comments and ditch the otherone, or have
+            // the other one test something else (see my comment re: special chars
 
             // Arrange
             const string source = @"/*!************88****
@@ -799,7 +806,7 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [TestMethod]
-        [Description("Raised in issue 9529")]
+        [Description("http://yuicompressor.codeplex.com/workitem/9529")]
         public void A_Background_Retains_The_Space_Between_The_Colour_And_The_Data_Ur()
         {
             const string source = @"
