@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Build.Framework;
 
-namespace Yahoo.Yui.Compressor.Tests
+namespace Yahoo.Yui.Compressor.Tests.TestHelpers
 {
     public class BuildEngineStub : IBuildEngine
     {

@@ -71,7 +71,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildEngineStub.cs" />
+    <Compile Include="TestHelpers\BuildEngineExtensions.cs" />
+    <Compile Include="TestHelpers\BuildEngineStub.cs" />
     <Compile Include="CompressorTaskTest.cs" />
     <Compile Include="CompressorType.cs" />
     <Compile Include="JavaScriptCompressorTest.cs" />
@@ -81,6 +82,9 @@
   <ItemGroup>
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
     <Content Include="Cascading Style Sheet Files\bug9527.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript Files\Issue9719.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Javascript Files\_syntax_error.js">

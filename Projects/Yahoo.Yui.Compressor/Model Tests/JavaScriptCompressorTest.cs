@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+using EcmaScript.NET;
 using NUnit.Framework;
 
 namespace Yahoo.Yui.Compressor.Tests
@@ -481,10 +482,10 @@ namespace Yahoo.Yui.Compressor.Tests
                 compressor.Compress();
                 Assert.Fail("Succeeded");
             }
-            catch (InvalidOperationException iox)
+            catch (EcmaScriptRuntimeException ex)
             {
                 // Assert
-                Assert.That(iox.Message, Is.StringContaining("Line: 2"));
+                Assert.That(ex.LineNumber, Is.EqualTo(2));
             }
         }
 

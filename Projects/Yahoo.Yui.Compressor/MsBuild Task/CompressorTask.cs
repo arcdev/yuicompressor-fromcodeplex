@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using EcmaScript.NET;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -422,15 +423,38 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                             finalContent.Append(compressedContent);
                         }
                     }
+                    catch (EcmaScriptException ecmaScriptException)
+                    {
+                        Log.LogError(string.Format(CultureInfo.InvariantCulture, "An error occurred in parsing the Javascript file [{0}].", file));
+                        if (ecmaScriptException.LineNumber == -1)
+                        {
+                            Log.LogError("[ERROR] {0} ********", ecmaScriptException.Message);
+                        }
+                        else
+                        {
+                            Log.LogError("[ERROR] {0} ******** Line: {2}. LineOffset: {3}. LineSource: \"{4}\"",
+                                         ecmaScriptException.Message,
+                                         string.IsNullOrEmpty(ecmaScriptException.SourceName) ? string.Empty : "Source: {1}. " + ecmaScriptException.SourceName,
+                                         ecmaScriptException.LineNumber,
+                                         ecmaScriptException.ColumnNumber,
+                                         ecmaScriptException.LineSource);
+                        }
+                    }
                     catch (Exception exception)
                     {
-                        // FFS :( Something bad happened.
-                        // The most likely scenario is that the user provided some incorrect path information.
-                        Log.LogError(string.Format(CultureInfo.InvariantCulture,
-                                                   "Failed to read in the data for the path/file [{0}]. The most common cause for this is because the path is incorrect or the file name is incorrect ... so please check your path and file names. Until you fix this up, I can't continue ... sowwy.",
-                                                   file));
-                        Log.LogErrorFromException(exception,
-                                                  false);
+                        if (exception is FileNotFoundException)
+                        {
+                            Log.LogError(string.Format(CultureInfo.InvariantCulture,
+                                                       "ERROR reading file or path [{0}].", file));
+                        }
+                        else
+                        {
+                            // FFS :( Something bad happened.
+                            Log.LogError(string.Format(CultureInfo.InvariantCulture,
+                                                       "Failed to read/parse data in file [{0}].",
+                                                       file));
+                        }
+                        Log.LogErrorFromException(exception, false);
                     }
 
                     // Try and remove this file, if the user requests to do this.

@@ -4,6 +4,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using NUnit.Framework;
 using Yahoo.Yui.Compressor.MsBuildTask;
+using Yahoo.Yui.Compressor.Tests.TestHelpers;
 
 namespace Yahoo.Yui.Compressor.Tests
 {
@@ -119,7 +120,30 @@ namespace Yahoo.Yui.Compressor.Tests
 
                 // Assert
                 Assert.That(success, Is.False, "Worked");
-                Assert.That(((BuildEngineStub)compressor.BuildEngine).Errors.Contains("Unrecognised JavaScriptCompressionType: invalid"));
+                Assert.That(compressor.BuildEngine.ContainsError("Unrecognised JavaScriptCompressionType: invalid"));
+            }
+
+            [Test]
+            public void An_Invalid_File_Or_Path_Results_In_An_Could_Not_File_File_Exception_Being_Logged()
+            {
+                var compressor = GetJavascriptCompressorFor(@"DoesNotExist");
+
+                compressor.Execute();
+
+                //Assert.That(success, Is.False, "Worked");
+                Assert.That(compressor.BuildEngine.ContainsError("Could not find file '"));
+            }
+
+            [Test]
+            [Description("http://yuicompressor.codeplex.com/workitem/9719")]
+            public void A_Reserved_Word_As_A_Propery_In_The_Source_Should_Throw_An_Error_With_The_Correct_Error_Exposed()
+            {
+                var compressor = GetJavascriptCompressorFor("Issue9719");
+
+                compressor.Execute();
+
+                //Assert.That(success, Is.False, "Worked");
+                Assert.That(compressor.BuildEngine.ContainsError("[ERROR] invalid property id"));
             }
 
             private static CompressorTask GetJavascriptCompressorFor(string fileName)
@@ -127,7 +151,7 @@ namespace Yahoo.Yui.Compressor.Tests
                 var compressorTask = CreateCompressorTask();
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    compressorTask.JavaScriptFiles = new ITaskItem[] { new TaskItem(@"Javascript Files\" + fileName + ".css") };
+                    compressorTask.JavaScriptFiles = new ITaskItem[] { new TaskItem(@"Javascript Files\" + fileName + ".js") };
                     compressorTask.JavaScriptOutputFile = fileName + "min.js";
                 }
                 return compressorTask;

@@ -26,11 +26,11 @@ namespace Yahoo.Yui.Compressor
                 string text;
                 if (line != -1)
                 {
-                    text = string.Format("[WARNING] {0} ******** Source: {1}. Line: {2}. LineSource: {3}. LineOffset: {4}",
+                    text = string.Format("[WARNING] {0} ******** Source: {1}. Line: {2}. LineOffset: {4}. LineSource: \"{3}\"",
                                   message,
                                   sourceName,
                                   line,
-                                  lineSource,
+                                  lineSource == null ? "" : lineSource.Trim(),
                                   lineOffset);
                 }
                 else
@@ -48,21 +48,13 @@ namespace Yahoo.Yui.Compressor
             string lineSource, 
             int lineOffset)
         {
-            InvalidOperationException exception;
-            if (line != -1)
-            {
-                exception = new InvalidOperationException(string.Format("[ERROR] {0} ******** Source: {1}. Line: {2}. LineSource: {3}. LineOffset: {4}",
-                              message,
-                              sourceName,
-                              line,
-                              lineSource,
-                              lineOffset));
-            }
-            else
-            {
-                 exception = new InvalidOperationException("[ERROR] " + message);
-            }
-            exception.Source = lineSource;
+            EcmaScriptException exception;
+            exception = new EcmaScriptRuntimeException(message,
+                                                       sourceName,
+                                                       line,
+                                                       lineSource == null ? "" : lineSource.Trim(),
+                                                       lineOffset);
+            exception.Source = "EcmaScript";
             throw exception;
         }
 
@@ -72,21 +64,12 @@ namespace Yahoo.Yui.Compressor
             string lineSource, 
             int lineOffset)
         {
-            InvalidOperationException exception;
-            if (line != -1)
-            {
-                exception = new InvalidOperationException(string.Format("[ERROR] {0} ******** Source: {1}. Line: {2}. LineSource: {3}. LineOffset: {4}",
-                              message,
+            EcmaScriptException exception = new EcmaScriptRuntimeException(string.Format("EcmaScriptRuntimeException :: {0}", message),
                               sourceName,
                               line,
-                              lineSource,
-                              lineOffset));
-            }
-            else
-            {
-                exception =  new InvalidOperationException("[ERROR] EcmaScriptRuntimeException :: " + message);
-            }
-            exception.Source = lineSource ?? "EcmaScriptRuntime";
+                              lineSource == null ? "" : lineSource.Trim(),
+                              lineOffset);
+            exception.Source = "EcmaScriptRuntime";
             throw exception;
         }
     }

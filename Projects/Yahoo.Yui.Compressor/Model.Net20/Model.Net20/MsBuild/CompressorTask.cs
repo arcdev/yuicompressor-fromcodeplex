@@ -467,8 +467,7 @@ namespace Yahoo.Yui.Compressor.MsBuild
             return finalContent;
         }
 
-        [SuppressMessage("Microsoft.Design",
-            "CA1031:DoNotCatchGeneralExceptionTypes")]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private bool SaveCompressedText(StringBuilder compressedText, ActionType actionType)
         {
             // Note: compressedText CAN be null or empty, so no check.
