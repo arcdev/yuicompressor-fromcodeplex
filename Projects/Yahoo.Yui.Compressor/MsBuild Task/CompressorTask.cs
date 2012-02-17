@@ -199,37 +199,31 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
             }
 
             // Optional Property.
-            if (!string.IsNullOrEmpty(ThreadCulture))
+            try
             {
-                try
+                switch (ThreadCulture.ToLowerInvariant())
                 {
-                    switch (ThreadCulture.ToLowerInvariant())
-                    {
-                        case "iv":
-                        case "ivl":
-                        case "invariantculture":
-                        case "invariant culture":
-                        case "invariant language":
-                        case "invariant language (invariant country)":
-                            {
-                                _threadCulture = CultureInfo.InvariantCulture;
-                                break;
-                            }
-                        default:
-                            {
-                                _threadCulture = CultureInfo.CreateSpecificCulture(ThreadCulture);
-                                break;
-                            }
-                    }
-                }
-                catch
-                {
-                    LogMessage("Failed to read in a legitimate culture value. As such, this property will *not* be set.");
+                    case "":
+                    case "iv":
+                    case "ivl":
+                    case "invariantculture":
+                    case "invariant culture":
+                    case "invariant language":
+                    case "invariant language (invariant country)":
+                        {
+                            _threadCulture = CultureInfo.InvariantCulture;
+                            break;
+                        }
+                    default:
+                        {
+                            _threadCulture = CultureInfo.CreateSpecificCulture(ThreadCulture);
+                            break;
+                        }
                 }
             }
-            else
+            catch
             {
-                _threadCulture = CultureInfo.CreateSpecificCulture("en-gb");
+                LogMessage("Failed to read in a legitimate culture value. As such, this property will *not* be set.");
             }
 
             // Optional property.

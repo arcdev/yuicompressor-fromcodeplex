@@ -276,13 +276,14 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [Test]
-        public void If_CultureInfo_Is_Not_Supplied_Then_The_Output_Respects_The_Current_Thread_Culture()
+        [Description("http://yuicompressor.codeplex.com/workitem/9876")]
+        public void If_CultureInfo_Is_Not_Supplied_Then_The_Invariant_Culture_Is_Used_And_The_Output_Is_Not_Converted_To_The_Current_Thread_Culture()
         {
             // Arrange
             var originalThreadCulture = Thread.CurrentThread.CurrentCulture;
             var originalThreadUICulture = Thread.CurrentThread.CurrentUICulture;
             const string source = "var stuff = {foo:0.9, faa:3};";
-            const string expected = "var stuff={foo:0,9,faa:3};";
+            const string expected = "var stuff={foo:0.9,faa:3};";   // This would be 0,9 if we respected the culture
 
             try
             {
@@ -467,6 +468,78 @@ namespace Yahoo.Yui.Compressor.Tests
             // Assert
             Assert.That(actual, Is.Not.EqualTo("var serverResolutions=[152.87405654907226,0.14929107084870338];"));
         }
+
+        [Test]
+        [Description("http://yuicompressor.codeplex.com/workitem/9856")]
+        [Ignore("We have not yet fixed the problem")]
+        public void Decimals_Will_Be_Entirely_Accurate_Pnce_We_Implement_A_Proper_Solution()
+        {
+            var values = new[] {         
+                                    "156543.03390625", 
+                                    "78271.516953125",  
+                                    "39135.7584765625",         
+                                    "19567.87923828125", 
+                                    "9783.939619140625",  
+                                    "4891.9698095703125",         
+                                    "2445.9849047851562", 
+                                    "1222.9924523925781",  
+                                    "611.4962261962891",         
+                                    "305.74811309814453", 
+                                    "152.87405654907226",  
+                                    "76.43702827453613",         
+                                    "38.218514137268066", 
+                                    "19.109257068634033",  
+                                    "9.554628534317017",         
+                                    "4.777314267158508", 
+                                    "2.388657133579254",  
+                                    "1.194328566789627",         
+                                    "0.5971642833948135",  
+                                    "0.29858214169740677",  
+                                    "0.14929107084870338",         
+                                    "0.07464553542435169"    
+            };
+
+            var output = string.Format("{0,22} {1,22} {2,22} {3,22}{4}", "Original", "G", "G16", "G17", Environment.NewLine);
+            output += string.Format("{0,22} {1,22} {2,22} {3,22}{4}", "===================", "===================", "===================", "===================", Environment.NewLine);
+            foreach (var value in values)
+            {
+                var decVal = decimal.Parse(value);
+                string G = decVal.ToString("G");
+                string G16 = decVal.ToString("G16");
+                string G17 = decVal.ToString("G99");
+                output += string.Format("{0,22} {1,22}{4}{2,22}{5}{3,22}{6}{7}", value, G, G16, G17, value == G ? "" : "*", value == G16 ? "" : "*", value == G17 ? "" : "*", Environment.NewLine);
+            }
+
+            Console.WriteLine(output);
+            const string source = @"var serverResolutions = [         
+                                        156543.03390625, 
+                                        78271.516953125,  
+                                        39135.7584765625,         
+                                        19567.87923828125, 
+                                        9783.939619140625,  
+                                        4891.9698095703125,         
+                                        2445.9849047851562, 
+                                        1222.9924523925781,  
+                                        611.4962261962891,         
+                                        305.74811309814453, 
+                                        152.87405654907226,  
+                                        76.43702827453613,         
+                                        38.218514137268066, 
+                                        19.109257068634033,  
+                                        9.554628534317017,         
+                                        4.777314267158508, 
+                                        2.388657133579254,  
+                                        1.194328566789627,         
+                                        0.5971642833948135,  
+                                        0.29858214169740677,  
+                                        0.14929107084870338,         
+                                        0.07464553542435169     
+                                        ];";
+
+            var result = JavaScriptCompressor.Compress(source);
+            Assert.AreEqual("var serverResolutions=[156543.03390625,78271.516953125,39135.7584765625,19567.87923828125,9783.939619140625,4891.9698095703125,2445.9849047851562,1222.9924523925781,611.4962261962891,305.74811309814453,152.87405654907226,76.43702827453613,38.218514137268066,19.109257068634033,9.554628534317017,4.777314267158508,2.388657133579254,1.194328566789627,0.5971642833948135,0.29858214169740677,0.14929107084870338,0.07464553542435169];", result);
+        }
+
 
         [Test]
         public void Errors_Will_Include_Line_Numbers()

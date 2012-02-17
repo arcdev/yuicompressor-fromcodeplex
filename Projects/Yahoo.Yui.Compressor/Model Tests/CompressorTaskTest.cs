@@ -136,7 +136,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
             [Test]
             [Description("http://yuicompressor.codeplex.com/workitem/9719")]
-            public void A_Reserved_Word_As_A_Propery_In_The_Source_Should_Throw_An_Error_With_The_Correct_Error_Exposed()
+            public void A_Reserved_Word_As_A_Property_In_The_Source_Should_Throw_An_Error_With_The_Correct_Error_Exposed()
             {
                 var compressor = GetJavascriptCompressorFor("Issue9719");
 

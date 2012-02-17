@@ -37,6 +37,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd Party Assemblies", "3rd Party Assemblies", "{57597355-3121-4B2E-AD33-A6DD78E40999}"
 	ProjectSection(SolutionItems) = preProject
 		3rd Party Assemblies\Iesi.Collections.dll = 3rd Party Assemblies\Iesi.Collections.dll
+		3rd Party Assemblies\nunit.framework.dll = 3rd Party Assemblies\nunit.framework.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2.3.6", "v2.3.6", "{9CAE6E06-6453-4E10-9563-2B55CE537EF3}"

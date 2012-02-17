@@ -16,7 +16,7 @@ namespace Yahoo.Yui.Compressor
 
         private readonly CultureInfo _originalCultureInfo;
         private readonly CultureInfo _originalUiCulture;
-        private readonly CultureInfo _tempCultureInfo;
+        private readonly CultureInfo _preferredCultureInfo;
 
         private const int BUILDING_SYMBOL_TREE = 1;
         private const int CHECKING_SYMBOL_TREE = 2;
@@ -92,7 +92,11 @@ namespace Yahoo.Yui.Compressor
             // Reference: http://www.codeplex.com/YUICompressor/WorkItem/View.aspx?WorkItemId=3219
             if (threadCulture != null)
             {
-                _tempCultureInfo = threadCulture;
+                _preferredCultureInfo = threadCulture;
+            }
+            else
+            {
+                _preferredCultureInfo = CultureInfo.InvariantCulture;
             }
 
             Initialise();
@@ -1896,12 +1900,8 @@ namespace Yahoo.Yui.Compressor
             }
             _munge = isObfuscateJavascript;
 
-            // Change the Thread Culture, if required.
-            if (_tempCultureInfo != null)
-            {
-                Thread.CurrentThread.CurrentCulture = _tempCultureInfo;
-                Thread.CurrentThread.CurrentUICulture = _tempCultureInfo;
-            }
+            Thread.CurrentThread.CurrentCulture = _preferredCultureInfo;
+            Thread.CurrentThread.CurrentUICulture = _preferredCultureInfo;
 
             var memoryStream = new MemoryStream(_encoding.GetBytes(_javaScript));
             _tokens = Parse(new StreamReader(memoryStream, _encoding), ErrorReporter);
@@ -1918,12 +1918,8 @@ namespace Yahoo.Yui.Compressor
             MungeSymboltree();
             var result = PrintSymbolTree(lineBreakPosition, preserveAllSemicolons).ToString();
 
-            // Reset the Thread Culture, if required.
-            if (_tempCultureInfo != null)
-            {
-                Thread.CurrentThread.CurrentCulture = _originalCultureInfo;
-                Thread.CurrentThread.CurrentUICulture = _originalUiCulture;
-            }
+            Thread.CurrentThread.CurrentCulture = _originalCultureInfo;
+            Thread.CurrentThread.CurrentUICulture = _originalUiCulture;
 
             return result;
         }
