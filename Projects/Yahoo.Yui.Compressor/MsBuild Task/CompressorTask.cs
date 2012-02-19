@@ -62,7 +62,6 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
         {
             bool result;
 
-
             if (string.IsNullOrEmpty(value))
             {
                 throw new ArgumentNullException("value");
@@ -248,12 +247,6 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
             {
                 case "none":
                     return Compressor.CssCompressionType.None;
-                case "michaelashsregexenhancements":
-                    return Compressor.CssCompressionType.MichaelAshRegexEnhancements;
-                case "havemycakeandeatit":
-                case "bestofbothworlds":
-                case "hybrid":
-                    return Compressor.CssCompressionType.Hybrid;
                 default:
                     return Compressor.CssCompressionType.StockYuiCompressor;
             }
@@ -344,7 +337,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                                          "# {0} {1} file{2} requested.",
                                          fileList.Length,
                                          actionDescription,
-                                         fileList.Length.ToPluralString()));
+                                         Extensions.ToPluralString(fileList.Length)));
 
                 // Now compress each file.
                 foreach (ITaskItem file in fileList)
@@ -475,7 +468,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                 LogMessage(string.Format(CultureInfo.InvariantCulture,
                                          "Finished compressing all {0} file{1}.",
                                          fileList.Length,
-                                         fileList.Length.ToPluralString()),
+                                         Extensions.ToPluralString(fileList.Length)),
                            true);
 
                 int finalContentLength = finalContent == null ? 0 : finalContent.ToString().Length;
@@ -492,13 +485,7 @@ namespace Yahoo.Yui.Compressor.MsBuildTask
                 if (actionType == ActionType.Css)
                 {
                     LogMessage(string.Format(CultureInfo.InvariantCulture,
-                                             "Css Compression Type: {0}.",
-                                             _cssCompressionType == Compressor.CssCompressionType.StockYuiCompressor
-                                                 ? "Stock YUI compression"
-                                                 : _cssCompressionType ==
-                                                   Compressor.CssCompressionType.MichaelAshRegexEnhancements
-                                                       ? "Micahel Ash's Regex Enhancement compression"
-                                                       : "Hybrid compresssion (the best compression out of all compression types)"));
+                                             "Css Compression Type: {0}.", _cssCompressionType));
                 }
             }
 

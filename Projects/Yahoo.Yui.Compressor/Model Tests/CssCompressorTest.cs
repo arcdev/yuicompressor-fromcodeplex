@@ -57,34 +57,6 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [Test]
-        public void CompressCssWithMichaelAshsRegexEnhancementsAndNoColumnWidthReturnsSomeCompressedCss()
-        {
-            // Arrange.
-            var source = File.ReadAllText(@"Cascading Style Sheet Files\SampleStylesheet1.css");
-
-            // Act.
-            var actual = CssCompressor.Compress(source, 0, CssCompressionType.MichaelAshRegexEnhancements, true);
-            
-            // Assert.
-            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
-            Assert.That(source.Length, Is.GreaterThan(actual.Length), "Not Greater");
-        }
-        
-        [Test]
-        public void CompressCssWithMichaelAshsRegexEnhancementsAndaSpecificColumnWidthReturnsSomeCompressedCss()
-        {
-            // Arrange.
-            var source = File.ReadAllText(@"Cascading Style Sheet Files\SampleStylesheet1.css");
-
-            // Act.
-            var actual = CssCompressor.Compress(source,73,CssCompressionType.MichaelAshRegexEnhancements, true);
-            
-            // Assert.
-            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
-            Assert.That(source.Length, Is.GreaterThan(actual.Length), "Not Greater");
-        }
-
-        [Test]
         public void Background_Position_Should_Have_Spurious_0s_Removed()
         {
             // Arrange
@@ -420,36 +392,6 @@ namespace Yahoo.Yui.Compressor.Tests
             CompressAndCompare(source, expected);
         }
 
-        [Test, Ignore]
-        [Description("PK to look at")]
-        public void Empty_Media_Elements_Should_Be_Removed_With_MichaelAshRegexEnhancements()
-        {
-            // Currently does not produce the same results as the regular compressor - is this correct?
-            // It returns:
-            // @media print{.noprint{display:none}}.printonly{display:none}}
-            // ie, it has removed the @media screen bit
-            // but then, if we're gonna ditch MichaelAsh, maybe we don't care.....
-            // or should the stock compressor do this also?
-            // Arrange
-            const string source = @"@media print {
-                                        .noprint { display: none; }
-                                    }
-
-                                    @media screen {
-                                        /* this empty rule should be removed, not simply minified.*/
-                                        .emptymedia {}
-                                        .printonly { display: none; }
-                                    }";
-            const string expected = @"@media print{.noprint{display:none}}@media screen{.printonly{display:none}}";
-
-            // Act
-            var actual = CssCompressor.Compress(source, -1, CssCompressionType.MichaelAshRegexEnhancements, true);
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
-
         [Test]
         public void Media_Elements_Retain_The_Space_After_An_And()
         {
@@ -465,23 +407,6 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [Test]
-        public void Media_Elements_Retain_The_Space_After_An_And_With_MichaelAshRegexEnhancements()
-        {
-            // Arrange
-            // This space --------------------------\ should be retained
-            const string source = @"@media screen and (-webkit-min-device-pixel-ratio:0) {
-                                      some-css : here
-                                    }";
-            const string expected = @"@media screen and (-webkit-min-device-pixel-ratio:0){some-css:here}";
-
-            // Act
-            var actual = CssCompressor.Compress(source, -1, CssCompressionType.MichaelAshRegexEnhancements, true);
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
-        [Test]
         public void Multiple_Media_Elements_Retain_Spaces_After_An_And()
         {
             // Arrange
@@ -494,25 +419,6 @@ namespace Yahoo.Yui.Compressor.Tests
 
             // Act & Assert
             CompressAndCompare(source, expected);
-        }
-
-        [Test]
-        public void Multiple_Media_Elements_Retain_Spaces_After_An_And_With_MichaelAshRegexEnhancements()
-        {
-            // Arrange
-            // These spaces ---------------------------\ ----------------------------\ -------------------------------------\ should be retained
-            const string source = @"@media only all and (max-width:50em), only all and (max-device-width:800px), only all and (max-width:780px) {
-                                      some-css : here
-                                    }
-                                    ";
-            const string expected = @"@media only all and (max-width:50em),only all and (max-device-width:800px),only all and (max-width:780px){some-css:here}";
-
-            // Act & Assert
-            // Act
-            var actual = CssCompressor.Compress(source, -1, CssCompressionType.MichaelAshRegexEnhancements, true);
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]

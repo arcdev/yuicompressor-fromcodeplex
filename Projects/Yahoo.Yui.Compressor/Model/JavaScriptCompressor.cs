@@ -10,6 +10,8 @@ using EcmaScript.NET;
 
 namespace Yahoo.Yui.Compressor
 {
+    using Iesi.Collections.Generic;
+
     public class JavaScriptCompressor
     {
         #region Fields
@@ -23,7 +25,7 @@ namespace Yahoo.Yui.Compressor
 
         private static readonly object _synLock = new object();
         private static readonly Regex SIMPLE_IDENTIFIER_NAME_PATTERN = new Regex("^[a-zA-Z_][a-zA-Z0-9_]*$", RegexOptions.Compiled);
-        private static HashSet<string> _builtin;
+        private static HashedSet<string> _builtin;
 
         private readonly ScriptOrFunctionScope _globalScope = new ScriptOrFunctionScope(-1, null);
         private readonly Hashtable _indexedScopes = new Hashtable();
@@ -47,7 +49,7 @@ namespace Yahoo.Yui.Compressor
         internal static List<string> Threes;
         internal static List<string> Twos;
         private static Hashtable Literals { get; set; }
-        private static HashSet<string> Reserved { get; set; }
+        private static HashedSet<string> Reserved { get; set; }
 
         public JavaScriptCompressionType CompressionType { get; set; }
  
@@ -123,7 +125,7 @@ namespace Yahoo.Yui.Compressor
                 {
                     if (_builtin == null)
                     {
-                        var builtin = new HashSet<string> {"NaN", "top"};
+                        var builtin = new HashedSet<string> {"NaN", "top"};
                         _builtin = builtin;
                     }
                 }
@@ -378,7 +380,7 @@ namespace Yahoo.Yui.Compressor
                         // These are not reserved, but should be taken into account
                         // in isValidIdentifier (See jslint source code)
 
-                        var reserved = new HashSet<string>
+                        var reserved = new HashedSet<string>
                                            {
                                                "break",
                                                "case",

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Yahoo.Yui.Compressor.MsBuildTask</RootNamespace>
     <AssemblyName>Yahoo.Yui.Compressor.MsBuildTask</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -43,13 +43,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Utilities.v3.5" />
+    <Reference Include="Microsoft.Build.Utilities" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionType.cs" />
     <Compile Include="CompressorTask.cs" />
-    <Compile Include="EmbeddedResourceTask.cs" />
     <Compile Include="LoggingType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

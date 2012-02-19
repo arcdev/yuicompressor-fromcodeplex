@@ -10,7 +10,7 @@ using System.Security;
 [assembly: AssemblyDescription("A .NET port of the Yahoo! YUI Compressor project")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("YUI Compressor (.NET 3.5 port)")]
+[assembly: AssemblyProduct("YUI Compressor (.NET 2.0 port)")]
 [assembly: AssemblyCopyright("Copyright © 2008 - 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -33,8 +33,8 @@ using System.Security;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.7.0.0")]
-[assembly: AssemblyFileVersion("1.7.0.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]
 
 [assembly: CLSCompliant(true)]
 [assembly: AllowPartiallyTrustedCallers]

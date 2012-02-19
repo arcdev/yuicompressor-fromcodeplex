@@ -144,8 +144,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Projects\Yahoo.Yui
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model Tests", "Projects\Yahoo.Yui.Compressor\Model Tests\Model Tests.csproj", "{D263F886-F883-45C6-B79D-2136E0CE2195}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model.Net20", "Projects\Yahoo.Yui.Compressor\Model.Net20\Model.Net20\Model.Net20.csproj", "{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcmaScript.NET", "Projects\EcmaScript.NET\EcmaScript.NET.csproj", "{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v35", "v35", "{9F595669-3873-47D0-84DD-0819C8FC6CB2}"
@@ -177,32 +175,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsBuild Task", "Projects\Yahoo.Yui.Compressor\MsBuild Task\MsBuild Task.csproj", "{1A7860DE-18F7-46D0-98B9-F304814DF4B0}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs07
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Projects\\Yahoo.Yui.Compressor\\Model\\Model.csproj
-		SccProjectTopLevelParentUniqueName1 = YUICompressor.sln
-		SccProjectName1 = Projects/Yahoo.Yui.Compressor/Model
-		SccLocalPath1 = Projects\\Yahoo.Yui.Compressor\\Model
-		SccProjectUniqueName2 = Projects\\Yahoo.Yui.Compressor\\Model\u0020Tests\\Model\u0020Tests.csproj
-		SccProjectTopLevelParentUniqueName2 = YUICompressor.sln
-		SccProjectName2 = Projects/Yahoo.Yui.Compressor/Model\u0020Tests
-		SccLocalPath2 = Projects\\Yahoo.Yui.Compressor\\Model\u0020Tests
-		SccProjectUniqueName3 = Projects\\Yahoo.Yui.Compressor\\Model.Net20\\Model.Net20\\Model.Net20.csproj
-		SccProjectTopLevelParentUniqueName3 = YUICompressor.sln
-		SccProjectName3 = Projects/Yahoo.Yui.Compressor/Model.Net20/Model.Net20
-		SccLocalPath3 = Projects\\Yahoo.Yui.Compressor\\Model.Net20\\Model.Net20
-		SccProjectUniqueName4 = Projects\\EcmaScript.NET\\EcmaScript.NET.csproj
-		SccProjectTopLevelParentUniqueName4 = YUICompressor.sln
-		SccProjectName4 = Projects/EcmaScript.NET
-		SccLocalPath4 = Projects\\EcmaScript.NET
-		SccProjectUniqueName5 = Projects\\Yahoo.Yui.Compressor\\MsBuild\u0020Task\\MsBuild\u0020Task.csproj
-		SccProjectTopLevelParentUniqueName5 = YUICompressor.sln
-		SccProjectName5 = Projects/Yahoo.Yui.Compressor/MsBuild\u0020Task
-		SccLocalPath5 = Projects\\Yahoo.Yui.Compressor\\MsBuild\u0020Task
-	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = YUICompressor.vsmdi
 	EndGlobalSection
@@ -218,10 +190,6 @@ Global
 		{D263F886-F883-45C6-B79D-2136E0CE2195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D263F886-F883-45C6-B79D-2136E0CE2195}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D263F886-F883-45C6-B79D-2136E0CE2195}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -240,7 +208,6 @@ Global
 		{55383C77-E8F0-4300-8828-79A50033FF7A} = {74643830-FD8D-4348-AE41-CCDF31DDAA73}
 		{AFDF50F0-286B-4490-9EBD-007561864738} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{D263F886-F883-45C6-B79D-2136E0CE2195} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
-		{3B2CB1E0-80D8-4B41-8D43-6E289D532B1C} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{1A7860DE-18F7-46D0-98B9-F304814DF4B0} = {540CCEDE-893E-4F91-BA22-B6441D409D28}
 		{197F7032-A560-44C7-969D-7D610B96B9AB} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}
 		{9CAE6E06-6453-4E10-9563-2B55CE537EF3} = {D063AA82-CD35-40A7-BA2D-B26C4E291C59}

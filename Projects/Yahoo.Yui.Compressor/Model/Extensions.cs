@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -9,7 +8,7 @@ namespace Yahoo.Yui.Compressor
 {
     public static class Extensions
     {
-        public static int AppendReplacement(this Capture capture,
+        public static int AppendReplacement(Capture capture,
                                             StringBuilder value,
                                             string input,
                                             string replacement,
@@ -24,21 +23,21 @@ namespace Yahoo.Yui.Compressor
             return capture.Index + capture.Length;
         }
 
-        public static void AppendTail(this StringBuilder value,
+        public static void AppendTail(StringBuilder value,
                                       string input,
                                       int index)
         {
             value.Append(input.Substring(index));
         }
 
-        public static string RegexReplace(this string input,
+        public static string RegexReplace(string input,
                                           string pattern,
                                           string replacement)
         {
             return Regex.Replace(input, pattern, replacement);
         }
 
-        public static string RegexReplace(this string input,
+        public static string RegexReplace(string input,
                                           string pattern,
                                           string replacement,
                                           RegexOptions options)
@@ -49,7 +48,7 @@ namespace Yahoo.Yui.Compressor
                                  options);
         }
 
-        public static string Fill(this string format,
+        public static string Fill(string format,
                                   params object[] args)
         {
             return String.Format(CultureInfo.InvariantCulture,
@@ -57,7 +56,7 @@ namespace Yahoo.Yui.Compressor
                                  args);
         }
 
-        public static string RemoveRange(this string input,
+        public static string RemoveRange(string input,
                                          int startIndex,
                                          int endIndex)
         {
@@ -65,7 +64,7 @@ namespace Yahoo.Yui.Compressor
                                 endIndex - startIndex);
         }
 
-        public static bool EqualsIgnoreCase(this string left,
+        public static bool EqualsIgnoreCase(string left,
                                             string right)
         {
             return String.Compare(left,
@@ -75,30 +74,30 @@ namespace Yahoo.Yui.Compressor
 
         // NOTE: To check out some decimal -> Hex converstions,
         //       goto http://www.openstrike.co.uk/cgi-bin/decimalhex.cgi
-        public static string ToHexString(this int value)
+        public static string ToHexString(int value)
         {
             return value.ToString("X");
         }
 
-        public static string ToPluralString(this int value)
+        public static string ToPluralString(int value)
         {
             return value == 1 ? string.Empty : "s";
         }
 
-        public static bool IsNullOrEmpty<T>(this IEnumerable<T> value)
+        public static bool IsNullOrEmpty<T>(IList<T> value)
         {
             return value == null ||
-                   value.Count() <= 0
+                   value.Count <= 0
                        ? true
                        : false;
         }
 
-        public static IList<T> ToListIfNotNullOrEmpty<T>(this IList<T> value)
+        public static IList<T> ToListIfNotNullOrEmpty<T>(IList<T> value)
         {
-            return value.IsNullOrEmpty() ? null : value;
+            return IsNullOrEmpty(value) ? null : value;
         }
 
-        public static string Replace(this string value, int startIndex, int endIndex, string newContent)
+        public static string Replace(string value, int startIndex, int endIndex, string newContent)
         {
             if (string.IsNullOrEmpty(value))
             {

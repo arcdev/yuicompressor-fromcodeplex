@@ -29,8 +29,7 @@
                                                              
             CssFiles/JavaScriptFiles data format: Please do not touch this.
             DeleteCssFiles: [Optional] True | Yes | Yeah | Yep | True | FoSho | Fo Sho. Default is False. Anything else is False. (eg. blah = false, xxxx111 = false, etc)
-            CssCompressionType: YuiStockCompression | MichaelAshsRegexEnhancements | HaveMyCakeAndEatIt or BestOfBothWorlds or Hybrid | None; 
-                                Default is YuiStockCompression.  None => Concatenate files only
+            CssCompressionType: YuiStockCompression | None; Default is YuiStockCompression.  None => Concatenate files only
             JavaScriptCompressionType: YuiStockCompression | None; Default is YuiStockCompression.  None => Concatenate files only
             ObfuscateJavaScript: [Optional] refer to DeleteCssFiles, above.
             PreserveAllSemicolons: [Optional] refer to DeleteCssFiles, above.

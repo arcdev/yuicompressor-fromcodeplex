@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Yahoo.Yui.Compressor</RootNamespace>
     <AssemblyName>Yahoo.Yui.Compressor</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -59,10 +59,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\..\3rd Party Assemblies\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -76,7 +76,6 @@
     <Compile Include="JavaScriptCompressor.cs" />
     <Compile Include="JavaScriptIdentifier.cs" />
     <Compile Include="JavaScriptToken.cs" />
-    <Compile Include="MichaelAshRegexCompressor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptOrFunctionScope.cs" />
     <Compile Include="YUICompressor.cs" />
