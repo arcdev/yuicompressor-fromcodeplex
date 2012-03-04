@@ -7,8 +7,16 @@ namespace Yahoo.Yui.Compressor.Tests
     // ReSharper disable InconsistentNaming
 
     [TestFixture]
-    public class CssCompressorTest 
+    public class CssCompressorTest
     {
+        private CssCompressor target;
+
+        [SetUp]
+        public void SetUp()
+        {
+            target = new CssCompressor();
+        }
+
         [Test]
         public void CompressCssWithNoColumnWidthSucessfullyCompressesText()
         {
@@ -16,7 +24,7 @@ namespace Yahoo.Yui.Compressor.Tests
             var source = File.ReadAllText(@"Cascading Style Sheet Files\SampleStylesheet1.css");
 
             // Act.
-            var actual = CssCompressor.Compress(source);
+            var actual = target.Compress(source);
 
             // Assert.
             Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
@@ -27,7 +35,7 @@ namespace Yahoo.Yui.Compressor.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void An_Exception_Is_Thrown_If_The_Incoming_Css_Is_Null()
         {
-            CssCompressor.Compress(null);
+            target.Compress(null);
         }
 
         [Test]
@@ -35,9 +43,10 @@ namespace Yahoo.Yui.Compressor.Tests
         {
             // Arrange.
             var source = File.ReadAllText(@"Cascading Style Sheet Files\SampleStylesheet1.css");
+            target.LineBreakPosition = 73;
 
             // Act.
-            var actual = CssCompressor.Compress(source, 73, CssCompressionType.StockYuiCompressor, true);
+            var actual = target.Compress(source);
             
             // Assert.
             Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
@@ -118,9 +127,9 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [Test]
-        public void Bug_2527974_Should_Be_Fixed()
+        [Description("https://github.com/yui/yuicompressor/blob/d36d4470ff786aadc2e70a36e689882d0bce4cc0/tests/bug2527974.css")]
+        public void Yahoo_YUICompressor_Bug_2527974_Should_Be_Fixed()
         {
-            // What is the bug being fixed???
             // Arrange
             const string source = @"/*	this file contains no css, it exists purely to put the revision number into the 
                                         combined css before uploading it to SiteManager. The exclaimation at the start
@@ -169,7 +178,7 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [Test]
-        [Description("Bug 2527998")]
+        [Description("https://github.com/yui/yuicompressor/blob/d36d4470ff786aadc2e70a36e689882d0bce4cc0/tests/bug2527998.css")]
         public void An_Empty_Body_Should_Be_Removed_But_A_Preserved_Comment_Should_Remain()
         {
             // Arrange
@@ -185,7 +194,7 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [Test]
-        [Description("Bug 2528034")]
+        [Description("https://github.com/yui/yuicompressor/blob/d36d4470ff786aadc2e70a36e689882d0bce4cc0/tests/bug2528034.css")]
         public void An_Empty_First_Child_Should_Be_Removed()
         {
             // Arrange
@@ -699,9 +708,10 @@ namespace Yahoo.Yui.Compressor.Tests
             // Arrange
             // Deliberately include loads of spaces and comments
             const string source = "body      {  color : blue    }  table {   border    :   2 px;    }  /*  Some Comment */";
-            
+            target.CompressionType = CompressionType.None;
+           
             // Act
-            var actual = CssCompressor.Compress(source, 0, CssCompressionType.None, false);
+            var actual = target.Compress(source);
 
             // Assert
             Assert.That(actual, Is.EqualTo(source));
@@ -726,7 +736,7 @@ namespace Yahoo.Yui.Compressor.Tests
             const string expected = @"ui-widget-shadow{margin:-5px 0 0 -5px;padding:5px;background:#000 url(""data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABkCAYAAAD0ZHJ6AAAAeUlEQVRoge3OMQHAIBAAsQf/nlsJDDfAkCjImplvHrZvB04EK8FKsBKsBCvBSrASrAQrwUqwEqwEK8FKsBKsBCvBSrASrAQrwUqwEqwEK8FKsBKsBCvBSrASrAQrwUqwEqwEK8FKsBKsBCvBSrASrAQrwUqwEqwEqx92LQHHRpDUNwAAAABJRU5ErkJggg=="") 50% 50% repeat-x;opacity:.20;filter:Alpha(Opacity=20);-moz-border-radius:5px;-khtml-border-radius:5px;-webkit-border-radius:5px;border-radius:5px}";
             
             // Act
-            var actual = CssCompressor.Compress(source);
+            var actual = target.Compress(source);
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
@@ -735,7 +745,7 @@ namespace Yahoo.Yui.Compressor.Tests
         private void CompressAndCompare(string source, string expected)
         {
             // Act
-            var actual = CssCompressor.Compress(source, -1, CssCompressionType.StockYuiCompressor, true);
+            var actual = target.Compress(source);
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));

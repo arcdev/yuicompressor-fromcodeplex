@@ -6,12 +6,12 @@ namespace Yahoo.Yui.Compressor
 {
     public class CustomErrorReporter : ErrorReporter
     {
-        private readonly bool _isVerboseLogging;
+        private readonly LoggingType loggingType;
         public StringCollection ErrorMessages { get; private set; }
 
-        public CustomErrorReporter(bool isVerboseLogging)
+        public CustomErrorReporter(LoggingType loggingType)
         {
-            _isVerboseLogging = isVerboseLogging;
+            this.loggingType = loggingType;
             ErrorMessages = new StringCollection();
         }
 
@@ -21,7 +21,7 @@ namespace Yahoo.Yui.Compressor
             string lineSource, 
             int lineOffset)
         {
-            if (_isVerboseLogging)
+            if (loggingType == LoggingType.Debug)
             {
                 string text;
                 if (line != -1)
@@ -30,7 +30,7 @@ namespace Yahoo.Yui.Compressor
                                   message,
                                   sourceName,
                                   line,
-                                  lineSource == null ? "" : lineSource.Trim(),
+                                  lineSource == null ? string.Empty : lineSource.Trim(),
                                   lineOffset);
                 }
                 else
@@ -48,12 +48,11 @@ namespace Yahoo.Yui.Compressor
             string lineSource, 
             int lineOffset)
         {
-            EcmaScriptException exception;
-            exception = new EcmaScriptRuntimeException(message,
-                                                       sourceName,
-                                                       line,
-                                                       lineSource == null ? "" : lineSource.Trim(),
-                                                       lineOffset);
+            EcmaScriptException exception = new EcmaScriptRuntimeException(message,
+                sourceName,
+                line,
+                lineSource == null ? string.Empty : lineSource.Trim(),
+                lineOffset);
             exception.Source = "EcmaScript";
             throw exception;
         }
@@ -67,7 +66,7 @@ namespace Yahoo.Yui.Compressor
             EcmaScriptException exception = new EcmaScriptRuntimeException(string.Format("EcmaScriptRuntimeException :: {0}", message),
                               sourceName,
                               line,
-                              lineSource == null ? "" : lineSource.Trim(),
+                              lineSource == null ? string.Empty : lineSource.Trim(),
                               lineOffset);
             exception.Source = "EcmaScriptRuntime";
             throw exception;

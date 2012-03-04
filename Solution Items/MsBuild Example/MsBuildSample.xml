@@ -1,49 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/MsBuild/2003">
-    <UsingTask
-        TaskName="CompressorTask"
-        AssemblyFile="..\..\Projects\Yahoo.Yui.Compressor\MsBuild Task\bin\Debug\Yahoo.Yui.Compressor.MsBuildTask.dll" />
-    <!-- The .NET 2.0 version of the task .. and yes .. that's Model.Net20 folder listed twice .. i know i know...
-    <UsingTask
-        TaskName="CompressorTask"
-        AssemblyFile="..\..\Projects\Yahoo.Yui.Compressor\Model.Net20\Model.Net20\bin\Debug\Yahoo.Yui.Compressor.NET20.dll" />
-    -->
+  
+    <UsingTask TaskName="CssCompressorTask" AssemblyFile="..\lib\Yahoo.Yui.Compressor.MsBuildTask.dll" />
+    <UsingTask TaskName="JavaScriptCompressorTask" AssemblyFile="..\lib\Yahoo.Yui.Compressor.MsBuildTask.dll" />
 
     <!-- Define the output locations. These can be set via the msbuild command line using
-         /p:CssOutputFile=$(TargetDir)../whatever...
-         /p:JavaScriptOutputFile=$(TargetDir)../whatever...
-         
+         /p:OutputFile=$(TargetDir)../whatever...
          If they are not supplied or are empty, then we the value whatever is supplied, below.
     -->
-    <PropertyGroup>
-        <CssOutputFile Condition=" '$(CssOutputFile)'=='' ">SylesSheetFinal.css</CssOutputFile>
-        <JavaScriptOutputFile Condition=" '$(JavaScriptOutputFile)'=='' ">JavaScriptFinal.css</JavaScriptOutputFile>
-    </PropertyGroup>
 
-    <Target Name="MyTaskTarget">
-        <!--
-            ItemGroup\CssFiles or ItemGroup\JavaScriptFiles: add zero to many files you wish to include in this compression task.
-                                                             Don't forget, you can use the wildcard (eg. *.css, *.js) if you feel up to it.
-                                                             Finally, at least one item is required - either a css file or a js file.
-                                                             Add <CompressionType> meta data to individual items to override the default compression type set for the task
-                                                             
-            CssFiles/JavaScriptFiles data format: Please do not touch this.
-            DeleteCssFiles: [Optional] True | Yes | Yeah | Yep | True | FoSho | Fo Sho. Default is False. Anything else is False. (eg. blah = false, xxxx111 = false, etc)
-            CssCompressionType: YuiStockCompression | None; Default is YuiStockCompression.  None => Concatenate files only
-            JavaScriptCompressionType: YuiStockCompression | None; Default is YuiStockCompression.  None => Concatenate files only
-            ObfuscateJavaScript: [Optional] refer to DeleteCssFiles, above.
-            PreserveAllSemicolons: [Optional] refer to DeleteCssFiles, above.
-            DisableOptimizations: [Optional] refer to DeleteCssFiles, above.
-            EncodingType: [Optional] ASCII, BigEndianUnicode, Unicode, UTF32, UTF7, UTF8, Default. Default is 'Default'.
-            DeleteJavaScriptFiles: [Optional] refer to DeleteCssFiles, above.
-            LineBreakPosition: [Optional] the position where a line feed is appened when the next semicolon is reached. Default is -1 (never add a line break).
-                               0 (zero) means add a line break after every semicolon. (This might help with debugging troublesome files).          
-            LoggingType: None | ALittleBit | HardcoreBringItOn;  Hardcore also lists javascript verbose warnings, if there are any (and there usually is :P ).
-            ThreadCulture: [Optional] the culture you want the thread to run under. Default value is whatever the system culture is.
-            IsEvalIgnored: [Optional] compress any functions that contain 'eval'. Default is False, which means a function that contains
-                           'eval' will NOT be compressed. It's deemed risky to compress a function containing 'eval'. That said,
-                           if the usages are deemed safe this check can be disabled by setting this value to True.
-            PreserveCssComments: [Optional] refer to DeleteCssFiles, above.
+    <Target Name="Minify">
+        <!--           
+            For both tasks, all Properties except SourceFiles and OutputFile are optional
+        
+            CssCompressorTask:
+                SourceFiles: An ITaskItem[] list of files to compress.
+                             Add <CompressionType> meta data to individual items to override the default compression type set for the task
+                DeleteSourceFiles: True | False (default).  Set True if you want to delete the source files after compressing
+                CompressionType: Standard (default) | None.  None => Concatenate files only.
+                EncodingType: ASCII, BigEndianUnicode, Unicode, UTF32, UTF7, UTF8, Default (default).
+                LineBreakPosition: The position where a line feed is appened when the next semicolon is reached. 
+                                   Default is -1 (never add a line break).
+                                   0 (zero) means add a line break after every semicolon. (This might help with debugging troublesome files).          
+                LoggingType: Info (default) | Debug | None.
+                PreserveComments: True | False (default).  Set True if you wish to preserve css comments.  False will remove them except ones marked with "!" 
+
+            JavaScriptCompressorTask:
+                SourceFiles: An ITaskItem[] list of files to compress.
+                             Add <CompressionType> meta data to individual items to override the default compression type set for the task
+                DeleteSourceFiles: True | False (default).  Set True if you want to delete the source files after compressing
+                CompressionType: Standard (default) | None.  None => Concatenate files only.
+                EncodingType: ASCII, BigEndianUnicode, Unicode, UTF32, UTF7, UTF8, Default (default).
+                LineBreakPosition: The position where a line feed is appened when the next semicolon is reached. 
+                                   Default is -1 (never add a line break).
+                                   0 (zero) means add a line break after every semicolon. (This might help with debugging troublesome files).          
+                LoggingType: Info (default) | Debug | None.  Debug also lists javascript verbose warnings, if there are any (and there usually is :P ).
+                ObfuscateJavaScript: True (default) | False.  True => Obfuscate function and variable names
+                PreserveAllSemicolons: True | False (default).  True => preserve redundant semicolons (e.g. after a '}'
+                DisableOptimizations: True | False (default).
+                ThreadCulture: The culture you want the thread to run under. This affects the treatment of numbers etc - e.g. 9.00 could be output as 9,00.
+                               Default value is the Invariant Culture
+                IsEvalIgnored: True | False (default).  True => compress any functions that contain 'eval'. Default is False, which means a function that contains
+                               'eval' will NOT be compressed. It's deemed risky to compress a function containing 'eval'. That said,
+                               if the usages are deemed safe this check can be disabled by setting this value to True.
         -->
         <ItemGroup>
             <!-- Single files, listed in order of dependency -->
@@ -55,31 +54,48 @@
             <CssFiles Include="StylesheetSample4.css"/>
             
             <JavaScriptFiles Include="jquery-1.3.2.js"/>
-            
-            <!-- All the files. They will be handled (I assume) in alphabetically. -->
-            <!-- <CssFiles Include="*.css" />
-            <JavaScriptFiles Include="*.js" />
-            -->
-            
         </ItemGroup>
-        <CompressorTask
-            CssFiles="@(CssFiles)"
-            DeleteCssFiles="false"
-            CssOutputFile="$(CssOutputFile)"
-            CssCompressionType="YuiStockCompression"
-            JavaScriptCompressionType="YuiStockCompression"
-            JavaScriptFiles="@(JavaScriptFiles)"
-            ObfuscateJavaScript="True"
-            PreserveAllSemicolons="False"
-            DisableOptimizations="Nope"
-            EncodingType="Default"
-            DeleteJavaScriptFiles="false"
+ 
+      <CssCompressorTask
+            SourceFiles="@(CssFiles)"
+            DeleteSourceFiles="false"
+            OutputFile="Minified.css"
+            CompressionType="Standard"
+            LoggingType="Info"
+            PreserveComments="false"
             LineBreakPosition="-1"
-            JavaScriptOutputFile="$(JavaScriptOutputFile)"
-            LoggingType="ALittleBit"
-            ThreadCulture="en-au"
-            IsEvalIgnored="false"
-            PreserveCssComments="false"
+       />
+
+      <!-- The version below produces the exact same results -->
+      <!--
+      <CssCompressorTask
+            SourceFiles="@(CssFiles)"
+            OutputFile="Minified.css"
+       />
+       -->
+
+      <JavaScriptCompressorTask
+          SourceFiles="@(JavaScriptFiles)"
+          DeleteSourceFiles="false"
+          OutputFile="Minified.js"
+          CompressionType="Standard"
+          ObfuscateJavaScript="True"
+          PreserveAllSemicolons="False"
+          DisableOptimizations="No"
+          EncodingType="Default"
+          LineBreakPosition="-1"
+          LoggingType="Info"
+          ThreadCulture="en-au"
+          IsEvalIgnored="false"
             />
+
+      <!-- The version below produces the exact same results -->
+      <!--
+      <JavaScriptCompressorTask
+          SourceFiles="@(JavaScriptFiles)"
+          DeleteSourceFiles="false"
+          OutputFile="Minified.js"
+       />
+       -->
     </Target>
 </Project>

@@ -67,18 +67,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JavaScriptCompressionType.cs" />
-    <Compile Include="CssCompressionType.cs" />
+    <Compile Include="Compressor.cs" />
+    <Compile Include="ICompressor.cs" />
+    <Compile Include="CompressionType.cs" />
     <Compile Include="CssCompressor.cs" />
     <Compile Include="CustomErrorReporter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ICompressorTask.cs" />
+    <Compile Include="ICssCompressor.cs" />
+    <Compile Include="IJavaScriptCompressor.cs" />
     <Compile Include="JavaScriptCompressor.cs" />
     <Compile Include="JavaScriptIdentifier.cs" />
     <Compile Include="JavaScriptToken.cs" />
+    <Compile Include="LoggingType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptOrFunctionScope.cs" />
-    <Compile Include="YUICompressor.cs" />
+    <Compile Include="Tokens.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />
