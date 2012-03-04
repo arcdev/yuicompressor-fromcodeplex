@@ -136,9 +136,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "org.mozilla.javascript", "o
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Post-build Events WebSite Example", "Post-build Events WebSite Example", "{55383C77-E8F0-4300-8828-79A50033FF7A}"
-	ProjectSection(SolutionItems) = preProject
-		Solution Items\Post-build Events WebSite Example\SampleWebSite.zip = Solution Items\Post-build Events WebSite Example\SampleWebSite.zip
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Projects\Yahoo.Yui.Compressor\Model\Model.csproj", "{AFDF50F0-286B-4490-9EBD-007561864738}"
 EndProject
@@ -174,6 +171,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "org.mozilla.javascript", "o
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsBuild Task", "Projects\Yahoo.Yui.Compressor\MsBuild Task\MsBuild Task.csproj", "{1A7860DE-18F7-46D0-98B9-F304814DF4B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebSite", "Solution Items\Post-build Events WebSite Example\SampleWebSite\SampleWebSite.csproj", "{486974FA-5703-485E-A019-C199F6F1ADE4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1A7860DE-18F7-46D0-98B9-F304814DF4B0} = {1A7860DE-18F7-46D0-98B9-F304814DF4B0}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = YUICompressor.vsmdi
@@ -198,6 +200,10 @@ Global
 		{1A7860DE-18F7-46D0-98B9-F304814DF4B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A7860DE-18F7-46D0-98B9-F304814DF4B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A7860DE-18F7-46D0-98B9-F304814DF4B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -223,6 +229,7 @@ Global
 		{ED3DF8AE-9541-4C95-93C5-8C417D4CBA50} = {B9985104-A65C-4B82-9844-1DD26967BB6E}
 		{C66F0E7F-0954-42F8-AA00-4F8592237B65} = {789E3CAA-6D10-41C0-987C-99AF5F58690A}
 		{F79D98D1-1C4A-4AB9-BBD3-19A4603EAE2A} = {789E3CAA-6D10-41C0-987C-99AF5F58690A}
+		{486974FA-5703-485E-A019-C199F6F1ADE4} = {55383C77-E8F0-4300-8828-79A50033FF7A}
 		{A38ACD88-75C9-4A2E-9C33-6502DCB6D33B} = {9F595669-3873-47D0-84DD-0819C8FC6CB2}
 		{B98FBEC4-97A8-47C6-8D76-1047BA0B4A49} = {9F595669-3873-47D0-84DD-0819C8FC6CB2}
 	EndGlobalSection
