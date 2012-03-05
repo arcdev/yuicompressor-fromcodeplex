@@ -4,12 +4,12 @@
     <UsingTask TaskName="CssCompressorTask" AssemblyFile="..\..\lib\Yahoo.Yui.Compressor.MsBuildTask.dll" />
     <UsingTask TaskName="JavaScriptCompressorTask" AssemblyFile="..\..\lib\Yahoo.Yui.Compressor.MsBuildTask.dll" />
 
-    <Target Name="MyTaskTarget">
+    <Target Name="Minimize" Condition="'$(ConfigurationName)' == 'Release'">
         <ItemGroup>
           <JavaScriptFiles Include="Scripts\jquery-1.3.2.min.js">
             <CompressionType>None</CompressionType>
           </JavaScriptFiles>
-            <JavaScriptFiles Include="Scripts\MicrosoftAjax.js."/>
+            <JavaScriptFiles Include="Scripts\MicrosoftAjax.js"/>
             <JavaScriptFiles Include="Scripts\MicrosoftMvcAjax.js"/>
         </ItemGroup>
 
@@ -21,7 +21,7 @@
       <JavaScriptCompressorTask
           SourceFiles="@(JavaScriptFiles)"
           DeleteSourceFiles="false"
-          OutputFile="Scripts\JavaScriptFinal.js"
+          OutputFile="Scripts\JavaScript.minified.js"
        />
     </Target>
 </Project>

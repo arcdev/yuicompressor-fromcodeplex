@@ -11,7 +11,7 @@ namespace SampleWebSite.Controllers
     {
         public ActionResult Index()
         {
-            ViewData["Message"] = "Welcome to ASP.NET MVC!";
+            ViewData["Message"] = "Welcome to the post build event sample!";
 
             return View();
         }

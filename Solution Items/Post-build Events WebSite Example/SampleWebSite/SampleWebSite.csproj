@@ -71,6 +71,7 @@
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -144,6 +145,6 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>$(MSBuildBinPath)\msbuild.exe "$(ProjectDir)YUICompress.msbuild"</PostBuildEvent>
+    <PostBuildEvent>$(MSBuildBinPath)\msbuild.exe "$(ProjectDir)YUICompress.msbuild" /target:Minimize /p:ConfigurationName=$(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
 </Project>
