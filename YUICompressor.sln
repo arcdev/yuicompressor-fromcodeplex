@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{EA41F6DE-F0DC-49C4-BF0E-0C8E29229C31}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo.Yui.Compressor", "Code\Yahoo.Yui.Compressor\Yahoo.Yui.Compressor.csproj", "{AFDF50F0-286B-4490-9EBD-007561864738}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo.Yui.Compressor.MsBuildTask", "Code\Yahoo.Yui.Compressor.MsBuildTask\Yahoo.Yui.Compressor.MsBuildTask.csproj", "{1A7860DE-18F7-46D0-98B9-F304814DF4B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo.Yui.Compressor.Tests", "Code\Yahoo.Yui.Compressor.Tests\Yahoo.Yui.Compressor.Tests.csproj", "{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs07
+		SccProjectUniqueName0 = Code\\Yahoo.Yui.Compressor\\Yahoo.Yui.Compressor.csproj
+		SccProjectName0 = Code/Yahoo.Yui.Compressor
+		SccLocalPath0 = Code\\Yahoo.Yui.Compressor
+		SccProjectUniqueName1 = Code\\Yahoo.Yui.Compressor.Tests\\Yahoo.Yui.Compressor.Tests.csproj
+		SccProjectName1 = Code/Yahoo.Yui.Compressor.Tests
+		SccLocalPath1 = Code\\Yahoo.Yui.Compressor.Tests
+		SccProjectUniqueName2 = Code\\Yahoo.Yui.Compressor.MsBuildTask\\Yahoo.Yui.Compressor.MsBuildTask.csproj
+		SccProjectName2 = Code/Yahoo.Yui.Compressor.MsBuildTask
+		SccLocalPath2 = Code\\Yahoo.Yui.Compressor.MsBuildTask
+		SccLocalPath3 = .
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = YUICompressor.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AFDF50F0-286B-4490-9EBD-007561864738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFDF50F0-286B-4490-9EBD-007561864738}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFDF50F0-286B-4490-9EBD-007561864738}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFDF50F0-286B-4490-9EBD-007561864738}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A7860DE-18F7-46D0-98B9-F304814DF4B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A7860DE-18F7-46D0-98B9-F304814DF4B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A7860DE-18F7-46D0-98B9-F304814DF4B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A7860DE-18F7-46D0-98B9-F304814DF4B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
