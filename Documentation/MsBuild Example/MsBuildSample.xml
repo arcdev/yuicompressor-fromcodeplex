@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/MsBuild/2003">
   
-    <UsingTask TaskName="CssCompressorTask" AssemblyFile="..\..\Code\Yahoo.Yui.Compressor.MsBuildTask\bin\Release\Yahoo.Yui.Compressor.MsBuildTask.dll" />
-    <UsingTask TaskName="JavaScriptCompressorTask" AssemblyFile="..\..\Code\Yahoo.Yui.Compressor.MsBuildTask\bin\Releaselib\Yahoo.Yui.Compressor.MsBuildTask.dll" />
+    <UsingTask TaskName="CssCompressorTask" AssemblyFile="..\..\MainAssemblies\Yahoo.Yui.Compressor.MsBuildTask.dll" />
+    <UsingTask TaskName="JavaScriptCompressorTask" AssemblyFile="..\..\MainAssemblies\Yahoo.Yui.Compressor.MsBuildTask.dll" />
 
     <!-- Define the output locations. These can be set via the msbuild command line using
          /p:OutputFile=$(TargetDir)../whatever...
@@ -74,6 +74,20 @@
        />
        -->
 
+      <!-- The version below will output one minified file per input css file - ie
+           StylesheetSample1.css.min StylesheetSample2.css.min, and StylesheetSample3.css.min-->
+      <!--
+      <CssCompressorTask
+            SourceFiles="@(CssFiles)"
+            DeleteSourceFiles="false"
+            OutputFile="%(CssFiles.Identity).min"
+            CompressionType="Standard"
+            LoggingType="Info"
+            PreserveComments="false"
+            LineBreakPosition="-1"
+      />
+      -->
+      
       <JavaScriptCompressorTask
           SourceFiles="@(JavaScriptFiles)"
           DeleteSourceFiles="false"

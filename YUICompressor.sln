@@ -13,21 +13,56 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo.Yui.Compressor.MsBuil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo.Yui.Compressor.Tests", "Code\Yahoo.Yui.Compressor.Tests\Yahoo.Yui.Compressor.Tests.csproj", "{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code", "Code", "{258C15F4-B2FC-48C5-BC4E-FF6E8858F530}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{0F1E147D-EBC6-48EC-9E30-711CAE1A65BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsBuild Example", "MsBuild Example", "{4296A6B3-1D93-4513-9832-48A0E9F80E9E}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\MsBuild Example\jquery-1.2.6-vsdoc.js = Documentation\MsBuild Example\jquery-1.2.6-vsdoc.js
+		Documentation\MsBuild Example\jquery-1.3.1.js = Documentation\MsBuild Example\jquery-1.3.1.js
+		Documentation\MsBuild Example\jquery-1.3.2.js = Documentation\MsBuild Example\jquery-1.3.2.js
+		Documentation\MsBuild Example\MicrosoftAjax.debug.js = Documentation\MsBuild Example\MicrosoftAjax.debug.js
+		Documentation\MsBuild Example\MsBuildSample.xml = Documentation\MsBuild Example\MsBuildSample.xml
+		Documentation\MsBuild Example\SampleJavaScript1.js = Documentation\MsBuild Example\SampleJavaScript1.js
+		Documentation\MsBuild Example\SampleJavaScript2.js = Documentation\MsBuild Example\SampleJavaScript2.js
+		Documentation\MsBuild Example\SampleJavaScript3.js = Documentation\MsBuild Example\SampleJavaScript3.js
+		Documentation\MsBuild Example\SampleJavaScript4.js = Documentation\MsBuild Example\SampleJavaScript4.js
+		Documentation\MsBuild Example\StylesheetSample1.css = Documentation\MsBuild Example\StylesheetSample1.css
+		Documentation\MsBuild Example\StylesheetSample2.css = Documentation\MsBuild Example\StylesheetSample2.css
+		Documentation\MsBuild Example\StylesheetSample3.css = Documentation\MsBuild Example\StylesheetSample3.css
+		Documentation\MsBuild Example\StyleSheetSample4.css = Documentation\MsBuild Example\StyleSheetSample4.css
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Post-build Events WebSite Example", "Post-build Events WebSite Example", "{06003410-684F-4CE7-9B8E-7EA61866E336}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\Post-build Events WebSite Example\SampleWebSite.sln = Documentation\Post-build Events WebSite Example\SampleWebSite.sln
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebSite", "Documentation\Post-build Events WebSite Example\SampleWebSite\SampleWebSite.csproj", "{486974FA-5703-485E-A019-C199F6F1ADE4}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs07
-		SccProjectUniqueName0 = Code\\Yahoo.Yui.Compressor\\Yahoo.Yui.Compressor.csproj
-		SccProjectName0 = Code/Yahoo.Yui.Compressor
-		SccLocalPath0 = Code\\Yahoo.Yui.Compressor
-		SccProjectUniqueName1 = Code\\Yahoo.Yui.Compressor.Tests\\Yahoo.Yui.Compressor.Tests.csproj
-		SccProjectName1 = Code/Yahoo.Yui.Compressor.Tests
-		SccLocalPath1 = Code\\Yahoo.Yui.Compressor.Tests
-		SccProjectUniqueName2 = Code\\Yahoo.Yui.Compressor.MsBuildTask\\Yahoo.Yui.Compressor.MsBuildTask.csproj
-		SccProjectName2 = Code/Yahoo.Yui.Compressor.MsBuildTask
-		SccLocalPath2 = Code\\Yahoo.Yui.Compressor.MsBuildTask
-		SccLocalPath3 = .
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Code\\Yahoo.Yui.Compressor\\Yahoo.Yui.Compressor.csproj
+		SccProjectTopLevelParentUniqueName1 = YUICompressor.sln
+		SccProjectName1 = Code/Yahoo.Yui.Compressor
+		SccLocalPath1 = Code\\Yahoo.Yui.Compressor
+		SccProjectUniqueName2 = Code\\Yahoo.Yui.Compressor.Tests\\Yahoo.Yui.Compressor.Tests.csproj
+		SccProjectTopLevelParentUniqueName2 = YUICompressor.sln
+		SccProjectName2 = Code/Yahoo.Yui.Compressor.Tests
+		SccLocalPath2 = Code\\Yahoo.Yui.Compressor.Tests
+		SccProjectUniqueName3 = Code\\Yahoo.Yui.Compressor.MsBuildTask\\Yahoo.Yui.Compressor.MsBuildTask.csproj
+		SccProjectTopLevelParentUniqueName3 = YUICompressor.sln
+		SccProjectName3 = Code/Yahoo.Yui.Compressor.MsBuildTask
+		SccLocalPath3 = Code\\Yahoo.Yui.Compressor.MsBuildTask
+		SccProjectUniqueName4 = Documentation\\Post-build\u0020Events\u0020WebSite\u0020Example\\SampleWebSite\\SampleWebSite.csproj
+		SccProjectTopLevelParentUniqueName4 = YUICompressor.sln
+		SccProjectName4 = Documentation/Post-build\u0020Events\u0020WebSite\u0020Example/SampleWebSite
+		SccLocalPath4 = Documentation\\Post-build\u0020Events\u0020WebSite\u0020Example\\SampleWebSite
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = YUICompressor.vsmdi
@@ -49,8 +84,20 @@ Global
 		{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AFDF50F0-286B-4490-9EBD-007561864738} = {258C15F4-B2FC-48C5-BC4E-FF6E8858F530}
+		{1A7860DE-18F7-46D0-98B9-F304814DF4B0} = {258C15F4-B2FC-48C5-BC4E-FF6E8858F530}
+		{0EDDD853-D3FD-4118-8210-2F9BBFE887C4} = {258C15F4-B2FC-48C5-BC4E-FF6E8858F530}
+		{4296A6B3-1D93-4513-9832-48A0E9F80E9E} = {0F1E147D-EBC6-48EC-9E30-711CAE1A65BE}
+		{06003410-684F-4CE7-9B8E-7EA61866E336} = {0F1E147D-EBC6-48EC-9E30-711CAE1A65BE}
+		{486974FA-5703-485E-A019-C199F6F1ADE4} = {06003410-684F-4CE7-9B8E-7EA61866E336}
 	EndGlobalSection
 EndGlobal
