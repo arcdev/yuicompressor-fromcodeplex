@@ -484,7 +484,7 @@ namespace Yahoo.Yui.Compressor.Tests
         [Test]
         [Description("http://yuicompressor.codeplex.com/workitem/9856")]
         [Ignore("We have not yet fixed the problem")]
-        public void Decimals_Will_Be_Entirely_Accurate_Pnce_We_Implement_A_Proper_Solution()
+        public void Decimals_Will_Be_Entirely_Accurate_Once_We_Implement_A_Proper_Solution()
         {
             var values = new[] {         
                                     "156543.03390625", 

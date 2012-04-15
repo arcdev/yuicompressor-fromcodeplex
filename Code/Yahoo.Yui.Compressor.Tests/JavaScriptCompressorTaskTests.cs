@@ -3,7 +3,7 @@ using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using NUnit.Framework;
-using Yahoo.Yui.Compressor.MsBuildTask;
+using Yahoo.Yui.Compressor.Build.MsBuild;
 using Yahoo.Yui.Compressor.Tests.TestHelpers;
 
 namespace Yahoo.Yui.Compressor.Tests
@@ -111,7 +111,7 @@ namespace Yahoo.Yui.Compressor.Tests
         {
             var compressor = GetJavascriptCompressorFor(@"DoesNotExist");
 
-            var result = compressor.Execute();
+            compressor.Execute();
             Assert.That(BuildEngineExtensions.ContainsError(compressor.BuildEngine, ("ERROR reading file or path")));
         }
 
@@ -121,8 +121,8 @@ namespace Yahoo.Yui.Compressor.Tests
         {
             var compressor = GetJavascriptCompressorFor("Issue9719");
 
-            var result = compressor.Execute();
-            Assert.That(BuildEngineExtensions.ContainsError(compressor.BuildEngine, ("[ERROR] invalid property id")));
+            compressor.Execute();
+            Assert.That(BuildEngineExtensions.ContainsError(compressor.BuildEngine, ("invalid property id")));
         }
 
         private static CompressorTask GetJavascriptCompressorFor(string fileName)

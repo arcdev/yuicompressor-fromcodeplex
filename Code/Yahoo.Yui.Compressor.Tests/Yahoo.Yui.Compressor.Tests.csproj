@@ -28,6 +28,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +37,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EcmaScript.NET">
@@ -103,9 +105,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Yahoo.Yui.Compressor.MsBuildTask\Yahoo.Yui.Compressor.MsBuildTask.csproj">
+    <ProjectReference Include="..\Yahoo.Yui.Compressor.Build.MsBuild\Yahoo.Yui.Compressor.Build.MsBuild.csproj">
       <Project>{1A7860DE-18F7-46D0-98B9-F304814DF4B0}</Project>
-      <Name>Yahoo.Yui.Compressor.MsBuildTask</Name>
+      <Name>Yahoo.Yui.Compressor.Build.MsBuild</Name>
     </ProjectReference>
     <ProjectReference Include="..\Yahoo.Yui.Compressor\Yahoo.Yui.Compressor.csproj">
       <Project>{AFDF50F0-286B-4490-9EBD-007561864738}</Project>
