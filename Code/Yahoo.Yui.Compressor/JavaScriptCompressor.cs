@@ -79,30 +79,34 @@ namespace Yahoo.Yui.Compressor
             var originalCultureInfo = Thread.CurrentThread.CurrentCulture;
             var originalUiCulture = Thread.CurrentThread.CurrentUICulture;
 
-            // Change the current Thread Culture if the user has asked for something specific.
-            // Reference: http://www.codeplex.com/YUICompressor/WorkItem/View.aspx?WorkItemId=3219
-            Thread.CurrentThread.CurrentCulture = ThreadCulture;
-            Thread.CurrentThread.CurrentUICulture = ThreadCulture;
-
-            var memoryStream = new MemoryStream(this.Encoding.GetBytes(source));
-            _tokens = Parse(new StreamReader(memoryStream, this.Encoding), ErrorReporter);
-
-            ProcessStringLiterals(_tokens, !DisableOptimizations);
-
-            if (!DisableOptimizations)
+            try
             {
-                OptimizeObjectMemberAccess(_tokens);
-                OptimizeObjLitMemberDecl(_tokens);
+                // Change the current Thread Culture if the user has asked for something specific.
+                // Reference: http://www.codeplex.com/YUICompressor/WorkItem/View.aspx?WorkItemId=3219
+                Thread.CurrentThread.CurrentCulture = ThreadCulture;
+                Thread.CurrentThread.CurrentUICulture = ThreadCulture;
+
+                var memoryStream = new MemoryStream(this.Encoding.GetBytes(source));
+                _tokens = Parse(new StreamReader(memoryStream, this.Encoding), ErrorReporter);
+
+                ProcessStringLiterals(_tokens, !DisableOptimizations);
+
+                if (!DisableOptimizations)
+                {
+                    OptimizeObjectMemberAccess(_tokens);
+                    OptimizeObjLitMemberDecl(_tokens);
+                }
+
+                BuildSymbolTree();
+                MungeSymboltree();
+                var result = PrintSymbolTree(LineBreakPosition, PreserveAllSemicolons);
+                return result.ToString();
             }
-
-            BuildSymbolTree();
-            MungeSymboltree();
-            var result = PrintSymbolTree(LineBreakPosition, PreserveAllSemicolons).ToString();
-
-            Thread.CurrentThread.CurrentCulture = originalCultureInfo;
-            Thread.CurrentThread.CurrentUICulture = originalUiCulture;
-
-            return result;
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = originalCultureInfo;
+                Thread.CurrentThread.CurrentUICulture = originalUiCulture;
+            }
         }
 
         #region Private Methods

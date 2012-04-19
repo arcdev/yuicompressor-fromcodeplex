@@ -317,6 +317,43 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [Test]
+        [Description("http://yuicompressor.codeplex.com/workitem/10107")]
+        public void The_Original_Thread_Culture_Is_Restored_If_An_Exception_Is_Thrown()
+        {
+            // Arrange
+            var originalThreadCulture = Thread.CurrentThread.CurrentCulture;
+            var originalThreadUICulture = Thread.CurrentThread.CurrentUICulture;
+            var expectedThreadCulture = CultureInfo.CreateSpecificCulture("it-IT");
+
+            target.ThreadCulture = CultureInfo.CreateSpecificCulture("zh-CN");
+
+            // The following script should throw an exception
+            const string source = @"<script type=""text/javascript>alert('hello world');</script>";
+
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = expectedThreadCulture;
+                Thread.CurrentThread.CurrentUICulture = expectedThreadCulture;
+
+                // Act
+                target.Compress(source);
+            }
+            catch (Exception)
+            {
+                // Assert.
+                Assert.That(Thread.CurrentThread.CurrentCulture.LCID, Is.EqualTo(expectedThreadCulture.LCID), "CurrentCulture");
+                Assert.That(Thread.CurrentThread.CurrentUICulture.LCID, Is.EqualTo(expectedThreadCulture.LCID), "CurrentUICulture");
+                return;
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = originalThreadCulture;
+                Thread.CurrentThread.CurrentUICulture = originalThreadUICulture;
+            }
+            Assert.Fail("Exception not thrown");
+        }
+
+        [Test]
         public void The_Output_Is_Obfuscated_When_IsObfuscateJavascript_Is_True()
         {
             // Arrange
