@@ -1,0 +1,137 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <Src>src</Src>
+    <Repository>https://YUICompressor.svn.codeplex.com/svn</Repository>
+    <buildConfig Condition="'$(buildConfig)'==''">Release</buildConfig>
+    <codePlexOutput>$(MSBuildProjectDirectory)\output\codeplex</codePlexOutput>
+    <nuGetOutput>$(MSBuildProjectDirectory)\output\nuget</nuGetOutput>
+    <nuGet>$(MSBuildProjectDirectory)\..\.nuget\nuget.exe</nuGet>
+  </PropertyGroup>
+
+  <Import Project="MSBuild.Community.Tasks.Targets"/>
+ 
+  <Target Name="All">
+    <CallTarget Targets="Clean" />
+    <CallTarget Targets="GetSource" />
+    <CallTarget Targets="Compile" />
+    <CallTarget Targets="Package" />
+  </Target>
+
+  <Target Name="Clean">
+    <Exec Condition="Exists('$(Src)')" Command="rmdir $(Src) /S /Q" ContinueOnError="true"></Exec>
+    <Exec Condition="Exists('$(codePlexOutput)')" Command="rmdir $(codePlexOutput) /S /Q" ContinueOnError="true"></Exec>
+    <Exec Condition="Exists('$(nuGetOutput)')" Command="rmdir $(nuGetOutput) /S /Q" ContinueOnError="true"></Exec>
+  </Target>
+  
+  <Target Name="GetSource">
+    <MakeDir Condition="!Exists('$(Src)')" Directories="$(Src)"></MakeDir>
+    <SvnCheckout RepositoryPath="$(Repository)" LocalPath="$(Src)" />
+  </Target>
+
+  <Target Name="Compile">
+    <MSBuild Projects="$(Src)\YUICompressor.sln" Properties="Configuration=$(buildConfig)" />
+  </Target>
+  
+  <Target Name="Package" DependsOnTargets="GetVersion">
+    <CallTarget Targets="CreateZip" />
+    <CallTarget Targets="CreateNuGetMainPackage" />
+    <CallTarget Targets="CreateNuGetMsBuildPackage" />
+    <CallTarget Targets="CreateNuGetNantPackage" />
+  </Target>
+  
+  <Target Name="CreateZip" DependsOnTargets="GetVersion">
+    <MakeDir Condition="!Exists('$(codePlexOutput)')" Directories="$(codePlexOutput)"></MakeDir>
+    <ItemGroup>
+        <ZipFiles Include="$(Src)\MainAssemblies\**\*.*" />
+        <ZipFiles Include="New BSD License.txt" />
+    </ItemGroup>
+     
+     <Zip Files="@(ZipFiles)" Flatten="true" ZipFileName="$(codePlexOutput)\Yahoo.Yui.Compressor v%(assemblyInfo.Version).zip" />
+  </Target>
+
+  <Target Name="CreateNuGetMainPackage">
+    <MakeDir Condition="!Exists('$(nuGetOutput)')" Directories="$(nuGetOutput)"></MakeDir>
+ 
+    <ItemGroup>
+       <MainBinaries Include="$(Src)\MainAssemblies\*.*" Exclude="$(Src)\MainAssemblies\*.Build.*.dll;$(Src)\MainAssemblies\NAnt.*.dll" />
+    </ItemGroup>
+    
+    <PropertyGroup>
+      <TempDir>$(nuGetOutput)\tempMain</TempDir>
+    </PropertyGroup>
+       
+    <Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(TempDir)\lib\NET20" />
+
+    <Copy SourceFiles="YUICompressor.nuspec" DestinationFiles="$(TempDir)\YUICompressor.NET.nuspec" />
+ 
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CreateNuGetPackage" Properties="TempDir=$(TempDir);nuSpecFile=YUICompressor.NET.nuspec" />  
+  </Target>
+  
+  <Target Name="CreateNuGetMSBuildPackage">
+    <MakeDir Condition="!Exists('$(nuGetOutput)')" Directories="$(nuGetOutput)" />
+
+    <ItemGroup>
+       <MSBuildBinaries Include="$(Src)\MainAssemblies\*.*" Exclude="$(Src)\MainAssemblies\*NAnt.*.dll;$(Src)\MainAssemblies\*.Build.NAnt.dll" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <TempDir>$(nuGetOutput)\tempMSBuild</TempDir>
+    </PropertyGroup>    
+    
+    <Copy SourceFiles="@(MSBuildBinaries)" DestinationFolder="$(TempDir)\lib\NET20" />
+    
+    <Copy SourceFiles="YUICompressor.nuspec" DestinationFiles="$(TempDir)\YUICompressor.NET.MSBuild.nuspec" />
+
+    <!-- Update package specific entries -->
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="UpdateProperty" Properties="nuSpecFile=$(TempDir)\YUICompressor.NET.MSBuild.nuspec;PropertyName=title;PropertyValue=YUICompressor .NET MSBuild Task" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="UpdateProperty" Properties="nuSpecFile=$(TempDir)\YUICompressor.NET.MSBuild.nuspec;PropertyName=id;PropertyValue=YUICompressor.NET.MSBuild" />
+
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CreateNuGetPackage" Properties="TempDir=$(TempDir);nuSpecFile=YUICompressor.NET.MSBuild.nuspec" />  
+  </Target>
+ 
+   <Target Name="CreateNuGetNAntPackage">
+    <MakeDir Condition="!Exists('$(nuGetOutput)')" Directories="$(nuGetOutput)" />
+
+    <ItemGroup>
+       <NAntBinaries Include="$(Src)\MainAssemblies\*.*" Exclude="$(Src)\MainAssemblies\*.Build.MsBuild.dll" />
+    </ItemGroup>
+    
+    <PropertyGroup>
+      <TempDir>$(nuGetOutput)\tempNAnt</TempDir>
+    </PropertyGroup>
+    
+    <Copy SourceFiles="@(NAntBinaries)" DestinationFolder="$(TempDir)\lib\NET20" />
+
+    <Copy SourceFiles="YUICompressor.nuspec" DestinationFiles="$(TempDir)\YUICompressor.NET.NAnt.nuspec" />
+    
+    <!-- Update package specific entries -->
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="UpdateProperty" Properties="nuSpecFile=$(TempDir)\YUICompressor.NET.NAnt.nuspec;PropertyName=title;PropertyValue=YUICompressor .NET NAnt Task" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="UpdateProperty" Properties="nuSpecFile=$(TempDir)\YUICompressor.NET.NAnt.nuspec;PropertyName=id;PropertyValue=YUICompressor.NET.NAnt" />
+
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CreateNuGetPackage" Properties="TempDir=$(TempDir);nuSpecFile=YUICompressor.NET.NAnt.nuspec" />  
+  </Target>
+  
+  <Target Name="GetVersion">
+     <GetAssemblyIdentity AssemblyFiles="$(Src)\MainAssemblies\Yahoo.Yui.Compressor.dll">
+        <Output TaskParameter="Assemblies" ItemName="assemblyInfo" />
+     </GetAssemblyIdentity>
+  </Target>
+
+  <Target Name="CreateNuGetPackage" DependsOnTargets="GetVersion">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="UpdateProperty" Properties="nuSpecFile=$(TempDir)\$(nuSpecFile);PropertyName=version;PropertyValue=%(assemblyInfo.Version)" />
+  
+    <Exec WorkingDirectory="$(nuGetOutput)" Command="$(nuGet) pack $(TempDir)\$(nuSpecFile)" />
+
+    <Exec Command="rmdir $(TempDir) /S /Q" ContinueOnError="true"></Exec> 
+  </Target>
+  
+   <Target Name="UpdateProperty"> 
+     <XmlUpdate Prefix="n"
+      Namespace="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd"
+      XmlFileName="$(nuSpecFile)"
+      XPath="/n:package/n:metadata/n:$(PropertyName)"
+      Value="$(PropertyValue)" />
+   </Target>
+
+</Project>
