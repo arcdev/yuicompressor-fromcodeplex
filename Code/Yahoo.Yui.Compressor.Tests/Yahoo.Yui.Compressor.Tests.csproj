@@ -56,7 +56,7 @@
     <Compile Include="JavaScriptCompressorTaskTests.cs" />
     <Compile Include="JavaScriptCompressorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestHelpers\BuildEngineExtensions.cs" />
+    <Compile Include="TestHelpers\BuildEngine.cs" />
     <Compile Include="TestHelpers\BuildEngineStub.cs" />
   </ItemGroup>
   <ItemGroup>

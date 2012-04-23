@@ -6,7 +6,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 
+// ReSharper disable CheckNamespace
 namespace Yahoo.Yui.Compressor.Build
+// ReSharper restore CheckNamespace
 {
     public class CompressorTaskEngine
     {
@@ -80,6 +82,15 @@ namespace Yahoo.Yui.Compressor.Build
                 return false;
             }
 
+            foreach (var sourceFile in SourceFiles)
+            {
+                if (string.Compare(sourceFile.FileName, OutputFile, StringComparison.InvariantCultureIgnoreCase) ==0)
+                {
+                    Log.LogError("Output file cannot be the same as source file(s).");
+                    return false;
+                }
+            }
+
             if (this.LogType == Yui.Compressor.LoggingType.Debug)
             {
                 LogTaskParameters();
@@ -121,7 +132,6 @@ namespace Yahoo.Yui.Compressor.Build
             if (!this.SaveCompressedText(compressedText))
             {
                 Log.LogMessage("Failed to finish compression - terminating prematurely.");
-
                 return false;
             }
 
@@ -284,6 +294,28 @@ namespace Yahoo.Yui.Compressor.Build
                             }
                             finalContent.Append(compressedContent);
                         }
+
+                        // Try and remove this file, if the user requests to do this.
+                        try
+                        {
+                            if (DeleteSourceFiles)
+                            {
+                                if (LogType == Yui.Compressor.LoggingType.Debug)
+                                {
+                                    Log.LogMessage("Deleting source file: " + file.FileName);
+                                }
+                                File.Delete(file.FileName);
+                            }
+                        }
+                        catch (Exception exception)
+                        {
+                            Log.LogError(
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "Failed to delete the path/file [{0}]. It's possible the file is locked?",
+                                    file.FileName));
+                            Log.LogErrorFromException(exception, false);
+                        }
                     }
                     catch (Exception exception)
                     {
@@ -296,24 +328,6 @@ namespace Yahoo.Yui.Compressor.Build
                             // FFS :( Something bad happened.
                             Log.LogError(string.Format(CultureInfo.InvariantCulture, "Failed to read/parse data in file [{0}].", file.FileName));
                         }
-                        Log.LogErrorFromException(exception, false);
-                    }
-
-                    // Try and remove this file, if the user requests to do this.
-                    try
-                    {
-                        if (DeleteSourceFiles)
-                        {
-                            File.Delete(file.FileName);
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        Log.LogError(
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                "Failed to delete the path/file [{0}]. It's possible the file is locked?",
-                                file.FileName));
                         Log.LogErrorFromException(exception, false);
                     }
                 }

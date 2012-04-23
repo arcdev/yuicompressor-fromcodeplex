@@ -4,9 +4,19 @@ using NUnit.Framework;
 
 namespace Yahoo.Yui.Compressor.Tests.TestHelpers
 {
-    public static class BuildEngineExtensions
+    public static class BuildEngine
     {
         public static bool ContainsError(IBuildEngine engine, string error)
+        {
+            return CheckForError(engine, error, true);
+        }
+
+        public static bool DoesNotContainError(IBuildEngine engine, string error)
+        {
+            return CheckForError(engine, error, false);
+        }
+
+        private static bool CheckForError(IBuildEngine engine, string error, bool exists)
         {
             var buildEngine = engine as BuildEngineStub;
             if (buildEngine == null)
@@ -19,9 +29,14 @@ namespace Yahoo.Yui.Compressor.Tests.TestHelpers
                 {
                     if (anError.StartsWith(error))
                     {
-                        return true;
+                        return exists;
                     }
                 }
+            }
+
+            if (!exists) 
+            {
+                return true;
             }
 
             var sb = new StringBuilder();
@@ -33,7 +48,7 @@ namespace Yahoo.Yui.Compressor.Tests.TestHelpers
             Assert.Fail(sb.ToString());
 
             // ReSharper disable HeuristicUnreachableCode
-            return false;
+            return !exists;
             // ReSharper restore HeuristicUnreachableCode
         }
     }

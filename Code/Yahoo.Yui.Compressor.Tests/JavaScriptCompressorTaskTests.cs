@@ -103,16 +103,20 @@ namespace Yahoo.Yui.Compressor.Tests
 
             // Assert
             Assert.IsFalse(result);
-            Assert.That(BuildEngineExtensions.ContainsError(compressor.BuildEngine, "Compression Type: invalid is invalid"));
+            Assert.That(BuildEngine.ContainsError(compressor.BuildEngine, "Compression Type: invalid is invalid"));
         }
 
         [Test]
         public void An_Invalid_File_Or_Path_Results_In_An_Could_Not_File_File_Exception_Being_Logged()
         {
+            // Arange
             var compressor = GetJavascriptCompressorFor(@"DoesNotExist");
 
+            // Act
             compressor.Execute();
-            Assert.That(BuildEngineExtensions.ContainsError(compressor.BuildEngine, ("ERROR reading file or path")));
+
+            // Assert
+            Assert.That(BuildEngine.ContainsError(compressor.BuildEngine, ("ERROR reading file or path")));
         }
 
         [Test]
@@ -122,7 +126,37 @@ namespace Yahoo.Yui.Compressor.Tests
             var compressor = GetJavascriptCompressorFor("Issue9719");
 
             compressor.Execute();
-            Assert.That(BuildEngineExtensions.ContainsError(compressor.BuildEngine, ("invalid property id")));
+            Assert.That(BuildEngine.ContainsError(compressor.BuildEngine, ("invalid property id")));
+        }
+
+        [Test]
+        public void An_Error_Is_Logged_If_The_Output_File_Is_The_Same_As_An_Input_File()
+        {
+            // Arange
+            var compressor = CreateCompressorTask();
+            compressor.SourceFiles = new ITaskItem[] { new TaskItem("SomeDir\\Different.js"), new TaskItem("SomeDir\\Same.js") };
+            compressor.OutputFile = "SomeDir\\Same.js";
+
+            // Act
+            compressor.Execute();
+
+            // Assert
+            Assert.That(BuildEngine.ContainsError(compressor.BuildEngine, ("Output file cannot be the same as source file(s).")));
+        }
+
+        [Test]
+        public void An_Error_Is_Not_Logged_If_The_Output_File_Has_The_Same_Name_But_A_Different_Location_To_An_Input_File()
+        {
+            // Arange
+            var compressor = CreateCompressorTask();
+            compressor.SourceFiles = new ITaskItem[] { new TaskItem("SomeDir\\Different.js"), new TaskItem("SomeOtherDir\\Same.js") };
+            compressor.OutputFile = "SomeDir\\Same.js";
+
+            // Act
+            compressor.Execute();
+
+            // Assert
+            Assert.That(BuildEngine.DoesNotContainError(compressor.BuildEngine, ("Output file cannot be the same as source file(s).")));
         }
 
         private static CompressorTask GetJavascriptCompressorFor(string fileName)
