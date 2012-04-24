@@ -413,23 +413,6 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [Test]
-        public void SyntaxErrorJsTest()
-        {
-            // Arrange
-            var source = File.ReadAllText(@"Javascript Files\_syntax_error.js", Encoding.UTF8);
-            var expected = File.ReadAllText(@"Javascript Files\_syntax_error.js.min");
-
-            // Act
-            var actual = target.Compress(source);
-
-            // Assert
-            Assert.That(actual, Is.Not.Null.Or.Empty, "Null Or Empty");
-            // Because the Java code uses a Hashtable to determine what variables names can be obfuscated, we can't do an exact file compare. But we can
-            // do a file LENGTH compare .. which might be a bit closer to fair Assert test.
-            Assert.That(actual.Length, Is.EqualTo(expected.Length), "Length mismatch");
-        }
-
-        [Test]
         [Description("http://yuicompressor.codeplex.com/workitem/8092")]
         public void Bug8092_Should_Be_Fixed()
         {

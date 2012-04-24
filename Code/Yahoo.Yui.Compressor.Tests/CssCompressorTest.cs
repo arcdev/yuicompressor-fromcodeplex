@@ -127,57 +127,6 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [Test]
-        [Description("https://github.com/yui/yuicompressor/blob/d36d4470ff786aadc2e70a36e689882d0bce4cc0/tests/bug2527974.css")]
-        public void Yahoo_YUICompressor_Bug_2527974_Should_Be_Fixed()
-        {
-            // Arrange
-            const string source = @"/*	this file contains no css, it exists purely to put the revision number into the 
-                                        combined css before uploading it to SiteManager. The exclaimation at the start
-                                        of the comment informs yuicompressor not to strip the comment out */
- 
-                                    /*! $LastChangedRevision: 81 $ $LastChangedDate: 2009-05-27 17:41:02 +0100 (Wed, 27 May 2009) $ */
- 
-                                    body {
-                                        yo: cats;
-                                    }
-                                    ul[id$=foo] label:hover {yo: yo;}";
-            const string expected = @"/*! $LastChangedRevision: 81 $ $LastChangedDate: 2009-05-27 17:41:02 +0100 (Wed, 27 May 2009) $ */body{yo:cats}ul[id$=foo] label:hover{yo:yo}";
-
-            // Act & Assert
-            CompressAndCompare(source, expected);
-        }
-
-        [Test]
-        [Description("https://github.com/yui/yuicompressor/blob/d36d4470ff786aadc2e70a36e689882d0bce4cc0/tests/bug2527991.css")]
-        public void Yahoo_YUICompressor_Bug_2527991_Should_Be_Fixed()
-        {
-            // Arrange
-            const string source = @"@media screen and/*!YUI-Compresser */(-webkit-min-device-pixel-ratio:0) {
-                                      a{
-                                        b: 1;
-                                      }
-                                    }
-
-
-                                    @media screen and/*! */ /*! */(-webkit-min-device-pixel-ratio:0) {
-                                      a{
-                                        b: 1;
-                                      }
-                                    }
-
-
-                                    @media -webkit-min-device-pixel-ratio:0 {
-                                      a{
-                                        b: 1;
-                                      }
-                                    }";
-            const string expected = @"@media screen and/*!YUI-Compresser */(-webkit-min-device-pixel-ratio:0){a{b:1}}@media screen and/*! *//*! */(-webkit-min-device-pixel-ratio:0){a{b:1}}@media -webkit-min-device-pixel-ratio:0{a{b:1}}";
-
-            // Act & Assert
-            CompressAndCompare(source, expected);
-        }
-
-        [Test]
         [Description("https://github.com/yui/yuicompressor/blob/d36d4470ff786aadc2e70a36e689882d0bce4cc0/tests/bug2527998.css")]
         public void An_Empty_Body_Should_Be_Removed_But_A_Preserved_Comment_Should_Remain()
         {
