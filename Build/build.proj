@@ -3,7 +3,7 @@
     <PropertyGroup>
         <buildConfig Condition="'$(buildConfig)'==''">Release</buildConfig>
         <buildTarget Condition="'$(buildTarget)'==''">Any CPU</buildTarget>
-        <Src Condition="'$(Src)'==''">$(MSBuildProjectDirectory)\src</Src>
+        <Src Condition="'$(Src)'==''">$(MSBuildProjectDirectory)\..</Src>
         <PackageDir Condition="'$(PackageDir)'==''">$(MSBuildProjectDirectory)\output</PackageDir>
         
         <zipPackage>$(PackageDir)\zip</zipPackage>
@@ -18,9 +18,8 @@
  
  
     <Target Name="All">
-    
-        <!-- <CallTarget Targets="Clean" /> -->
-        <CallTarget Targets="Get" />
+    
+        <CallTarget Targets="Clean" />
         <CallTarget Targets="Build" />
         <CallTarget Targets="Package" />
         
@@ -29,19 +28,11 @@
 
     <Target Name="Clean">
     
-        <Exec Condition="Exists('$(Src)')" Command="rmdir $(Src) /S /Q" ContinueOnError="true"></Exec>
         <Exec Condition="Exists('$(zipPackage)')" Command="rmdir $(zipPackage) /S /Q" ContinueOnError="true"></Exec>   
         <Exec Condition="Exists('$(nuGetPackage)')" Command="rmdir $(nuGetPackage) /S /Q" ContinueOnError="true"></Exec>
     
     </Target>
   
-    <Target Name="Get">
-        
-        <MakeDir Condition="!Exists('$(Src)')" Directories="$(Src)"></MakeDir>
-        <SvnCheckout RepositoryPath="$(Repository)" LocalPath="$(Src)" />
-    
-    </Target>
-
 
     <Target Name="Build">
         <MSBuild Projects="$(Src)\YUICompressor.sln" Properties="Configuration=$(buildConfig);Platform=$(buildTarget)" />
@@ -172,12 +163,11 @@
         <Message Text="    eg: msbuild /t:All" Importance="High"/>
         <Message Text=" " />
         <Message Text="Main Targets:" Importance="High"/>
-        <Message Text="Clean   - Cleans the source and output directories" />
-        <Message Text="Get     - Pulls the latest code from Codeplex using SVN" />
+        <Message Text="Clean   - Cleans the output directories" />
         <Message Text="Build   - Builds the YUICompressor solution" />
         <Message Text="Package - Creates a binary zip file (e.g for upload to Codeplex) and NuGet packages from the binaries in the" />
         <Message Text="          '$(Src)\MainAssemblies' directory" />
-        <Message Text="All     - Excutes Clean;Get;Build;Package in that order" />
+        <Message Text="All     - Excutes Clean;Build;Package in that order" />
         <Message Text=" " />
         <Message Text="Additional Targets:" Importance="High"/>
         <Message Text="Zip     - Creates the binary zip file from the binaries in the '$(Src)\MainAssemblies' directory" />
