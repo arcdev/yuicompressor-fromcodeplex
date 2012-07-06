@@ -141,7 +141,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>3174</DevelopmentServerPort>
+          <DevelopmentServerPort>41974</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
@@ -155,7 +155,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>$(MSBuildBinPath)\msbuild.exe "$(ProjectDir)YUICompress.msbuild"</PostBuildEvent>
+    <PostBuildEvent>$(MSBuildBinPath)\msbuild.exe "$(ProjectDir)YUICompress.msbuild" /p:ConfigurationName=$(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>

@@ -57,7 +57,13 @@ namespace Yahoo.Yui.Compressor
 
         static JavaScriptCompressor()
         {
-            Initialise();
+            AssemblyResolver.Initialise();
+            InitialiseBuiltIn();
+            InitialiseOnesList();
+            InitialiseTwosList();
+            InitialiseThreesList();
+            InitialiseLiterals();
+            InitialiseReserved();
         }
 
         public JavaScriptCompressor()
@@ -438,16 +444,6 @@ namespace Yahoo.Yui.Compressor
                     }
                 }
             }
-        }
-
-        private static void Initialise()
-        {
-            InitialiseBuiltIn();
-            InitialiseOnesList();
-            InitialiseTwosList();
-            InitialiseThreesList();
-            InitialiseLiterals();
-            InitialiseReserved();
         }
 
         private static int CountChar(string haystack, char needle)

@@ -34,8 +34,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsBuild Example", "MsBuild 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Post-build Events WebSite Example", "Post-build Events WebSite Example", "{06003410-684F-4CE7-9B8E-7EA61866E336}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebSite", "Documentation\Post-build Events WebSite Example\SampleWebSite\SampleWebSite.csproj", "{486974FA-5703-485E-A019-C199F6F1ADE4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo.Yui.Compressor.Build.MsBuild", "Code\Yahoo.Yui.Compressor.Build.MsBuild\Yahoo.Yui.Compressor.Build.MsBuild.csproj", "{1A7860DE-18F7-46D0-98B9-F304814DF4B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo.Yui.Compressor.Build.Nant", "Code\Yahoo.Yui.Compressor.Build.Nant\Yahoo.Yui.Compressor.Build.Nant.csproj", "{B25483E2-C7A9-4BC6-832A-08F2270B5C84}"
@@ -63,42 +61,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nant Example", "Nant Exampl
 		Documentation\Nant Example\StyleSheetSample4.css = Documentation\Nant Example\StyleSheetSample4.css
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebSite", "Documentation\Post-build Events WebSite Example\SampleWebSite\SampleWebSite.csproj", "{486974FA-5703-485E-A019-C199F6F1ADE4}"
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs07
-		SccProjectUniqueName0 = Code\\Yahoo.Yui.Compressor.Tests\\Yahoo.Yui.Compressor.Tests.csproj
-		SccProjectTopLevelParentUniqueName0 = YUICompressor.sln
-		SccProjectName0 = Code/Yahoo.Yui.Compressor.Tests
-		SccAuxPath0 = https://tfs.codeplex.com/tfs/tfs07
-		SccLocalPath0 = Code\\Yahoo.Yui.Compressor.Tests
-		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName1 = Code\\Yahoo.Yui.Compressor\\Yahoo.Yui.Compressor.csproj
-		SccProjectTopLevelParentUniqueName1 = YUICompressor.sln
-		SccProjectName1 = Code/Yahoo.Yui.Compressor
-		SccAuxPath1 = https://tfs.codeplex.com/tfs/tfs07
-		SccLocalPath1 = Code\\Yahoo.Yui.Compressor
-		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName2 = Code\\Yahoo.Yui.Compressor.Build.Nant\\Yahoo.Yui.Compressor.Build.Nant.csproj
-		SccProjectTopLevelParentUniqueName2 = YUICompressor.sln
-		SccProjectName2 = Code/Yahoo.Yui.Compressor.Build.Nant
-		SccAuxPath2 = https://tfs.codeplex.com/tfs/tfs07
-		SccLocalPath2 = Code\\Yahoo.Yui.Compressor.Build.Nant
-		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName3 = Code\\Yahoo.Yui.Compressor.Build.MsBuild\\Yahoo.Yui.Compressor.Build.MsBuild.csproj
-		SccProjectTopLevelParentUniqueName3 = YUICompressor.sln
-		SccProjectName3 = Code/Yahoo.Yui.Compressor.Build.MsBuild
-		SccAuxPath3 = https://tfs.codeplex.com/tfs/tfs07
-		SccLocalPath3 = Code\\Yahoo.Yui.Compressor.Build.MsBuild
-		SccProvider3 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName4 = Documentation\\Post-build\u0020Events\u0020WebSite\u0020Example\\SampleWebSite\\SampleWebSite.csproj
-		SccProjectTopLevelParentUniqueName4 = YUICompressor.sln
-		SccProjectName4 = Documentation/Post-build\u0020Events\u0020WebSite\u0020Example/SampleWebSite
-		SccAuxPath4 = https://tfs.codeplex.com/tfs/tfs07
-		SccLocalPath4 = Documentation\\Post-build\u0020Events\u0020WebSite\u0020Example\\SampleWebSite
-		SccProvider4 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = YUICompressor.vsmdi
 	EndGlobalSection
@@ -115,10 +80,6 @@ Global
 		{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EDDD853-D3FD-4118-8210-2F9BBFE887C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{486974FA-5703-485E-A019-C199F6F1ADE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{486974FA-5703-485E-A019-C199F6F1ADE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{486974FA-5703-485E-A019-C199F6F1ADE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{486974FA-5703-485E-A019-C199F6F1ADE4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1A7860DE-18F7-46D0-98B9-F304814DF4B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A7860DE-18F7-46D0-98B9-F304814DF4B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A7860DE-18F7-46D0-98B9-F304814DF4B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -127,6 +88,10 @@ Global
 		{B25483E2-C7A9-4BC6-832A-08F2270B5C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B25483E2-C7A9-4BC6-832A-08F2270B5C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B25483E2-C7A9-4BC6-832A-08F2270B5C84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{486974FA-5703-485E-A019-C199F6F1ADE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
