@@ -372,6 +372,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="CustomDictionary.xml" />
+    <Content Include="Javascript Files\Accents.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Javascript Files\Issue9719.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

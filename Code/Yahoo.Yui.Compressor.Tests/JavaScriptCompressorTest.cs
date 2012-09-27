@@ -34,7 +34,7 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
             Assert.That(source.Length, Is.GreaterThan(actual.Length), "Not Greater");
         }
-
+        
         [Test]
         public void CompressSampleJavaScript2ReturnsCompressedJavascript()
         {
@@ -351,6 +351,52 @@ namespace Yahoo.Yui.Compressor.Tests
                 Thread.CurrentThread.CurrentUICulture = originalThreadUICulture;
             }
             Assert.Fail("Exception not thrown");
+        }
+
+        [TestCase("sv-SE", "sv-SE")]
+        [TestCase("en-US", "sv-SE")]
+        [TestCase("sv-SE", "en-US")]
+        [TestCase("en-US", "en-US")]
+        [TestCase(null, null)]
+        [TestCase(null, "sv-SE")]
+        [TestCase("sv-SE", null)]
+        [TestCase(null, "en-US")]
+        [TestCase("en-US", null)]
+        public void Accents_Should_Be_Retained_In_All_Cases(string threadCulture, string compressorCulture)
+        {
+            // Arrange
+            var originalThreadCulture = Thread.CurrentThread.CurrentCulture;
+            var originalThreadUICulture = Thread.CurrentThread.CurrentUICulture;
+            const string source = @"Strings = {
+                                        IncorrectLogin: 'Felaktigt användarnamn eller lösenord. Försök igen.'
+                                    }";
+            const string expected = @"Strings={IncorrectLogin:""Felaktigt användarnamn eller lösenord. Försök igen.""};";
+
+            try
+            {
+                if (threadCulture != null)
+                {
+                    Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(threadCulture);
+                    Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(threadCulture);
+                }
+                var compressor = new JavaScriptCompressor();
+                compressor.Encoding = Encoding.UTF8;
+                if (compressorCulture != null)
+                {
+                    compressor.ThreadCulture = CultureInfo.CreateSpecificCulture(compressorCulture);
+                }
+
+                // Act
+                var actual = compressor.Compress(source);
+
+                // Assert.
+                Assert.That(actual, Is.EqualTo(expected));
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = originalThreadCulture;
+                Thread.CurrentThread.CurrentUICulture = originalThreadUICulture;
+            }
         }
 
         [Test]

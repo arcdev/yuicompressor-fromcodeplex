@@ -64,6 +64,30 @@ namespace Yahoo.Yui.Compressor.Tests
         }
 
         [Test]
+        [Ignore("freeranger to fix")]
+        [Description("http://yuicompressor.codeplex.com/workitem/10507")]
+        public void Accents_Should_Be_Retained_When_Encoded_With_UTF8()
+        {
+            // Arrange
+            var compressor = CreateCompressorTask();
+            compressor.EncodingType = "utf-8";
+
+            compressor.SourceFiles = new ITaskItem[]
+                {
+                    new TaskItem(@"Javascript Files\Accents.js")
+                };
+            compressor.OutputFile = "accentscompressed.js";
+
+            // Act
+            compressor.Execute();
+
+            // Assert
+            var actual = File.ReadAllText("accentscompressed.js");
+            Assert.That(actual, Is.EqualTo(@"Strings={IncorrectLogin:""Felaktigt användarnamn eller lösenord. Försök igen.""};"));
+        }
+
+
+        [Test]
         public void When_The_Compressions_Type_Is_Overridden_On_An_Individual_Item_It_Takes_Precedence_Over_The_Task_Compression_Type()
         {
             // Arrange
