@@ -212,6 +212,9 @@
     <Content Include="Compatability Test Files\_syntax_error.js.min">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Javascript Files\Accents.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -372,7 +375,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="CustomDictionary.xml" />
-    <Content Include="Javascript Files\Accents.js">
+    <Content Include="Javascript Files\Accents.Expected.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Javascript Files\Issue9719.js">

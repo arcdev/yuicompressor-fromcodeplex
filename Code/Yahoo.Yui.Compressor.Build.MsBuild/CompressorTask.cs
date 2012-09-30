@@ -27,7 +27,7 @@ namespace Yahoo.Yui.Compressor.Build.MsBuild
 
         protected CompressorTask(ICompressor compressor)
         {
-            TaskEngine = new CompressorTaskEngine(new MsBuildLogAdapter(Log), compressor) { SetBuildParameters = SetBuildParameters };
+            TaskEngine = new CompressorTaskEngine(new MsBuildLogAdapter(Log), compressor) { SetTaskEngineParameters = this.SetTaskEngineParameters };
             DeleteSourceFiles = false;
             LineBreakPosition = -1;
         }
@@ -37,7 +37,7 @@ namespace Yahoo.Yui.Compressor.Build.MsBuild
             return this.TaskEngine.Execute();
         }
 
-        protected virtual void SetBuildParameters()
+        protected virtual void SetTaskEngineParameters()
         {
             this.TaskEngine.CompressionType = this.CompressionType;
             this.TaskEngine.DeleteSourceFiles = this.DeleteSourceFiles;

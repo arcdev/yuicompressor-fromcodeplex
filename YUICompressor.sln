@@ -63,6 +63,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nant Example", "Nant Exampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebSite", "Documentation\Post-build Events WebSite Example\SampleWebSite\SampleWebSite.csproj", "{486974FA-5703-485E-A019-C199F6F1ADE4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C3839C7B-865C-4EE6-BF83-A3B98EAA9AA4}"
+	ProjectSection(SolutionItems) = preProject
+		Build\build.proj = Build\build.proj
+		Build\MSBuild.Community.Tasks.dll = Build\MSBuild.Community.Tasks.dll
+		Build\MSBuild.Community.Tasks.Targets = Build\MSBuild.Community.Tasks.Targets
+		Build\New BSD License.txt = Build\New BSD License.txt
+		Build\YUICompressor.nuspec = Build\YUICompressor.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = YUICompressor.vsmdi

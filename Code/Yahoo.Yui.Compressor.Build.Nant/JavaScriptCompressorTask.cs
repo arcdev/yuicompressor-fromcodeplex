@@ -36,21 +36,10 @@ namespace Yahoo.Yui.Compressor.Build.Nant
         public JavaScriptCompressorTask(IJavaScriptCompressor compressor) : base(compressor)
         {
             this.compressor = compressor;
-            this.ObfuscateJavaScript = true;
-            this.TaskEngine.LogAdditionalTaskParameters = this.LogTaskParameters;
-        }
-
-        protected override void SetBuildParameters()
-        {
-            base.SetBuildParameters();
-            this.ParseThreadCulture();
-            this.compressor.DisableOptimizations = this.DisableOptimizations;
-            this.compressor.IgnoreEval = this.IsEvalIgnored;
-            this.compressor.ObfuscateJavascript = this.ObfuscateJavaScript;
-            this.compressor.PreserveAllSemicolons = this.PreserveAllSemicolons;
-            this.compressor.ThreadCulture = this.threadCulture;
-            this.compressor.Encoding = this.TaskEngine.Encoding;
-            this.compressor.ErrorReporter = new CustomErrorReporter(this.TaskEngine.LogType);
+            ObfuscateJavaScript = true;
+            TaskEngine.ParseAdditionalTaskParameters = this.ParseAdditionalTaskParameters;
+            TaskEngine.LogAdditionalTaskParameters = this.LogAdditionalTaskParameters;
+            TaskEngine.SetCompressorParameters = this.SetCompressorParameters;
         }
 
         protected override void ExecuteTask()
@@ -61,14 +50,14 @@ namespace Yahoo.Yui.Compressor.Build.Nant
             }
             catch (EcmaScriptException ecmaScriptException)
             {
-                this.TaskEngine.Log.LogError("An error occurred in parsing the Javascript file.");
+                TaskEngine.Log.LogError("An error occurred in parsing the Javascript file.");
                 if (ecmaScriptException.LineNumber == -1)
                 {
-                    this.TaskEngine.Log.LogError("[ERROR] {0} ********", ecmaScriptException.Message);
+                    TaskEngine.Log.LogError("[ERROR] {0} ********", ecmaScriptException.Message);
                 }
                 else
                 {
-                    this.TaskEngine.Log.LogError(
+                    TaskEngine.Log.LogError(
                         "[ERROR] {0} ******** Line: {2}. LineOffset: {3}. LineSource: \"{4}\"",
                         ecmaScriptException.Message,
                         string.IsNullOrEmpty(ecmaScriptException.SourceName)
@@ -81,29 +70,45 @@ namespace Yahoo.Yui.Compressor.Build.Nant
             }
         }
 
-        private void LogTaskParameters()
+        private void ParseAdditionalTaskParameters()
         {
-            this.TaskEngine.Log.LogBoolean("Obfuscate Javascript", this.ObfuscateJavaScript);
-            this.TaskEngine.Log.LogBoolean("Preserve semi colons", this.PreserveAllSemicolons);
-            this.TaskEngine.Log.LogBoolean("Disable optimizations", this.DisableOptimizations);
-            this.TaskEngine.Log.LogBoolean("Is Eval Ignored", this.IsEvalIgnored);
-            this.TaskEngine.Log.LogMessage(
+            ParseThreadCulture();
+        }
+
+        private void SetCompressorParameters()
+        {
+            compressor.DisableOptimizations = DisableOptimizations;
+            compressor.IgnoreEval = IsEvalIgnored;
+            compressor.ObfuscateJavascript = ObfuscateJavaScript;
+            compressor.PreserveAllSemicolons = PreserveAllSemicolons;
+            compressor.ThreadCulture = threadCulture;
+            compressor.Encoding = TaskEngine.Encoding;
+            compressor.ErrorReporter = new CustomErrorReporter(TaskEngine.LogType);
+        }
+
+        private void LogAdditionalTaskParameters()
+        {
+            TaskEngine.Log.LogBoolean("Obfuscate Javascript", ObfuscateJavaScript);
+            TaskEngine.Log.LogBoolean("Preserve semi colons", PreserveAllSemicolons);
+            TaskEngine.Log.LogBoolean("Disable optimizations", DisableOptimizations);
+            TaskEngine.Log.LogBoolean("Is Eval Ignored", IsEvalIgnored);
+            TaskEngine.Log.LogMessage(
                 "Line break position: "
-                + (this.LineBreakPosition <= -1 ? "None" : this.LineBreakPosition.ToString(CultureInfo.InvariantCulture)));
-            this.TaskEngine.Log.LogMessage("Thread Culture: " + this.threadCulture.DisplayName);
+                + (LineBreakPosition <= -1 ? "None" : LineBreakPosition.ToString(CultureInfo.InvariantCulture)));
+            TaskEngine.Log.LogMessage("Thread Culture: " + threadCulture.DisplayName);
         }
 
         private void ParseThreadCulture()
         {
-            if (string.IsNullOrEmpty(this.ThreadCulture))
+            if (string.IsNullOrEmpty(ThreadCulture))
             {
-                this.threadCulture = CultureInfo.InvariantCulture;
+                threadCulture = CultureInfo.InvariantCulture;
                 return;
             }
 
             try
             {
-                switch (this.ThreadCulture.ToLowerInvariant())
+                switch (ThreadCulture.ToLowerInvariant())
                 {
                     case "iv":
                     case "ivl":
@@ -112,19 +117,19 @@ namespace Yahoo.Yui.Compressor.Build.Nant
                     case "invariant language":
                     case "invariant language (invariant country)":
                         {
-                            this.threadCulture = CultureInfo.InvariantCulture;
+                            threadCulture = CultureInfo.InvariantCulture;
                             break;
                         }
                     default:
                         {
-                            this.threadCulture = CultureInfo.CreateSpecificCulture(this.ThreadCulture);
+                            threadCulture = CultureInfo.CreateSpecificCulture(ThreadCulture);
                             break;
                         }
                 }
             }
             catch
             {
-                throw new ArgumentException("Thread Culture: " + this.ThreadCulture + " is invalid.", "ThreadCulture");
+                throw new ArgumentException("Thread Culture: " + ThreadCulture + " is invalid.", "ThreadCulture");
             }
         }
     }

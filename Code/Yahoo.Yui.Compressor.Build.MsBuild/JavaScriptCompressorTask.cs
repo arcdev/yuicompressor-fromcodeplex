@@ -29,20 +29,9 @@ namespace Yahoo.Yui.Compressor.Build.MsBuild
         {
             this.compressor = compressor;
             ObfuscateJavaScript = true;
-            TaskEngine.LogAdditionalTaskParameters = this.LogTaskParameters;
-        }
-
-        protected override void SetBuildParameters()
-        {
-            base.SetBuildParameters();
-            ParseThreadCulture();
-            compressor.DisableOptimizations = DisableOptimizations;
-            compressor.IgnoreEval = IsEvalIgnored;
-            compressor.ObfuscateJavascript = ObfuscateJavaScript;
-            compressor.PreserveAllSemicolons = PreserveAllSemicolons;
-            compressor.ThreadCulture = threadCulture;
-            compressor.Encoding = TaskEngine.Encoding;
-            compressor.ErrorReporter = new CustomErrorReporter(TaskEngine.LogType);
+            TaskEngine.ParseAdditionalTaskParameters = this.ParseAdditionalTaskParameters;
+            TaskEngine.LogAdditionalTaskParameters = this.LogAdditionalTaskParameters;
+            TaskEngine.SetCompressorParameters = this.SetCompressorParameters;
         }
 
         public override bool Execute()
@@ -74,7 +63,23 @@ namespace Yahoo.Yui.Compressor.Build.MsBuild
             }
         }
 
-        private void LogTaskParameters()
+        private void ParseAdditionalTaskParameters()
+        {
+            ParseThreadCulture();
+        }
+
+        private void SetCompressorParameters()
+        {
+            compressor.DisableOptimizations = DisableOptimizations;
+            compressor.IgnoreEval = IsEvalIgnored;
+            compressor.ObfuscateJavascript = ObfuscateJavaScript;
+            compressor.PreserveAllSemicolons = PreserveAllSemicolons;
+            compressor.ThreadCulture = threadCulture;
+            compressor.Encoding = TaskEngine.Encoding;
+            compressor.ErrorReporter = new CustomErrorReporter(TaskEngine.LogType);
+        }
+
+        private void LogAdditionalTaskParameters()
         {
             TaskEngine.Log.LogBoolean("Obfuscate Javascript", ObfuscateJavaScript);
             TaskEngine.Log.LogBoolean("Preserve semi colons", PreserveAllSemicolons);

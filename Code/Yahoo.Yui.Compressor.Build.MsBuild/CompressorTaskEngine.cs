@@ -36,11 +36,13 @@ namespace Yahoo.Yui.Compressor.Build
 
         public ILog Log { get; private set; }
 
-        public Action SetBuildParameters; 
- 
-        public Action ParseAdditionalParameters;
+        public Action SetTaskEngineParameters;
+
+        public Action ParseAdditionalTaskParameters;
 
         public Action LogAdditionalTaskParameters;
+
+        public Action SetCompressorParameters;
 
         public delegate void Action();
 
@@ -57,11 +59,15 @@ namespace Yahoo.Yui.Compressor.Build
         {
             try
             {
-                if (SetBuildParameters != null)
+                if (this.SetTaskEngineParameters != null)
                 {
-                    SetBuildParameters();
+                    this.SetTaskEngineParameters();
                 }
-                ParseBuildParameters();
+                ParseTaskParameters();
+                if (this.SetCompressorParameters != null)
+                {
+                    SetCompressorParameters();
+                }
             }
             catch (Exception ex)
             {
@@ -145,7 +151,7 @@ namespace Yahoo.Yui.Compressor.Build
             return true;
         }
 
-        public void ParseBuildParameters()
+        public void ParseTaskParameters()
         {
             ParseLoggingType();
             if (string.IsNullOrEmpty(CompressionType))
@@ -158,9 +164,9 @@ namespace Yahoo.Yui.Compressor.Build
                 compressionType = ParseCompressionType(CompressionType);
             }
             ParseEncoding();
-            if (ParseAdditionalParameters != null)
+            if (this.ParseAdditionalTaskParameters != null)
             {
-                ParseAdditionalParameters();
+                ParseAdditionalTaskParameters();
             }
         }
 
@@ -275,7 +281,7 @@ namespace Yahoo.Yui.Compressor.Build
                     // Load up the file.
                     try
                     {
-                        var originalContent = File.ReadAllText(file.FileName);
+                        var originalContent = File.ReadAllText(file.FileName, this.Encoding);
                         totalOriginalContentLength += originalContent.Length;
 
                         if (string.IsNullOrEmpty(originalContent))

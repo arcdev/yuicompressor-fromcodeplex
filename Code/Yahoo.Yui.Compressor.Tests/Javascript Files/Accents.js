@@ -1,3 +1,6 @@
 Strings = {
-    IncorrectLogin: 'Felaktigt användarnamn eller lösenord. Försök igen.'
-}
+	IncorrectLogin: 'Felaktigt anvÃ¤ndarnamn eller lÃ¶senord. FÃ¶rsÃ¶k igen!',
+    ExpandAll: 'Visa allt',
+    CollapseAll: 'Minimera',
+    ViewInNormalMode: 'Tryck hÃ¤r fÃ¶r normalt lÃ¤ge'
+};

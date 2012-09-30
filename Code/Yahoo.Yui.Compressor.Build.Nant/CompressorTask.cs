@@ -38,7 +38,7 @@
         protected CompressorTask(ICompressor compressor)
         {
             this.logger = new NantLogAdapter();
-            this.TaskEngine = new CompressorTaskEngine(logger, compressor) { SetBuildParameters = this.SetBuildParameters };
+            this.TaskEngine = new CompressorTaskEngine(logger, compressor) { SetTaskEngineParameters = this.SetTaskEngineParameters };
             this.SourceFiles = new FileSet();
             this.DeleteSourceFiles = false;
             this.LineBreakPosition = -1;
@@ -50,7 +50,7 @@
             TaskEngine.Execute();
         }
 
-        protected virtual void SetBuildParameters()
+        protected virtual void SetTaskEngineParameters()
         {
             this.TaskEngine.CompressionType = this.CompressionType;
             this.TaskEngine.DeleteSourceFiles = this.DeleteSourceFiles;
