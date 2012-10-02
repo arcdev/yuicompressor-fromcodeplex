@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using NUnit.Framework;
@@ -77,6 +78,7 @@ namespace Yahoo.Yui.Compressor.Tests
 
             foreach (var file in Directory.GetFiles("Compatability Test Files", "*" + extension))
             {
+                Debug.WriteLine("File: " + file);
                 if (exclusions.Contains(file))
                 {
                     continue;
