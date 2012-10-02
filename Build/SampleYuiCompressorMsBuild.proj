@@ -17,22 +17,20 @@
     
     <ItemGroup>
       <!-- Single files, listed in order of dependency -->
-      <CssFiles Include="*.css"/>
-      <JavaScriptFiles Include="jquery-1.7.1.js"/>
-      <JavaScriptFiles Include="jquery-ui-1.8.20.js"/>
-      <JavaScriptFiles Include="jquery.validate.js"/>
+      <CssFiles Include="..\..\..\Content\*.css"/>
+      <JavaScriptFiles Include="..\..\..\Scripts\jquery-1.7.1.js"/>
+      <JavaScriptFiles Include="..\..\..\Scripts\jquery-ui-1.8.20.js"/>
+      <JavaScriptFiles Include="..\..\..\Scripts\jquery.validate.js"/>
     </ItemGroup>
 
     <CssCompressorTask
           SourceFiles="@(CssFiles)"
-          OutputFile="Minified.css"
+          OutputFile="..\..\..\Content\Minified.css"
        />
 
     <JavaScriptCompressorTask
           SourceFiles="@(JavaScriptFiles)"
-          OutputFile="Minified.js"
-          
-          
+          OutputFile="..\..\..\Scripts\Minified.js"
        />
     
   </Target>
