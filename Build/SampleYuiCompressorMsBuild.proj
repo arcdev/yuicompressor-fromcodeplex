@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/MsBuild/2003">
+
+  <UsingTask TaskName="CssCompressorTask" AssemblyFile="..\..\lib\NET20\Yahoo.Yui.Compressor.Build.MsBuild.dll" />
+  <UsingTask TaskName="JavaScriptCompressorTask" AssemblyFile="..\..\lib\NET20\Yahoo.Yui.Compressor.Build.MsBuild.dll" />
+
+  
+  <!-- 
+      ****************************************************************************************************************************************
+      ******  Please refer to the official documentation for the full list of options: http://yuicompressor.codeplex.com/documentation  ******  
+      ****************************************************************************************************************************************
+  -->
+
+  
+  
+  <Target Name="Minify">
+    
+    <ItemGroup>
+      <!-- Single files, listed in order of dependency -->
+      <CssFiles Include="*.css"/>
+      <JavaScriptFiles Include="jquery-1.7.1.js"/>
+      <JavaScriptFiles Include="jquery-ui-1.8.20.js"/>
+      <JavaScriptFiles Include="jquery.validate.js"/>
+    </ItemGroup>
+
+    <CssCompressorTask
+          SourceFiles="@(CssFiles)"
+          OutputFile="Minified.css"
+       />
+
+    <JavaScriptCompressorTask
+          SourceFiles="@(JavaScriptFiles)"
+          OutputFile="Minified.js"
+          
+          
+       />
+    
+  </Target>
+</Project>
