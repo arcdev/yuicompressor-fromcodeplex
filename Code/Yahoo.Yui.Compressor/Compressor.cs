@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Yahoo.Yui.Compressor
+﻿namespace Yahoo.Yui.Compressor
 {
     using System;
 
@@ -8,11 +6,6 @@ namespace Yahoo.Yui.Compressor
     {
         public CompressionType CompressionType { get; set; }
         public int LineBreakPosition { get; set; }
-
-        static Compressor()
-        {
-            AssemblyResolver.Initialise();
-        }
 
         protected Compressor()
         {

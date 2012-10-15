@@ -64,20 +64,16 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EcmaScript.NET, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EcmaScript.NET">
       <HintPath>..\..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compressor.cs" />
-    <Compile Include="AssemblyResolver.cs" />
     <Compile Include="ICompressor.cs" />
     <Compile Include="CompressionType.cs" />
     <Compile Include="CssCompressor.cs" />
@@ -116,14 +112,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll">
-      <Link>Resources\EcmaScript.NET.dll</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll">
-      <Link>Resources\Iesi.Collections.dll</Link>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

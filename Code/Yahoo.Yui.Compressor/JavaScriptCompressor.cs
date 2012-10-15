@@ -57,7 +57,6 @@ namespace Yahoo.Yui.Compressor
 
         static JavaScriptCompressor()
         {
-            AssemblyResolver.Initialise();
             InitialiseBuiltIn();
             InitialiseOnesList();
             InitialiseTwosList();
@@ -598,7 +597,6 @@ namespace Yahoo.Yui.Compressor
                                     tokens.RemoveAt(i);
                                     i = i - 1;
                                     length = length - 2;
-                                    break;
                                 }
                             }
                             break;

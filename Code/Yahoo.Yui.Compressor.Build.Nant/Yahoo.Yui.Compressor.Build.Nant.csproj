@@ -41,7 +41,6 @@
   <ItemGroup>
     <Reference Include="EcmaScript.NET">
       <HintPath>..\..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="NAnt.Core">
       <HintPath>..\..\packages\Nant\lib\NAnt.Core.dll</HintPath>
