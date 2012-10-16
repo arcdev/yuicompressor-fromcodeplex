@@ -1,17 +1,19 @@
-﻿namespace Yahoo.Yui.Compressor
-{
-    using System;
+﻿using System;
 
+namespace Yahoo.Yui.Compressor
+{
     public abstract class Compressor : ICompressor
     {
-        public CompressionType CompressionType { get; set; }
-        public int LineBreakPosition { get; set; }
-
         protected Compressor()
         {
             CompressionType = CompressionType.Standard;
-            this.LineBreakPosition = -1;
+            LineBreakPosition = -1;
         }
+
+        #region ICompressor Members
+
+        public CompressionType CompressionType { get; set; }
+        public int LineBreakPosition { get; set; }
 
         public string Compress(string source)
         {
@@ -27,6 +29,8 @@
 
             return DoCompress(source);
         }
+
+        #endregion
 
         protected abstract string DoCompress(string source);
     }

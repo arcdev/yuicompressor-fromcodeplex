@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>2.0.0.0</version>
-    <authors>Pure Krome &amp; freeranger</authors>
+    <version>2.1.1.0</version>
+    <authors>Pure Krome and freeranger</authors>
     <owners>Pure Krome</owners>
     <licenseUrl>http://yuicompressor.codeplex.com/license/</licenseUrl>
     <projectUrl>http://yuicompressor.codeplex.com/</projectUrl>

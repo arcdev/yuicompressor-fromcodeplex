@@ -2,7 +2,7 @@
 {
     public class CssCompressorTask : CompressorTask
     {
-        private readonly ICssCompressor compressor;
+        private readonly ICssCompressor _compressor;
 
         public bool PreserveComments { get; set; }
 
@@ -12,12 +12,12 @@
 
         public CssCompressorTask(ICssCompressor compressor) : base(compressor)
         {
-            this.compressor = compressor;
+            _compressor = compressor;
         }
 
         public override bool Execute()
         {
-            compressor.RemoveComments = !PreserveComments;
+            _compressor.RemoveComments = !PreserveComments;
             return base.Execute();
         }
     }
