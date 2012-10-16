@@ -71,9 +71,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C3839C7B
 		Build\YUICompressor.nuspec = Build\YUICompressor.nuspec
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo.Yui.Compressor.Mvc", "Code\Yahoo.Yui.Compressor.Mvc\Yahoo.Yui.Compressor.Mvc.csproj", "{2EF5DA41-11FA-4EC4-9B29-F431063A0708}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs07
 		SccProjectUniqueName0 = Code\\Yahoo.Yui.Compressor\\Yahoo.Yui.Compressor.csproj
@@ -100,6 +102,12 @@ Global
 		SccAuxPath3 = https://tfs.codeplex.com/tfs/tfs07
 		SccLocalPath3 = Code\\Yahoo.Yui.Compressor.Build.Nant
 		SccProvider3 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName4 = Code\\Yahoo.Yui.Compressor.Mvc\\Yahoo.Yui.Compressor.Mvc.csproj
+		SccProjectTopLevelParentUniqueName4 = YUICompressor.sln
+		SccProjectName4 = Code/Yahoo.Yui.Compressor.Mvc
+		SccAuxPath4 = https://tfs.codeplex.com/tfs/tfs07
+		SccLocalPath4 = Code\\Yahoo.Yui.Compressor.Mvc
+		SccProvider4 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = YUICompressor.vsmdi
@@ -125,6 +133,10 @@ Global
 		{B25483E2-C7A9-4BC6-832A-08F2270B5C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B25483E2-C7A9-4BC6-832A-08F2270B5C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B25483E2-C7A9-4BC6-832A-08F2270B5C84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF5DA41-11FA-4EC4-9B29-F431063A0708}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF5DA41-11FA-4EC4-9B29-F431063A0708}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF5DA41-11FA-4EC4-9B29-F431063A0708}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF5DA41-11FA-4EC4-9B29-F431063A0708}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -134,6 +146,7 @@ Global
 		{AFDF50F0-286B-4490-9EBD-007561864738} = {258C15F4-B2FC-48C5-BC4E-FF6E8858F530}
 		{1A7860DE-18F7-46D0-98B9-F304814DF4B0} = {258C15F4-B2FC-48C5-BC4E-FF6E8858F530}
 		{B25483E2-C7A9-4BC6-832A-08F2270B5C84} = {258C15F4-B2FC-48C5-BC4E-FF6E8858F530}
+		{2EF5DA41-11FA-4EC4-9B29-F431063A0708} = {258C15F4-B2FC-48C5-BC4E-FF6E8858F530}
 		{4296A6B3-1D93-4513-9832-48A0E9F80E9E} = {0F1E147D-EBC6-48EC-9E30-711CAE1A65BE}
 		{76215796-B8E2-4699-9E48-4909A62E4494} = {0F1E147D-EBC6-48EC-9E30-711CAE1A65BE}
 	EndGlobalSection

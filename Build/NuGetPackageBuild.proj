@@ -63,6 +63,7 @@
         <CallTarget Targets="NuGetMain" />
         <CallTarget Targets="NuGetMsBuild" />
         <CallTarget Targets="NuGetNAnt" />
+      <CallTarget Targets="NuGetMvc" />
         
     </Target>
     
@@ -126,6 +127,31 @@
         <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="UpdateProperty" Properties="nuSpecFile=$(PackageTempDir)\YUICompressor.NET.NAnt.nuspec;PropertyName=id;PropertyValue=YUICompressor.NET.NAnt" />
 
         <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CreateNuGetPackage" Properties="nuSpecFile=YUICompressor.NET.NAnt.nuspec" />  
+
+    </Target>
+
+
+
+    <Target Name="NuGetMvc">
+      <!-- Creates a NuGet package for the ASP.NET MVC 4.5 binaries -->
+
+      <MakeDir Condition="!Exists('$(nuGetOutput)')" Directories="$(nuGetOutput)"></MakeDir>
+
+      <ItemGroup>
+        <MvcBinaries Include="$(Src)\MainAssemblies\*.*" Exclude="$(Src)\MainAssemblies\*NAnt.*.dll;$(Src)\MainAssemblies\*.Build.NAnt.dll;$(Src)\MainAssemblies\*.Build.*.dll;" />
+      </ItemGroup>
+
+
+      <Copy SourceFiles="@(MvcBinaries)" DestinationFolder="$(PackageTempDir)\lib\NET45" />
+      <Copy SourceFiles="YUICompressor.nuspec" DestinationFiles="$(PackageTempDir)\YUICompressor.NET.Mvc.nuspec" />
+      <Copy SourceFiles="$(Src)\Build\ReadMe-Mvc.txt" DestinationFiles="$(PackageTempDir)\readme.txt" />
+
+      <!-- Update package specific entries -->
+      <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="UpdateProperty" Properties="nuSpecFile=$(PackageTempDir)\YUICompressor.NET.Mvc.nuspec;PropertyName=title;PropertyValue=YUICompressor .NET - Mvc Bundle Transform" />
+      <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="UpdateProperty" Properties="nuSpecFile=$(PackageTempDir)\YUICompressor.NET.Mvc.nuspec;PropertyName=id;PropertyValue=YUICompressor.NET.Mvc" />
+
+      <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CreateNuGetPackage" Properties="nuSpecFile=YUICompressor.NET.Mvc.nuspec" />
+
 
     </Target>
   
