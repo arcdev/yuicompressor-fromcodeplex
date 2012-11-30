@@ -23,7 +23,7 @@ namespace Yahoo.Yui.Compressor
         private static readonly Regex SIMPLE_IDENTIFIER_NAME_PATTERN = new Regex("^[a-zA-Z_][a-zA-Z0-9_]*$", RegexOptions.Compiled);
         private static HashedSet<string> _builtin;
 
-        private readonly ScriptOrFunctionScope _globalScope = new ScriptOrFunctionScope(-1, null);
+        private ScriptOrFunctionScope _globalScope;
         private readonly Hashtable _indexedScopes = new Hashtable();
         private readonly Stack _scopes = new Stack();
         private ArrayList _tokens;
@@ -101,7 +101,7 @@ namespace Yahoo.Yui.Compressor
                     OptimizeObjectMemberAccess(_tokens);
                     OptimizeObjLitMemberDecl(_tokens);
                 }
-
+                _globalScope = new ScriptOrFunctionScope(-1, null);
                 BuildSymbolTree();
                 MungeSymboltree();
                 var result = PrintSymbolTree(LineBreakPosition, PreserveAllSemicolons);
