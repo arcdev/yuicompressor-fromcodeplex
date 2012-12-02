@@ -2,7 +2,7 @@
 using System.Text;
 using System.Web.Optimization;
 
-namespace Yahoo.Yui.Compressor.Mvc
+namespace Yahoo.Yui.Compressor.Web.Optimization
 {
     public class YuiCompressorTransform : IBundleTransform
     {
@@ -61,9 +61,10 @@ namespace Yahoo.Yui.Compressor.Mvc
 
             // Define the compressor we wish to use.
             ICompressor compressor;
-            if (_compressorConfig is CssCompressorConfig)
+            var config = _compressorConfig as CssCompressorConfig;
+            if (config != null)
             {
-                var cssCompressorConfig = (CssCompressorConfig)_compressorConfig;
+                var cssCompressorConfig = config;
                 compressor = new CssCompressor
                 {
                     CompressionType = cssCompressorConfig.CompressionType,

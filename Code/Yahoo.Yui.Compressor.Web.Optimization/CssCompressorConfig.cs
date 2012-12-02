@@ -1,4 +1,4 @@
-﻿namespace Yahoo.Yui.Compressor.Mvc
+﻿namespace Yahoo.Yui.Compressor.Web.Optimization
 {
     public class CssCompressorConfig : CompressorConfig
     {

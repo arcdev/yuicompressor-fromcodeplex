@@ -2,7 +2,7 @@
 using System.Text;
 using EcmaScript.NET;
 
-namespace Yahoo.Yui.Compressor.Mvc
+namespace Yahoo.Yui.Compressor.Web.Optimization
 {
     public class JavaScriptCompressorConfig : CompressorConfig
     {
