@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>YUICompressor.NET.Web.Optimization</id>
-        <version>0.0.0.0</version>
+        <version>2.1.1.1</version>
         <title>YUICompressor .NET - Web.Optimization</title>
         <authors>Pure Krome and freeranger</authors>
         <owners>Pure Krome</owners>
@@ -22,11 +22,10 @@ This is a direct .NET port of the original Yahoo! UI Library: YUI Compressor.</d
         <tags>compression, compressor, minification, obfuscation, minify, bundle, bundler, combine, javascript, js, CSS, cascading style sheets, optimization, transform</tags>
         <dependencies>
             <dependency id="EcmaScript.Net" version="1.0.1.0" />
-            <dependency id="Iesi.Collections" version="3.2.0.4000" />
+            <dependency id="Iesi.Collections" version="[3.2.0.4000]" />
             <dependency id="Microsoft.AspNet.Web.Optimization" version="1.0.0" />
             <dependency id="Microsoft.Web.Infrastructure" version="1.0.0" />
             <dependency id="WebGrease" version="1.1.0" />
         </dependencies>
     </metadata>
-    <files />
 </package>

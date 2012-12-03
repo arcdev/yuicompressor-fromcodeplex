@@ -69,7 +69,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C3839C7B
 		Build\ReadMe-WebOptimization.txt = Build\ReadMe-WebOptimization.txt
 		Build\SampleYuiCompressorMsBuild.proj = Build\SampleYuiCompressorMsBuild.proj
 		Build\YUICompressor.NET.nuspec = Build\YUICompressor.NET.nuspec
-		Build\YUICompressor.nuspec = Build\YUICompressor.nuspec
+		Build\YUICompressor.NET.Web.Optimization.nuspec = Build\YUICompressor.NET.Web.Optimization.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo.Yui.Compressor.Web.Optimization", "Code\Yahoo.Yui.Compressor.Web.Optimization\Yahoo.Yui.Compressor.Web.Optimization.csproj", "{87F4FDFA-533F-42FA-859E-78AD521E99BB}"
