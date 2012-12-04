@@ -94,11 +94,11 @@
         <MakeDir Condition="!Exists('$(nuGetOutput)')" Directories="$(nuGetOutput)" />
 
         <ItemGroup>
-           <MSBuildBinaries Include="$(Src)\MainAssemblies\Yahoo.Yui.Compressor.dll;$(Src)\MainAssemblies\Yahoo.Yui.Compressor.Build.MsBuild.dll" />
+           <MSBuildBinaries Include="$(Src)\MainAssemblies\Yahoo.Yui.Compressor.Build.MsBuild.dll" />
         </ItemGroup>
 
         <Copy SourceFiles="@(MSBuildBinaries)" DestinationFolder="$(PackageTempDir)\lib\NET20" />
-        <Copy SourceFiles="YUICompressor.NET.nuspec" DestinationFiles="$(PackageTempDir)\YUICompressor.NET.MSBuild.nuspec" />
+        <Copy SourceFiles="YUICompressor.NET.MSBuild.NAnt.nuspec" DestinationFiles="$(PackageTempDir)\YUICompressor.NET.MSBuild.nuspec" />
         <Copy SourceFiles="$(Src)\Build\SampleYuiCompressorMsBuild.proj" DestinationFiles="$(PackageTempDir)\Samples\YUICompressor\MSBuild.proj" />
         <Copy SourceFiles="$(Src)\Build\ReadMe-Core.txt" DestinationFiles="$(PackageTempDir)\readme.txt" />
         <Copy SourceFiles="$(Src)\Build\New BSD License.txt" DestinationFiles="$(PackageTempDir)\New BSD License.txt" />
@@ -122,11 +122,11 @@ This is a direct .NET port of the original Yahoo! UI Library: YUI Compressor." /
         <MakeDir Condition="!Exists('$(nuGetOutput)')" Directories="$(nuGetOutput)" />
 
         <ItemGroup>
-            <NAntBinaries Include="$(Src)\MainAssemblies\Yahoo.Yui.Compressor.dll;$(Src)\MainAssemblies\Yahoo.Yui.Compressor.Build.Nant.dll;$(Src)\MainAssemblies\NAnt.Core.dll" />
+            <NAntBinaries Include="$(Src)\MainAssemblies\Yahoo.Yui.Compressor.Build.Nant.dll;$(Src)\MainAssemblies\NAnt.Core.dll" />
         </ItemGroup>
         
         <Copy SourceFiles="@(NAntBinaries)" DestinationFolder="$(PackageTempDir)\lib\NET20" />
-        <Copy SourceFiles="YUICompressor.NET.nuspec" DestinationFiles="$(PackageTempDir)\YUICompressor.NET.NAnt.nuspec" />
+        <Copy SourceFiles="YUICompressor.NET.MSBuild.NAnt.nuspec" DestinationFiles="$(PackageTempDir)\YUICompressor.NET.NAnt.nuspec" />
         <Copy SourceFiles="$(Src)\Build\New BSD License.txt" DestinationFiles="$(PackageTempDir)\New BSD License.txt" />
         
         <!-- Update package specific entries -->
@@ -149,7 +149,7 @@ This is a direct .NET port of the original Yahoo! UI Library: YUI Compressor." /
       <MakeDir Condition="!Exists('$(nuGetOutput)')" Directories="$(nuGetOutput)"></MakeDir>
 
       <ItemGroup>
-          <WebOptimizationBinaries Include="$(Src)\MainAssemblies\Yahoo.Yui.Compressor.dll;$(Src)\MainAssemblies\Yahoo.Yui.Compressor.Web.Optimization.dll" />
+          <WebOptimizationBinaries Include="$(Src)\MainAssemblies\Yahoo.Yui.Compressor.Web.Optimization.dll" />
       </ItemGroup>
 
       <Copy SourceFiles="@(WebOptimizationBinaries)" DestinationFolder="$(PackageTempDir)\lib\NET45" />

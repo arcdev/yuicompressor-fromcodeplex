@@ -66,7 +66,7 @@ You have a few choices.
    YUICompressor.NET package instead :) This will auto-wire up this package where required. 
    That said - you'll still need to define what files you want to compress, etc.
 
-   Sample video explaing this:
+   Sample video explaing this: http://www.youtube.com/watch?v=NSHGSbViMm8
 
    ** Technically, this is part of the System.Web.Optimization package .. which first came baked into
    to VS2012 with an ASP.NET MVC4 project.

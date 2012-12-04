@@ -51,7 +51,7 @@
    How the hell do I use this thing?
  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
- Just watch this video :
+ Just watch this video : http://www.youtube.com/watch?v=NSHGSbViMm8
 
 
 

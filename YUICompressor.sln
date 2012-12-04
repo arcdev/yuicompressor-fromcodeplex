@@ -69,47 +69,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C3839C7B
 		Build\ReadMe-WebOptimization.txt = Build\ReadMe-WebOptimization.txt
 		Build\SampleYuiCompressorMsBuild.proj = Build\SampleYuiCompressorMsBuild.proj
 		Build\YUICompressor.NET.nuspec = Build\YUICompressor.NET.nuspec
+		Build\YUICompressor.NET.MSBuild.NAnt.nuspec = Build\YUICompressor.NET.MSBuild.NAnt.nuspec
 		Build\YUICompressor.NET.Web.Optimization.nuspec = Build\YUICompressor.NET.Web.Optimization.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo.Yui.Compressor.Web.Optimization", "Code\Yahoo.Yui.Compressor.Web.Optimization\Yahoo.Yui.Compressor.Web.Optimization.csproj", "{87F4FDFA-533F-42FA-859E-78AD521E99BB}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs07
-		SccProjectUniqueName0 = Code\\Yahoo.Yui.Compressor.Web.Optimization\\Yahoo.Yui.Compressor.Web.Optimization.csproj
-		SccProjectTopLevelParentUniqueName0 = YUICompressor.sln
-		SccProjectName0 = Code/Yahoo.Yui.Compressor.Web.Optimization
-		SccAuxPath0 = https://tfs.codeplex.com/tfs/tfs07
-		SccLocalPath0 = Code\\Yahoo.Yui.Compressor.Web.Optimization
-		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName1 = Code\\Yahoo.Yui.Compressor\\Yahoo.Yui.Compressor.csproj
-		SccProjectTopLevelParentUniqueName1 = YUICompressor.sln
-		SccProjectName1 = Code/Yahoo.Yui.Compressor
-		SccAuxPath1 = https://tfs.codeplex.com/tfs/tfs07
-		SccLocalPath1 = Code\\Yahoo.Yui.Compressor
-		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName2 = Code\\Yahoo.Yui.Compressor.Build.MsBuild\\Yahoo.Yui.Compressor.Build.MsBuild.csproj
-		SccProjectTopLevelParentUniqueName2 = YUICompressor.sln
-		SccProjectName2 = Code/Yahoo.Yui.Compressor.Build.MsBuild
-		SccAuxPath2 = https://tfs.codeplex.com/tfs/tfs07
-		SccLocalPath2 = Code\\Yahoo.Yui.Compressor.Build.MsBuild
-		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName3 = Code\\Yahoo.Yui.Compressor.Tests\\Yahoo.Yui.Compressor.Tests.csproj
-		SccProjectTopLevelParentUniqueName3 = YUICompressor.sln
-		SccProjectName3 = Code/Yahoo.Yui.Compressor.Tests
-		SccAuxPath3 = https://tfs.codeplex.com/tfs/tfs07
-		SccLocalPath3 = Code\\Yahoo.Yui.Compressor.Tests
-		SccProvider3 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName4 = Code\\Yahoo.Yui.Compressor.Build.Nant\\Yahoo.Yui.Compressor.Build.Nant.csproj
-		SccProjectTopLevelParentUniqueName4 = YUICompressor.sln
-		SccProjectName4 = Code/Yahoo.Yui.Compressor.Build.Nant
-		SccAuxPath4 = https://tfs.codeplex.com/tfs/tfs07
-		SccLocalPath4 = Code\\Yahoo.Yui.Compressor.Build.Nant
-		SccProvider4 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = YUICompressor.vsmdi
 	EndGlobalSection
