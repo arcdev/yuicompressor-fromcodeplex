@@ -21,7 +21,7 @@ This is a direct .NET port of the original Yahoo! UI Library: YUI Compressor.</d
         <dependencies>
             <dependency id="EcmaScript.Net" version="1.0.1.0" />
             <dependency id="Iesi.Collections" version="[3.2.0.4000]" />
-            <dependency id="YUICompressor.Net.Core" version="2.2.0.0" />
+            <dependency id="YUICompressor.NET" version="2.2.0.0" />
         </dependencies>
     </metadata>
 </package>
