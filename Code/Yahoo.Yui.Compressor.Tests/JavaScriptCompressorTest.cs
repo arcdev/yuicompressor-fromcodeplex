@@ -689,6 +689,35 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.Fail("Message not found");
         }
 
+        [Test]
+        [Description("http://yuicompressor.codeplex.com/workitem/10742")]
+        [Ignore("Ignored until the ECMAScript library is fixed")]
+        public void Compressing_A_File_With_A_Unicode_BOM_Character_At_Start_Of_File_Should_Succeed()
+        {
+            // Arrange.
+            var source = File.ReadAllText(@"Javascript Files\jquery.caret.1.02_bom_at_start.js");
+
+            // Act.
+            var actual = target.Compress(source);
+
+            // Assert.
+            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
+        }
+
+        [Test]
+        [Description("http://yuicompressor.codeplex.com/workitem/10742")]
+        public void Compressing_A_File_With_A_Unicode_BOM_Character_Not_At_Start_Of_File_Should_Succeed()
+        {
+            // Arrange.
+            var source = File.ReadAllText(@"Javascript Files\jquery.caret.1.02.js");
+
+            // Act.
+            var actual = target.Compress(source);
+
+            // Assert.
+            Assert.That(actual, Is.Not.Null.Or.Empty, "Null or Empty");
+        }
+
         private void CompressAndCompare(string source, string expected)
         {
             // Act

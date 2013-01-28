@@ -393,6 +393,12 @@
     <Content Include="Javascript Files\jquery-1.3.2.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Javascript Files\jquery.caret.1.02.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript Files\jquery.caret.1.02_bom_at_start.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Javascript Files\SampleJavaScript-ignoreEval.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
