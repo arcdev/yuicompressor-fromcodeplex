@@ -154,6 +154,22 @@ namespace Yahoo.Yui.Compressor
                 }
             }
 
+            // Preserve any calc(...) css - https://yuicompressor.codeplex.com/workitem/11445
+            stringBuilder = new StringBuilder();
+            pattern = new Regex("(calc\\s*\\(.*\\))");
+            match = pattern.Match(source);
+            index = 0;
+            while (match.Success)
+            {
+                preservedTokens.Add(match.Value);
+                string preserver = Tokens.PreservedToken + (preservedTokens.Count - 1) + "___";
+
+                index = Extensions.AppendReplacement(match, stringBuilder, source, preserver, index);
+                match = match.NextMatch();
+            }
+            Extensions.AppendTail(stringBuilder, source, index);
+            source = stringBuilder.ToString();
+
             // Normalize all whitespace strings to single spaces. Easier to work with that way.
             source = Extensions.RegexReplace(source, "\\s+", " ");
 

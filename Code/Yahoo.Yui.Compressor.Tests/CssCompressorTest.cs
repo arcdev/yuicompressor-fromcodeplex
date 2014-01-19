@@ -691,6 +691,24 @@ namespace Yahoo.Yui.Compressor.Tests
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        [Test]
+        [Description("https://yuicompressor.codeplex.com/workitem/11445")]
+        public void Calc_Has_Spaces_Preserved_Between_Brackets()
+        {
+            const string source = @"
+                .test {
+                    width: calc(100% - (40em + 10px));
+                    height: 11px;
+                }";
+            const string expected = @".test{width:calc(100% - (40em + 10px));height:11px}";
+
+            // Act
+            var actual = target.Compress(source);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         private void CompressAndCompare(string source, string expected)
         {
             // Act
