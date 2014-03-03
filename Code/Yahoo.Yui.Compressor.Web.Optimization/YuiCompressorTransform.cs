@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Web.Optimization;
 
@@ -36,9 +37,12 @@ namespace Yahoo.Yui.Compressor.Web.Optimization
             var rawContent = new StringBuilder();
             foreach (var fileInfo in response.Files)
             {
-                using (var reader = fileInfo.OpenText())
+                using (var stream = fileInfo.VirtualFile.Open())
                 {
-                    rawContent.Append(reader.ReadToEnd());
+                    using (var streamReader = new StreamReader(stream))
+                    {
+                        rawContent.Append(streamReader.ReadToEnd());
+                    }
                 }
             }
 
@@ -47,7 +51,7 @@ namespace Yahoo.Yui.Compressor.Web.Optimization
             var output = compressor.Compress(rawContent.ToString());
             context.HttpContext.Response.Cache.SetLastModifiedFromFileDependencies();
             response.Content = output;
-            response.ContentType = compressor is CssCompressor ? "text/css" : "text/javascript";
+            response.ContentType = compressor.ContentType;
         }
 
         #endregion

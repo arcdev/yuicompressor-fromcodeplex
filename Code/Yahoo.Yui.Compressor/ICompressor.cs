@@ -4,6 +4,7 @@ namespace Yahoo.Yui.Compressor
     {
         CompressionType CompressionType { get; set; }
         int LineBreakPosition { get; set; }
+        string ContentType { get; }
 
         string Compress(string source);
     }

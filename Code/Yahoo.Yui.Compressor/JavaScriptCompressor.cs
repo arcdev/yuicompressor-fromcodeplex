@@ -46,6 +46,7 @@ namespace Yahoo.Yui.Compressor
         public bool PreserveAllSemicolons { get; set; }
         public bool IgnoreEval { get; set; }
         public CultureInfo ThreadCulture { get; set; }
+        public override string ContentType { get { return "text/javascript"; } }
 
         public LoggingType LoggingType { get; set; }
 

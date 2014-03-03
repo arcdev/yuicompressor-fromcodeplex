@@ -8,6 +8,7 @@ namespace Yahoo.Yui.Compressor
     public class CssCompressor : Compressor, ICssCompressor
     {
         public bool RemoveComments { get; set; }
+        public override string ContentType { get { return "text/css"; } }
 
         public CssCompressor()
         {
