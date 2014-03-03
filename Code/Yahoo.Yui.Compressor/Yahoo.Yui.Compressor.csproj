@@ -73,6 +73,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared Assembly Info\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Compressor.cs" />
     <Compile Include="ICompressor.cs" />
     <Compile Include="CompressionType.cs" />
